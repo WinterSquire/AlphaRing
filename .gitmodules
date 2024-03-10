@@ -1,0 +1,16 @@
+[submodule "deps/minhook"]
+	path = deps/minhook
+	url = https://github.com/TsudaKageyu/minhook.git
+	branch = master
+[submodule "deps/imgui"]
+	path = deps/imgui
+	url = https://github.com/ocornut/imgui
+	branch = master
+[submodule "deps/lua"]
+	path = deps/lua
+	url = https://github.com/lua/lua.git
+    branch = master
+[submodule "deps/tinyxml2"]
+	path = deps/tinyxml2
+	url = https://github.com/leethomason/tinyxml2.git
+    branch = master
