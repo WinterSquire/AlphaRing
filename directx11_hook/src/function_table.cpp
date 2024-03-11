@@ -1,8 +1,6 @@
-#include "window.h"
+#include "function_table.h"
 
-bool getFunctionTable(FunctionTable *functionTable) {
-    if (functionTable == nullptr) return false;
-
+bool FunctionTable::Initialize() {
     WNDCLASS wc {
             CS_HREDRAW | CS_VREDRAW,
             DefWindowProc,
@@ -91,9 +89,9 @@ bool getFunctionTable(FunctionTable *functionTable) {
         return -2;
     }
 
-    memcpy(functionTable, *(uintptr_t**)swapChain, 18 * sizeof(uintptr_t));
-    memcpy(((uintptr_t*)functionTable) + 18, *(uintptr_t**)device, 43 * sizeof(uintptr_t));
-    memcpy(((uintptr_t*)functionTable) + 18 + 43, *(uintptr_t**)context, 144 * sizeof(uintptr_t));
+    memcpy(this, *(uintptr_t**)swapChain, 18 * sizeof(uintptr_t));
+    memcpy(((uintptr_t*)this) + 18, *(uintptr_t**)device, 43 * sizeof(uintptr_t));
+    memcpy(((uintptr_t*)this) + 18 + 43, *(uintptr_t**)context, 144 * sizeof(uintptr_t));
 
     swapChain->Release();
     swapChain = NULL;

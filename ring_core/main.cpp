@@ -1,6 +1,7 @@
 #include <iostream>
 #include <windows.h>
 
+#include "hook.h"
 
 void StartupThread(HANDLE hModule) {
     AllocConsole();
@@ -8,9 +9,14 @@ void StartupThread(HANDLE hModule) {
     freopen("CONOUT$", "w", stdout);
     freopen("CONOUT$", "w", stderr);
 
+    std::cout << Directx11Hook::Initialize();
+
+
     while (true) {
 
     }
+
+    Directx11Hook::Shutdown();
 
     fclose(stdin);
     fclose(stdout);

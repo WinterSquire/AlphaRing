@@ -3,16 +3,16 @@
 
 #include <d3d11.h>
 
-// 8 13
 typedef HRESULT(__stdcall* tPresent) (IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags);
 typedef HRESULT (__stdcall* tResizeBuffers) (IDXGISwapChain*, UINT, UINT, UINT, DXGI_FORMAT, UINT);
 
-struct FunctionTable {
-    uintptr_t functions1[8];
+inline struct FunctionTable {
+    uintptr_t functions[205];
+
     tPresent Present;
-    uintptr_t functions2[4];
     tResizeBuffers ResizeBuffers;
-    uintptr_t functions3[191];
-};
+
+    bool Initialize();
+} functionTable;
 
 #endif //ALPHA_RING_FUNCTION_TABLE_H
