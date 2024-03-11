@@ -14,3 +14,7 @@
 	path = deps/tinyxml2
 	url = https://github.com/leethomason/tinyxml2.git
     branch = master
+[submodule "deps/spdlog"]
+	path = deps/spdlog
+	url = https://github.com/gabime/spdlog
+	branch = v1.13.0

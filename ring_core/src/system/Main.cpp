@@ -1,16 +1,17 @@
 #include <iostream>
-#include <windows.h>
+#include <Windows.h>
 
 #include "hook.h"
+#include "Log.h"
 
 void StartupThread(HANDLE hModule) {
-    AllocConsole();
-    freopen("CONIN$", "r", stdin);
-    freopen("CONOUT$", "w", stdout);
-    freopen("CONOUT$", "w", stderr);
+    Log::Init();
 
-    std::cout << Directx11Hook::Initialize();
+    auto result = Directx11Hook::Initialize();
 
+    if (result) LOG_INFO("Directx11 Hook Initialized!");
+
+    LOG_INFO("Initialize Success!");
 
     while (true) {
 
@@ -18,10 +19,7 @@ void StartupThread(HANDLE hModule) {
 
     Directx11Hook::Shutdown();
 
-    fclose(stdin);
-    fclose(stdout);
-    fclose(stderr);
-    FreeConsole();
+    Log::Shutdown();
 }
 
 BOOL APIENTRY DllMain(HANDLE handle, DWORD reason, LPVOID reserved) {

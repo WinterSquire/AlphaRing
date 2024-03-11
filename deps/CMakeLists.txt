@@ -69,6 +69,15 @@ set (LUA_SRC
 
 add_library(lua STATIC ${LUA_SRC} )
 
+# setup spdlog
+include_directories(${SPD_LOG_DIR}/include)
+
+file(GLOB_RECURSE SPD_LOG_SRC "${SPD_LOG_DIR}/src/*.cpp")
+
+add_definitions(-DSPDLOG_COMPILED_LIB)
+
+add_library(spd_log STATIC ${SPD_LOG_SRC})
+
 # setup tinyxml2
 include_directories(${TINYXML2_DIR})
 
