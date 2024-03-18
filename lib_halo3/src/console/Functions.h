@@ -1,0 +1,10 @@
+#ifndef TINYXML2_TEST_FUNCTIONS_H
+#define TINYXML2_TEST_FUNCTIONS_H
+
+
+class Functions {
+
+};
+
+
+#endif //TINYXML2_TEST_FUNCTIONS_H
