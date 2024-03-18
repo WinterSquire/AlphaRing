@@ -2,9 +2,8 @@
 #define ALPHA_RING_OBJECTS_H
 
 #include "../base/base.h"
-#include "../native/native.h"
 
-struct Objects {
+struct Objects_t {
     Datum datum;//0x0
     __int8 v0[8];
     INDEX next_object_index;//0xC
@@ -60,8 +59,8 @@ struct Objects {
         EFFECTSCENERY
     };
 
-    inline bool IsUnit(){return type & (BIPED|GIANT|VEHICLE);}
-    inline __int16 size(){return *(__int16*)(*(__int64*)(Native::GetModuleHandle() + 0x810D20 + type * 8) + 0x6);}
+    bool IsUnit();
+    __int16 size();
 };
 
 

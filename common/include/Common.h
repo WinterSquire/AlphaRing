@@ -1,7 +1,7 @@
 #ifndef TINYXML2_TEST_COMMON_H
 #define TINYXML2_TEST_COMMON_H
 
-#include "../src/base.h"
+#include "../src/Base.h"
 
 #include "../src/hex/Hex.h"
 #include "../src/string/String.h"

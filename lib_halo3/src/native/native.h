@@ -4,10 +4,14 @@
 #include "Common.h"
 
 namespace Native {
-    bool updateData(Module&& data);
-    const Module& getModuleData();
+    bool sethModule(__int64 hModule);
+    __int64 gethModule();
 
-    __int64 GetModuleHandle();
+    bool setModule(Module && module);
+    const Module& getModule();
+
+    bool setTEB(__int64 teb);
+    __int64 getTEB();
 };
 
 

@@ -1,7 +1,7 @@
 #ifndef ALPHA_RING_MODULE_H
 #define ALPHA_RING_MODULE_H
 
-#include "../base.h"
+#include "../Base.h"
 
 class Module {
 public:

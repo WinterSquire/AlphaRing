@@ -1,7 +1,7 @@
 #include <iostream>
 #include <Windows.h>
 
-#include "hook.h"
+#include "directx11_hook.h"
 #include "Log.h"
 
 void StartupThread(HANDLE hModule) {

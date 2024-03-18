@@ -14,13 +14,16 @@ set(LIBRARY_LIST
 )
 
 # include directory
-include_directories(${IMGUI_DIR})
 include_directories(${COMMON_DIR}/include)
+include_directories(${DIRECTX11_HOOK_DIR}/include)
+include_directories(${LIB_HALO3_DIR}/include)
+
+include_directories(${IMGUI_DIR})
 include_directories(${MINHOOK_DIR}/include)
 include_directories(${SPD_LOG_DIR}/include)
-include_directories(${DIRECTX11_HOOK_DIR}/include)
 
-add_compile_definitions(XML_NAME="data.xml")
+set(XML_NAME "data.xml")
+add_compile_definitions(XML_NAME=${XML_NAME})
 
 file(GLOB_RECURSE CORE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 
@@ -29,3 +32,4 @@ add_library(${WRAPPER_NAME} SHARED ${CORE_SRC})
 target_link_libraries(${WRAPPER_NAME} PUBLIC ${LIBRARY_LIST})
 
 install(TARGETS ${WRAPPER_NAME} DESTINATION ${MCC_DIR})
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/res/${XML_NAME} DESTINATION ${MCC_DIR})

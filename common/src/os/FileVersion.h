@@ -1,7 +1,7 @@
 #ifndef ALPHA_RING_FILEVERSION_H
 #define ALPHA_RING_FILEVERSION_H
 
-#include "../base.h"
+#include "../Base.h"
 
 class FileVersion {
 public:

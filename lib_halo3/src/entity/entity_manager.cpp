@@ -1,7 +1,7 @@
 #include "entity_manager.h"
 
 template<typename Entity>
-bool EntityManager<Entity>::update(__int64 root) {
+bool EntityManager<Entity>::setRoot(__int64 root) {
     m_root = root;
     m_entitySize = *(__int32*)(m_root + 0x24);
     m_count = *(__int32*)(m_root + 0x3C);

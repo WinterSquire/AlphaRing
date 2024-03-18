@@ -15,8 +15,6 @@ class PhysicsConstant
     void set_gravity(float scale);
 };
 
-static PhysicsConstant *physicsConstant;
-
 //   v0 = *(*(NtCurrentTeb()->ThreadLocalStoragePointer + TlsIndex) + 304i64);
 //   *v0 = 0x40857AF5;                             // gravity
 //   *(v0 + 4) = 0x3F800000;

@@ -1,16 +1,32 @@
 #include "native.h"
 
-static Module module;
+static __int64 s_hModule;
+static Module s_module;
+static __int64 s_teb;
 
-bool Native::updateData(Module &&data) {
-    module = data;
+bool sethModule(__int64 hModule) {
+    s_hModule = hModule;
     return true;
 }
 
-const Module &Native::getModuleData() {
-    return module;
+__int64 Native::gethModule() {
+    return s_hModule;
 }
 
-__int64 Native::GetModuleHandle() {
-    return 0;
+bool Native::setModule(Module &&module) {
+    s_module = module;
+    return true;
+}
+
+const Module &Native::getModule() {
+    return s_module;
+}
+
+bool Native::setTEB(__int64 teb) {
+    s_teb = teb;
+    return true;
+}
+
+__int64 Native::getTEB() {
+    return s_teb;
 }

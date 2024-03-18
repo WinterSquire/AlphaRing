@@ -8,6 +8,7 @@ set(WRAPPER_DLL_NAME "${WRAPPER_NAME}.dll")
 
 set(COMMON_DIR ${CMAKE_SOURCE_DIR}/common)
 set(DIRECTX11_HOOK_DIR ${CMAKE_SOURCE_DIR}/directx11_hook)
+set(LIB_HALO3_DIR ${CMAKE_SOURCE_DIR}/lib_halo3)
 
 set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/deps/imgui)
 set(LUA_DIR ${CMAKE_SOURCE_DIR}/deps/lua)

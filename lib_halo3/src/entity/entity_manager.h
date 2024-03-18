@@ -6,7 +6,7 @@
 template<typename Entity>
 class EntityManager {
 public:
-    bool update(__int64 root);
+    bool setRoot(__int64 root);
     INDEX getAbsoluteIndex(Index index);
     Entity* getEntity(Index index);
 
