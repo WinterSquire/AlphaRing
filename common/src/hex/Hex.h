@@ -1,7 +1,6 @@
 #ifndef TINYXML2_TEST_HEX_H
 #define TINYXML2_TEST_HEX_H
 
-
 #include <cstddef>
 
 namespace Hex {

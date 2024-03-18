@@ -1,6 +1,6 @@
 #include "FileVersion.h"
 
-#include <windows.h>
+#include <Windows.h>
 
 FileVersion::FileVersion(uint64_t version) {
     m_version = version;

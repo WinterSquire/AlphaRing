@@ -1,6 +1,6 @@
 #include "Arg.h"
 
-#include "Common.h"
+#include "../string/String.h"
 
 Arg::Arg() {
     m_nArgc = 0;

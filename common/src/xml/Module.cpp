@@ -1,7 +1,5 @@
 #include "Module.h"
 
-#include <iostream>
-
 #include "tinyxml2.h"
 
 using namespace tinyxml2;
@@ -55,14 +53,14 @@ uint64_t Module::getAddress(const char *name) {
     return result->second;
 }
 
-string Module::toString() {
-    string result {
+std::string Module::toString() {
+    std::string result {
         "Name: " + m_name + '\n' +\
         "Version: " + m_version + '\n'
     };
 
-    for (auto key: m_address) {
-        result.append(string(key.first + ' ' + std::to_string(key.second) + '\n'));
+    for (const auto& key: m_address) {
+        result.append(std::string(key.first + ' ' + std::to_string(key.second) + '\n'));
     }
 
     return result;

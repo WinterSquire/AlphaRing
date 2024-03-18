@@ -1,16 +1,11 @@
 #ifndef TINYXML2_TEST_COMMON_H
 #define TINYXML2_TEST_COMMON_H
 
-#include "../src/Hex.h"
-#include "../src/String.h"
+#include "../src/base.h"
 
-#include <stdint.h>
-
-#include <cstdio>
-#include <string>
-
-#define CPrint(str) printf("%s", str)
-
-using string = std::string;
+#include "../src/hex/Hex.h"
+#include "../src/string/String.h"
+#include "../src/console/Console.h"
+#include "../src/xml/Module.h"
 
 #endif //TINYXML2_TEST_COMMON_H

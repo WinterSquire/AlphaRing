@@ -1,7 +1,7 @@
 #ifndef ALPHA_RING_FILEVERSION_H
 #define ALPHA_RING_FILEVERSION_H
 
-#include "Common.h"
+#include "../base.h"
 
 class FileVersion {
 public:
@@ -9,7 +9,7 @@ public:
     FileVersion(const char* version);
     FileVersion(uint16_t a, uint16_t b, uint16_t c, uint16_t d);
 
-    string toString() const;
+    std::string toString() const;
 
     static FileVersion getFileVersion(const char *fileName);
 private:

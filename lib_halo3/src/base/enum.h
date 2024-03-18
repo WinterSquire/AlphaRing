@@ -94,24 +94,6 @@ enum eModelChoice : unsigned int
     MODELCHOICE_MONITER
 };
 
-enum eObjectType : unsigned int
-{
-    OBJECTTYPE_BIPED,
-    OBJECTTYPE_VEHICLE,
-    OBJECTTYPE_WEAPON,
-    OBJECTTYPE_EQUIPMENT,
-    OBJECTTYPE_TERMINAL,
-    OBJECTTYPE_PROJECTILE,
-    OBJECTTYPE_SCENERY,
-    OBJECTTYPE_MACHINE,
-    OBJECTTYPE_CONTROL,
-    OBJECTTYPE_SOUNDSCENERY,
-    OBJECTTYPE_CRATE,
-    OBJECTTYPE_CREATURE,
-    OBJECTTYPE_GIANT,
-    OBJECTTYPE_EFFECTSCENERY
-};
-
 const static char* eObjectTypeName[] =
         {
                 "biped",
@@ -190,25 +172,6 @@ const static char* eTeamColorName[] =
                 "Pink",
                 "Grey"
         };
-
-enum eEntryOffset : size_t //1.3073.0
-{
-    ENTRYOFFSET_ACTOR = 0x8,
-    ENTRYOFFSET_PLAYER = 0x10,
-    ENTRYOFFSET_PATCHEDRESOURCEDATA = 0x20,
-    ENTRYOFFSET_OBJECT = 0x38,
-    ENTRYOFFSET_ACTORLOOP = 0x30,
-    ENTRYOFFSET_PLAYERACTION = 0x40,
-    ENTRYOFFSET_MAP = 0x48,
-    ENTRYOFFSET_SPEED = 0xC8, // 0x8 1.0/tick 0xC current tick 0x10 speed(float 1.0)
-    ENTRYOFFSET_INFO = 0x110, // input,player INDEX ... local player
-    ENTRYOFFSET_PHYSICS = 0x130, // Gravity ...
-    ENTRYOFFSET_CAMERA = 0x188,
-    ENTRYOFFSET_RENDER = 0x220, // Chud Light
-    ENTRYOFFSET_CINEMATIC = 0x450
-    //0x238 sim. gamestate entities
-    //0x388 loopobjects
-};
 
 enum eGiveWeapon : unsigned int
 {

@@ -1,6 +1,6 @@
 project(lib_halo3)
 
-file(GLOB_RECURSE LIB_HALO3_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+include_directories(${COMMON_DIR}/include)
 
 file(GLOB_RECURSE LIB_HALO3_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 

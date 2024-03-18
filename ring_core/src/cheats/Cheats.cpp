@@ -1,8 +1,6 @@
-#include "Functions.h"
+#include "Cheats.h"
 
-#include "Function.h"
 #include "Common.h"
-
 
 void CC_NoClip(const Arg& arg) {
     CPrint("NoClip On\n");

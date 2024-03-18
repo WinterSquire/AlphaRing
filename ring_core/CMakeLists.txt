@@ -8,14 +8,13 @@ set(CMAKE_CXX_STANDARD 17)
 add_definitions(-D_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS)
 
 set(LIBRARY_LIST
-        common dll_wrapper directx11_hook
+        common dll_wrapper directx11_hook lib_halo3
         minhook imgui lua spd_log tinyxml2
         Version
 )
 
 # include directory
 include_directories(${IMGUI_DIR})
-include_directories(${TINYXML2_DIR})
 include_directories(${COMMON_DIR}/include)
 include_directories(${MINHOOK_DIR}/include)
 include_directories(${SPD_LOG_DIR}/include)

@@ -1,6 +1,6 @@
 #include "Hex.h"
 
-#include "String.h"
+#include "../string/String.h"
 
 size_t cHexToDec(char c) {
     if ('0' <= c && c <= '9') return c - '0';

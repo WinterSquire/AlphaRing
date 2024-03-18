@@ -1,0 +1,6 @@
+#ifndef ALPHA_RING_CHEATS_H
+#define ALPHA_RING_CHEATS_H
+
+
+
+#endif //ALPHA_RING_CHEATS_H
