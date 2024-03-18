@@ -38,10 +38,10 @@ string FileVersion::toString() const {
     char buffer[256];
 
     sprintf_s(buffer, "%d.%d.%d.%d",
-              ( m_version >> (32 + 16) ) & 0xffff,
-              ( m_version >> 32 ) & 0xffff,
-              ( m_version >> 16 ) & 0xffff,
-              ( m_version >> 0 ) & 0xffff
+              static_cast<uint16_t>(( m_version >> (32 + 16) ) & 0xffff),
+              static_cast<uint16_t>(( m_version >> (32) ) & 0xffff),
+              static_cast<uint16_t>(( m_version >> (16) ) & 0xffff),
+              static_cast<uint16_t>(( m_version >> (0) ) & 0xffff)
     );
 
     return {buffer};

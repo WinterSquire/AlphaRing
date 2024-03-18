@@ -1,5 +1,5 @@
-#ifndef TINYXML2_TEST_ARG_H
-#define TINYXML2_TEST_ARG_H
+#ifndef ALPHA_RING_ARG_H
+#define ALPHA_RING_ARG_H
 
 #include <initializer_list>
 
@@ -25,4 +25,4 @@ private:
     const char*	m_ppArgv[ COMMAND_MAX_ARGC ];
 };
 
-#endif //TINYXML2_TEST_ARG_H
+#endif //ALPHA_RING_ARG_H

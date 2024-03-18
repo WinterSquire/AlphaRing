@@ -17,9 +17,9 @@ set(TINYXML2_DIR ${CMAKE_SOURCE_DIR}/deps/tinyxml2)
 
 set(MCC_DIR "E:\\SteamLibrary\\steamapps\\common\\Halo The Master Chief Collection\\mcc\\binaries\\win64")
 
+add_subdirectory(common)
 add_subdirectory(deps)
 add_subdirectory(directx11_hook)
 add_subdirectory(dll_wrapper)
 add_subdirectory(lib_halo3)
 add_subdirectory(ring_core)
-add_subdirectory(test)

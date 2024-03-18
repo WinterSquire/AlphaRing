@@ -1,8 +1,6 @@
 #include "Arg.h"
 
-#include <iostream>
-
-#include "../common/Common.h"
+#include "Common.h"
 
 Arg::Arg() {
     m_nArgc = 0;

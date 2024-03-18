@@ -1,7 +1,7 @@
-#ifndef TINYXML2_TEST_FILEVERSION_H
-#define TINYXML2_TEST_FILEVERSION_H
+#ifndef ALPHA_RING_FILEVERSION_H
+#define ALPHA_RING_FILEVERSION_H
 
-#include "../system/Base.h"
+#include "Common.h"
 
 class FileVersion {
 public:
@@ -16,4 +16,4 @@ private:
     uint64_t m_version;
 };
 
-#endif //TINYXML2_TEST_FILEVERSION_H
+#endif //ALPHA_RING_FILEVERSION_H

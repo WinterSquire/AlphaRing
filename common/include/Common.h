@@ -4,8 +4,13 @@
 #include "../src/Hex.h"
 #include "../src/String.h"
 
-#include <cstdio>
+#include <stdint.h>
 
-#define Print(str) printf("%s", str)
+#include <cstdio>
+#include <string>
+
+#define CPrint(str) printf("%s", str)
+
+using string = std::string;
 
 #endif //TINYXML2_TEST_COMMON_H

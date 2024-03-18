@@ -1,8 +1,18 @@
 #include "Module.h"
 
-#include <tinyxml2.h>
+#include <iostream>
+
+#include "tinyxml2.h"
 
 using namespace tinyxml2;
+
+Module::Module() {
+
+}
+
+Module::Module(const char *fileName, const char *moduleName, const char *version) {
+    loadModule(fileName, moduleName, version);
+}
 
 bool Module::loadModule(const char *fileName, const char *moduleName, const char *version) {
     XMLDocument doc;
@@ -37,6 +47,12 @@ bool Module::loadModule(const char *fileName, const char *moduleName, const char
     }
 
     return true;
+}
+
+uint64_t Module::getAddress(const char *name) {
+    auto result = m_address.find(name);
+    if (result == m_address.end()) return 0;
+    return result->second;
 }
 
 string Module::toString() {

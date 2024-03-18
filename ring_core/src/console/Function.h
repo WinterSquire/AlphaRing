@@ -1,5 +1,5 @@
-#ifndef TINYXML2_TEST_FUNCTION_H
-#define TINYXML2_TEST_FUNCTION_H
+#ifndef ALPHA_RING_FUNCTION_H
+#define ALPHA_RING_FUNCTION_H
 
 #include "Arg.h"
 
@@ -24,4 +24,4 @@ private:
 };
 
 
-#endif //TINYXML2_TEST_FUNCTION_H
+#endif //ALPHA_RING_FUNCTION_H
