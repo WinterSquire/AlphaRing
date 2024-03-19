@@ -4,6 +4,7 @@
 
 namespace Hook {
     bool Init();
+    bool Check();
     void Shutdown();
 };
 

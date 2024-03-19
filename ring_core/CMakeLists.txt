@@ -25,7 +25,7 @@ include_directories(${SPD_LOG_DIR}/include)
 set(XML_NAME "data.xml")
 add_compile_definitions(XML_NAME=${XML_NAME})
 
-file(GLOB_RECURSE CORE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+file(GLOB_RECURSE CORE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/*.asm)
 
 add_library(${WRAPPER_NAME} SHARED ${CORE_SRC})
 

@@ -11,3 +11,8 @@ void Hook::Shutdown() {
     MH_DisableHook(MH_ALL_HOOKS);
     MH_Uninitialize();
 }
+
+bool Hook::Check() {
+
+    return false;
+}
