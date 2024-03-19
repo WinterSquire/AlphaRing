@@ -5,6 +5,5 @@
 #include <windows.h>
 
 void H3::update() {
-    // todo
-//    Native::sethModule((long long int)GetModuleHandleA("halo3.dll"));
+    Native::sethModule((long long int)GetModuleHandleA("halo3.dll"));
 }

@@ -4,7 +4,7 @@ static __int64 s_hModule;
 static Module s_module;
 static __int64 s_teb;
 
-bool sethModule(__int64 hModule) {
+bool Native::sethModule(__int64 hModule) {
     s_hModule = hModule;
     return true;
 }
