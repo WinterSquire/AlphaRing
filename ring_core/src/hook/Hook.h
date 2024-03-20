@@ -1,12 +1,12 @@
-#ifndef ALPHA_RING_DIRECTX11_HOOK_H
+#ifndef ALPHA_RING_HOOK_H
 #define ALPHA_RING_HOOK_H
 
 
 namespace Hook {
     bool Init();
-    bool Check();
+    bool Check(__int64 hModule);
     void Shutdown();
 };
 
 
-#endif //ALPHA_RING_DIRECTX11_HOOK_H
+#endif //ALPHA_RING_HOOK_H

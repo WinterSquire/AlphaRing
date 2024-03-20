@@ -17,3 +17,4 @@ asm_hook_script_entry proc
     push rax
     jmp p_scriptEntry
 asm_hook_script_entry endp
+end

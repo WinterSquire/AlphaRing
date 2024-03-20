@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.27)
 project(ring_core)
 
+enable_language(ASM_MASM)
+
 # set variables
 set(CMAKE_CXX_STANDARD 17)
 
