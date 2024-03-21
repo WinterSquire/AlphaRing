@@ -1,16 +1,32 @@
-#include <iostream>
 #include <Windows.h>
 
 #include "directx11_hook.h"
+#include "mcc_hook.h"
+
 #include "Log.h"
 #include "../hook/Hook.h"
+#include "../interface/Interface.h"
 
-#include <Windows.h>
+void ModuleLoad(ModuleInfo *info) {
+    if (info->errorCode == 0) {
+        LOG_INFO("Module {0}: Loaded At: {1:x}", info->title, info->hModule);
+    } else {
+        LOG_INFO("Module {0}: Loaded Error: {1}", info->title, info->errorCode);
+    }
+}
+
+void ModuleUnload(ModuleInfo *info) {
+    LOG_INFO("Module {0}: Is about to unload", info->title);
+}
 
 void StartupThread(HANDLE hModule) {
     bool result;
 
     Log::Init();
+
+    result = MCCHook::Initialize(ModuleLoad, ModuleUnload);
+
+    if (result) LOG_INFO("MCC Hook Initialized!");
 
     result = Hook::Init();
 
@@ -20,10 +36,12 @@ void StartupThread(HANDLE hModule) {
 
     if (result) LOG_INFO("Directx11 Hook Initialized!");
 
+    result = sInterface.initialize();
+
     LOG_INFO("Initialize Success!");
 
     while (true) {
-        Hook::Check(reinterpret_cast<long long int>(GetModuleHandleA("halo3.dll")));
+
     }
 
     Directx11Hook::Shutdown();

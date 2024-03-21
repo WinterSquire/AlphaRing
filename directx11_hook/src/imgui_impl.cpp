@@ -5,7 +5,6 @@
 #include "backends/imgui_impl_dx11.h"
 #include <d3d11.h>
 
-bool                    bShowGUI;
 bool                    bInitialized;
 
 LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -17,6 +16,8 @@ IDXGISwapChain*         pSwapChain;
 ID3D11Device*			pDevice;
 ID3D11DeviceContext*	pContext;
 ID3D11RenderTargetView*	mainRenderTargetView;
+
+ImmediateGUI::IMGUIContextCallback_t pCallback;
 
 ID3D11DeviceContext* ImmediateGUI::GetImmediateContext() {return pContext;}
 
@@ -50,7 +51,6 @@ void ImmediateGUI::Initialize(IDXGISwapChain* swapChain)
     ImGui_ImplWin32_Init(window);
     ImGui_ImplDX11_Init(pDevice, pContext);
 
-    bShowGUI = true;
     bInitialized = true;
 }
 
@@ -63,16 +63,7 @@ void ImmediateGUI::Update()
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    if (bShowGUI)
-    {
-        ImGui::Begin("Directx11 Hook");
-
-        ImGui::End();
-    }
-    else
-    {
-        ImGui::SetMouseCursor(ImGuiMouseCursor_None);
-    }
+    if (pCallback != nullptr) pCallback();
 
     ImGui::Render();
     pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
@@ -97,6 +88,10 @@ void ImmediateGUI::CreateMainRenderTargetView() {
     pDevice->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView);
     pBackBuffer->Release();
     pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
+}
+
+void ImmediateGUI::SetCallback(ImmediateGUI::IMGUIContextCallback_t callback) {
+    pCallback = callback;
 }
 
 // forward declare

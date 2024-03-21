@@ -4,7 +4,6 @@
 
 namespace Hook {
     bool Init();
-    bool Check(__int64 hModule);
     void Shutdown();
 };
 

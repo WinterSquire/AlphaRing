@@ -7,5 +7,11 @@ namespace Directx11Hook {
     bool Shutdown();
 }
 
+namespace ImmediateGUI {
+    using IMGUIContextCallback_t = void (*)();
+
+    void SetCallback(IMGUIContextCallback_t callback);
+}
+
 
 #endif //ALPHA_RING_DIRECTX11_HOOK_H

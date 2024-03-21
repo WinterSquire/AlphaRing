@@ -4,6 +4,10 @@
 #include <d3d11.h>
 
 namespace ImmediateGUI {
+    using IMGUIContextCallback_t = void(*)();
+
+    void SetCallback(IMGUIContextCallback_t callback);
+
     bool Initialized();
     void Initialize(IDXGISwapChain *pSwapChain);
     void Update();
