@@ -1,6 +1,6 @@
 [submodule "deps/minhook"]
 	path = deps/minhook
-	url = https://github.com/TsudaKageyu/minhook.git
+	url = https://github.com/WinterSquire/minhook.git
 	branch = master
 [submodule "deps/imgui"]
 	path = deps/imgui

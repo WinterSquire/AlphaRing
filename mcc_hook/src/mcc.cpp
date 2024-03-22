@@ -31,11 +31,11 @@ bool MCCHook::Initialize(Callback_t load_callback, Callback_t unload_callback) {
 
     if (!(status == MH_OK || status == MH_ERROR_ALREADY_INITIALIZED)) return false;
 
-    asm_hook_mcc_load_init(ModuleLoad, &ppOriginal_ModuleLoad);
+    asm_mcc_hook_load_init(ModuleLoad, &ppOriginal_ModuleLoad);
 
-    status = MH_CreateHook((LPVOID)(hModule + OFFSET_MODULE_LOAD),
-                           asm_hook_mcc_load_entry,
-                           (void**)&ppOriginal_ModuleLoad
+    status = MH_CreateHook((LPVOID) (hModule + OFFSET_MODULE_LOAD),
+                           asm_mcc_hook_load_entry,
+                           (void **) &ppOriginal_ModuleLoad
     );
 
     if (status != MH_OK) return false;
@@ -44,11 +44,11 @@ bool MCCHook::Initialize(Callback_t load_callback, Callback_t unload_callback) {
 
     if (status != MH_OK) return false;
 
-    asm_hook_mcc_unload_init(ModuleUnload, &ppOriginal_ModuleUnload);
+    asm_mcc_hook_unload_init(ModuleUnload, &ppOriginal_ModuleUnload);
 
-    status = MH_CreateHook((LPVOID)(hModule + OFFSET_MODULE_UNLOAD),
-                           asm_hook_mcc_unload_entry,
-                           (void**)&ppOriginal_ModuleUnload
+    status = MH_CreateHook((LPVOID) (hModule + OFFSET_MODULE_UNLOAD),
+                           asm_mcc_hook_unload_entry,
+                           (void **) &ppOriginal_ModuleUnload
     );
 
     if (status != MH_OK) return false;

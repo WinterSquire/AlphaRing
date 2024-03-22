@@ -4,17 +4,18 @@
 
 .code
 
-asm_hook_script_init proc
+asm_mcc_hook_load_init proc
     mov p_scriptEntry, rcx
     mov p_ppOriginal, rdx
     ret
-asm_hook_script_init endp
+asm_mcc_hook_load_init endp
 
-asm_hook_script_entry proc
-    lea rcx, [rsp+50h]
+asm_mcc_hook_load_entry proc
+    lea rcx, [r14]
+
     mov rax, p_ppOriginal
     mov rax, [rax]
     push rax
     jmp p_scriptEntry
-asm_hook_script_entry endp
+asm_mcc_hook_load_entry endp
 end
