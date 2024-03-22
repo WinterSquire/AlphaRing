@@ -3,15 +3,7 @@
 #define ALPHA_RING_MCC_H
 
 struct ModuleInfo {
-    __int32 title;
-    __int32 errorCode; // 0 == ERROR_SUCCESS; 126 = ERROR_MOD_NOT_FOUND
-    __int64 hModule;
-    __int64 p_CreateDataAccess;
-    __int64 p_ppCxxFrameHandler3;
-};
-
-struct ModuleSet {
-    enum {
+    enum eTitle : __int32 {
         Halo1 = 0,
         Halo2 = 1,
         Halo3 = 2,
@@ -21,6 +13,24 @@ struct ModuleSet {
         HaloReach = 6,
     };
 
+    inline static const char* cTitle[] {
+            "Halo1",
+            "Halo2",
+            "Halo3",
+            "Halo4",
+            "Groundhog",
+            "Halo3ODST",
+            "HaloReach"
+    };
+
+    eTitle title;
+    __int32 errorCode; // 0 == ERROR_SUCCESS; 126 = ERROR_MOD_NOT_FOUND
+    __int64 hModule;
+    __int64 p_CreateDataAccess;
+    __int64 p_ppCxxFrameHandler3;
+};
+
+struct ModuleSet {
     ModuleInfo modules[7];
 };
 

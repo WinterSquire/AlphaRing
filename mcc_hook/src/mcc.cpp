@@ -40,12 +40,20 @@ bool MCCHook::Initialize(Callback_t load_callback, Callback_t unload_callback) {
 
     if (status != MH_OK) return false;
 
+    status = MH_EnableHook((LPVOID)(hModule + OFFSET_MODULE_LOAD)); // !! essential
+
+    if (status != MH_OK) return false;
+
     asm_hook_mcc_unload_init(ModuleUnload, &ppOriginal_ModuleUnload);
 
     status = MH_CreateHook((LPVOID)(hModule + OFFSET_MODULE_UNLOAD),
                            asm_hook_mcc_unload_entry,
                            (void**)&ppOriginal_ModuleUnload
     );
+
+    if (status != MH_OK) return false;
+
+    status = MH_EnableHook((LPVOID)(hModule + OFFSET_MODULE_UNLOAD)); // !! essential
 
     if (status != MH_OK) return false;
 
