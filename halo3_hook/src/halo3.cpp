@@ -2,21 +2,13 @@
 
 #include "MinHook.h"
 
-#include "./asm/asm.h"
+#include "./entry/entry.h"
 
-const __int64 OFFSET_ENGINE_INIT = 0xB2A20;
-const __int64 OFFSET_ENGINE_UNINIT = 0xB2EB6;
 const __int64 OFFSET_MAP_INIT = 0x12E6CE;
 const __int64 OFFSET_SCRIPT = 0xEF2BF;
 
-bool Halo3Hook::Init() {
-    return true;
-}
+bool Halo3Hook::Init() {return true;}
 
-bool Halo3Hook::Update(__int64 hModule) {
-    return true;
-}
+bool Halo3Hook::Update(__int64 hModule) { return Entry::update_all(hModule); }
 
-void Halo3Hook::Shutdown() {
-
-}
+void Halo3Hook::Shutdown() {}

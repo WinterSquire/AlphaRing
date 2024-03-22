@@ -1,6 +1,7 @@
 #include <Windows.h>
 
 #include "directx11_hook.h"
+#include "halo3_hook.h"
 #include "mcc_hook.h"
 
 #include "Log.h"
@@ -10,14 +11,37 @@
 void ModuleLoad(ModuleInfo *info) {
     if (info->errorCode == 0) {
         LOG_INFO("Module {0}: Loaded At: {1:x}", ModuleInfo::cTitle[info->title], info->hModule);
+        if (info->title == ModuleInfo::Halo3) {
+            if (Halo3Hook::Update(info->hModule))
+                LOG_INFO("Halo3 Hook Reload Success!");
+            else
+                LOG_ERROR("Halo3 Hook Reload Failed!");
+        }
     } else {
         LOG_INFO("Module {0}: Loaded Error: {1}", ModuleInfo::cTitle[info->title], info->errorCode);
     }
 }
 
 void ModuleUnload(ModuleInfo *info) {
-    LOG_INFO("Module {0}: Is about to unload", info->title);
+    LOG_INFO("Module {0}: Is about to unload", ModuleInfo::cTitle[info->title]);
 }
+
+#include <winnt.h>
+#include <winternl.h>
+
+#define NtCurrentTls_p() NtCurrentTeb()->Reserved1[11]
+
+void EngineInit() {
+    __int64 peb = (__int64) NtCurrentTls_p();
+
+    LOG_INFO("Engine Init");
+    LOG_INFO("TLS{0:x}", peb);
+}
+
+void EngineUninit() {
+    LOG_INFO("Engine Uninit");
+}
+
 
 void StartupThread(HANDLE hModule) {
     bool result;
@@ -27,6 +51,15 @@ void StartupThread(HANDLE hModule) {
     result = MCCHook::Initialize(ModuleLoad, ModuleUnload);
 
     if (result) LOG_INFO("MCC Hook Initialized!");
+
+    {
+        result = Halo3Hook::Init();
+
+        if (result) LOG_INFO("Halo3 Hook Initialized!");
+
+        Halo3Hook::Engine::setEngineInitCallback(EngineInit);
+        Halo3Hook::Engine::setEngineUninitCallback(EngineUninit);
+    }
 
     result = Hook::Init();
 
