@@ -21,16 +21,20 @@ static int getModuleTlsIndex(__int64 pModule) {
     return *(__int32*)pTLS->AddressOfIndex;
 }
 
-ThreadLocalStorage::ThreadLocalStorage(__int64 pModule) {
-    m_pTEB = (__int64*)NtCurrentTeb();
-    m_pTLS = (__int64**)((_TEB*)m_pTEB)->Reserved1[11];
-    m_TlsIndex = getModuleTlsIndex(pModule);
-}
-
 __int64* ThreadLocalStorage::ptr(int index) {
     return *(m_pTLS + m_TlsIndex) + index;
 }
 
 __int64 ThreadLocalStorage::operator[](int index) {
     return (*(m_pTLS + m_TlsIndex))[index];
+}
+
+bool ThreadLocalStorage::update(__int64 pModule) {
+    if (pModule == 0) return false;
+
+    m_pTEB = (__int64*)NtCurrentTeb();
+    m_pTLS = (__int64**)((_TEB*)m_pTEB)->Reserved1[11];
+    m_TlsIndex = getModuleTlsIndex(pModule);
+
+    return true;
 }

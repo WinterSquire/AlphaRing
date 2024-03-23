@@ -4,14 +4,9 @@
 #include "Common.h"
 
 namespace Native {
-    bool sethModule(__int64 hModule);
-    __int64 gethModule();
-
-    bool setModule(Module && module);
-    const Module& getModule();
-
-    bool setTEB(__int64 teb);
-    __int64 getTEB();
+    bool Init(__int64 hModule);
+    const ThreadLocalStorage& getTLS();
+    void Shutdown();
 };
 
 

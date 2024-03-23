@@ -5,7 +5,7 @@
 
 class Log {
 public:
-    static void Init();
+    static bool Init();
     static void Shutdown();
 };
 
