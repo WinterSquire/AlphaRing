@@ -5,6 +5,7 @@
 
 #include "../src/hex/Hex.h"
 #include "../src/string/String.h"
+#include "../src/os/ThreadLocalStorage.h"
 #include "../src/console/Console.h"
 #include "../src/xml/Module.h"
 
