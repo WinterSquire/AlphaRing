@@ -6,11 +6,11 @@ namespace Halo3::Entry::World {
     extern void Epilogue();
     void detour();
 
-    ::Entry world{OFFSET, (__int64)detour};
+    ::Entry entry{OFFSET, (__int64)detour};
 }
 
 void Halo3::Entry::World::detour() {
     Prologue();
-    world.getPointerOriginal()();
+    entry.getPointerOriginal()();
     Epilogue();
 }

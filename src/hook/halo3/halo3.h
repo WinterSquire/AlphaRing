@@ -3,8 +3,7 @@
 
 
 namespace Halo3Hook {
-    bool Init();
-    bool Update(__int64 hModule);
+    bool Init(__int64 hModule);
     void Shutdown();
 };
 

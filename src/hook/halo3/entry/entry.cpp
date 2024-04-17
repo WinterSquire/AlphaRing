@@ -6,8 +6,8 @@
 
 const int MAX_ENTRY = 20;
 
-int entryCount = 0;
-Entry* entryArray[MAX_ENTRY];
+static int entryCount = 0;
+static Entry* entryArray[MAX_ENTRY];
 
 Entry::Entry(__int64 offset, __int64 pDetour) : m_offset(offset), m_pDetour(pDetour), m_target(0) {
     assert(entryCount < MAX_ENTRY);

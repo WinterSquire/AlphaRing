@@ -26,12 +26,14 @@ __int64* ThreadLocalStorage::ptr(int index) {
 }
 
 __int64 ThreadLocalStorage::operator[](int index) {
+    if (m_pTLS == nullptr) return 0;
     return (*(m_pTLS + m_TlsIndex))[index];
 }
 
 bool ThreadLocalStorage::update(__int64 pModule) {
     if (pModule == 0) return false;
 
+    m_hModule = pModule;
     m_pTEB = (__int64*)NtCurrentTeb();
     m_pTLS = (__int64**)((_TEB*)m_pTEB)->Reserved1[11];
     m_TlsIndex = getModuleTlsIndex(pModule);

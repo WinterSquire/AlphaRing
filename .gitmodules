@@ -18,3 +18,7 @@
 	path = deps/spdlog
 	url = https://github.com/gabime/spdlog
 	branch = v1.13.0
+[submodule "deps/dxtk"]
+	path = deps/dxtk
+	url = https://github.com/microsoft/DirectXTK
+	branch = feb2024

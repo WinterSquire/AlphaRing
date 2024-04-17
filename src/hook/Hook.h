@@ -1,7 +1,7 @@
 #ifndef ALPHA_RING_HOOK_H
 #define ALPHA_RING_HOOK_H
 
-#include "../core/ISystem.h"
+#include "core/ISystem.h"
 
 extern ISystem* g_pHook;
 

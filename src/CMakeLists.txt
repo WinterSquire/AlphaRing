@@ -18,27 +18,26 @@ set(MCC_DIR "E:\\SteamLibrary\\steamapps\\common\\Halo The Master Chief Collecti
 
 set(LIBRARY_LIST
         minhook imgui lua spd_log tinyxml2
-        Version
+        Version DirectXTK
 )
 
 add_compile_definitions(XML_NAME="${XML_NAME}")
 add_compile_definitions(WRAPPER_DLL_NAME="${WRAPPER_DLL_NAME}")
 
 # include directory
-include_directories(${COMMON_DIR}/include)
-include_directories(${DIRECTX11_HOOK_DIR}/include)
-include_directories(${LIB_HALO3_DIR}/include)
-include_directories(${MCC_HOOK_DIR}/include)
-include_directories(${HALO3_HOOK_DIR}/include)
-
 include_directories(${IMGUI_DIR})
 include_directories(${TINYXML2_DIR})
 include_directories(${MINHOOK_DIR}/include)
 include_directories(${SPD_LOG_DIR}/include)
+include_directories(${DXTK_DIR}/Inc)
+
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
 file(GLOB_RECURSE CORE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/*.asm)
 
 add_library(${WRAPPER_NAME} SHARED ${CORE_SRC})
+
+target_link_directories(${WRAPPER_NAME} PUBLIC ${DXTK_DIR}/Bin/Desktop_2022/x64/${CMAKE_BUILD_TYPE})
 
 target_link_libraries(${WRAPPER_NAME} PUBLIC ${LIBRARY_LIST})
 

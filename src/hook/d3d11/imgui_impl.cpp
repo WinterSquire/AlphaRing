@@ -18,8 +18,10 @@ ID3D11DeviceContext*	pContext;
 ID3D11RenderTargetView*	mainRenderTargetView;
 
 ImmediateGUI::IMGUIContextCallback_t pCallback;
-
+IDXGISwapChain*      ImmediateGUI::GetSwapChain(){return pSwapChain;}
+ID3D11Device*		 ImmediateGUI::GetDevice(){return pDevice;}
 ID3D11DeviceContext* ImmediateGUI::GetImmediateContext() {return pContext;}
+ID3D11RenderTargetView** ImmediateGUI::GetTargetView(){return &mainRenderTargetView;}
 
 bool ImmediateGUI::Initialized() {return bInitialized;}
 

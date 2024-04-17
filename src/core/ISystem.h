@@ -1,7 +1,7 @@
 #ifndef ALPHA_RING_ISYSTEM_H
 #define ALPHA_RING_ISYSTEM_H
 
-#include "Log.h"
+#include "common.h"
 
 class ISystem {
 public:

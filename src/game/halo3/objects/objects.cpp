@@ -7,5 +7,6 @@ bool Objects_t::IsUnit() {
 }
 
 __int16 Objects_t::size() {
-    return *(__int16*)(*(__int64*)(Native::getTLS().get_hModule() + 0x810D20 + type * 8) + 0x6);
+    return 0;
+//    return *(__int16*)(*(__int64*)(NativeInfo::getTLS().get_hModule() + 0x810D20 + type * 8) + 0x6);
 }
