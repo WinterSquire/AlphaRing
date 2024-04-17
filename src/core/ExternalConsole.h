@@ -1,12 +1,9 @@
 #ifndef ALPHA_RING_EXTERNALCONSOLE_H
 #define ALPHA_RING_EXTERNALCONSOLE_H
 
+#include "ISystem.h"
 
-class ExternalConsole {
-public:
-    static bool Init();
-    static void Shutdown();
-};
-
+extern ISystem* g_pExternalConsole;
+inline ISystem* ExternalConsole() {return g_pExternalConsole;}
 
 #endif //ALPHA_RING_EXTERNALCONSOLE_H

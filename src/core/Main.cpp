@@ -1,47 +1,40 @@
 #include <Windows.h>
 
 #include "Log.h"
+#include "ISystem.h"
 
 #include "ExternalConsole.h"
 #include "../hook/Hook.h"
 #include "../ui/Interface.h"
 
-void StartupThread(HANDLE hModule) {
-    bool result;
+bool Prologue() {
+    if (ExternalConsole()->initialize() != ISystem::SYS_OK) return false;
+    if (Hook()->initialize() != ISystem::SYS_OK) return false;
+    if (Interface()->initialize() != ISystem::SYS_OK) return false;
+    return true;
+}
 
-    if (ExternalConsole::Init() == false) {
-        LOG_ERROR("ExternalConsole Failed To Initialize!");
-        return;
-    }
-
-    LOG_INFO("ExternalConsole Initialized!");
-
-    if (Hook::Init() == false) {
-        LOG_ERROR("Game Hook Failed To Initialize!");
-        return;
-    }
-
-    LOG_INFO("Game Hook Initialized!");
-
-    if (sInterface.initialize() != System::SYS_OK) {
-        LOG_ERROR("Interface Failed To Initialize!");
-        return;
-    }
-
-    LOG_INFO("Interface Initialized!");
-
-    LOG_INFO("Initialize Success!");
-
+signed Main() {
     while (true) {
 
     }
 
-    Hook::Shutdown();
-
-    ExternalConsole::Shutdown();
-
-    sInterface.shutdown();
+    return 0;
 }
+
+bool Epilogue() {
+    LOG_INFO("Shutdown");
+
+    Hook()->shutdown();
+
+    ExternalConsole()->shutdown();
+
+    Interface()->shutdown();
+
+    return true;
+}
+
+void StartupThread(HANDLE hModule) {if (Prologue()) Main(); Epilogue();}
 
 BOOL APIENTRY DllMain(HANDLE handle, DWORD reason, LPVOID reserved) {
     if (reason == DLL_PROCESS_ATTACH) {

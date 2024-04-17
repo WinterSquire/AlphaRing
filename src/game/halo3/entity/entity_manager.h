@@ -10,8 +10,6 @@ public:
     INDEX getAbsoluteIndex(Index index);
     Entity* getEntity(Index index);
 
-
-
     //1.3073.0
     enum class EntityOffset : __int64 {
         ACTOR = 0x8,
@@ -32,6 +30,7 @@ public:
     inline __int32 entitySize(){return m_entitySize;};
     inline __int32 length(){return m_count = *(__int32*)(m_root + 0x3C);};
     inline __int64 begin(){return m_begin;}
+    inline __int64 getRoot() {return m_root;}
 
 private:
     __int64 m_root;
@@ -43,6 +42,7 @@ private:
 
 template<typename Entity>
 bool EntityManager<Entity>::setRoot(__int64 root) {
+    if (root == 0) return false;
     m_root = root;
     m_entitySize = *(__int32*)(m_root + 0x24);
     m_count = *(__int32*)(m_root + 0x3C);

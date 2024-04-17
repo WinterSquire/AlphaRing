@@ -1,14 +1,10 @@
 #ifndef ALPHA_RING_INTERFACE_H
 #define ALPHA_RING_INTERFACE_H
 
-#include "../core/System.h"
+#include "../core/ISystem.h"
 
-class Interface : public System {
-public:
-    eStatus initialize() override;
-    eStatus shutdown() override;
-};
+extern ISystem* g_pInterface;
 
-static Interface sInterface;
+inline ISystem* Interface() {return g_pInterface;}
 
 #endif //ALPHA_RING_INTERFACE_H
