@@ -6,9 +6,9 @@
 
 class ICModuleWatcher : public ISystem {
 public:
-    typedef void(*invoke_t)();
+    typedef void(*invoke_t)(__int64 pModule);
 
-    void setModuleEventInvoke(ModuleInfo::eTitle title, invoke_t func);
+    virtual void setModuleEventInvoke(ModuleInfo::eTitle title, invoke_t func) = 0;
 };
 
 extern ICModuleWatcher* g_pModuleWatcher;

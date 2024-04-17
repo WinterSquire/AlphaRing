@@ -1,0 +1,6 @@
+#ifndef ALPHA_RING_WORLD_H
+#define ALPHA_RING_WORLD_H
+
+
+
+#endif //ALPHA_RING_WORLD_H

@@ -4,9 +4,8 @@
 #include "module.h"
 
 namespace MCCHook {
-    using Callback_t = void(*)(void*);
 
-    bool Initialize(Callback_t load_callback, Callback_t unload_callback);
+    bool Initialize();
     void Shutdown();
 }
 

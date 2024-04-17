@@ -3,9 +3,15 @@
 #include "imgui_impl.h"
 #include "function_table.h"
 
+void drawTest(ID3D11DeviceContext* context) {
+
+}
+
 HRESULT __stdcall Detour::Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
     if (!ImmediateGUI::Initialized()) ImmediateGUI::Initialize(pSwapChain);
+
+    drawTest(ImmediateGUI::GetImmediateContext());
 
     ImmediateGUI::Update();
 
