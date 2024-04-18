@@ -5,7 +5,7 @@
 class ICNativeFunc {
 public:
     // Main Thread
-    virtual bool pushMsg(int player_index, const char* msg, int type = 2) = 0;
+    virtual bool pushMsg(int player_index, const wchar_t* msg, int type = 2) = 0;
 
     // Render Thread
     virtual __int64 draw(__int64 drawType, unsigned int count, void *data, unsigned int size) = 0;

@@ -4,7 +4,7 @@
 
 class CNativeFunc : public ICNativeFunc {
 public:
-    bool pushMsg(int player_index, const char *msg, int type) override;
+    bool pushMsg(int player_index, const wchar_t *msg, int type) override;
     __int64 draw(__int64 drawType, unsigned int count, void *data, unsigned int size) override;
 
     __int64 draw_line(void *data, unsigned int line_count, unsigned int vertex_size) override;
@@ -13,8 +13,8 @@ public:
 static CNativeFunc native_func;
 ICNativeFunc* g_pICNativeFunc = &native_func;
 
-bool CNativeFunc::pushMsg(int player_index, const char *msg, int type) {
-    typedef void (__fastcall* func_t)(__int64 a1, const char *a2, int a3);
+bool CNativeFunc::pushMsg(int player_index, const wchar_t *msg, int type) {
+    typedef void (__fastcall* func_t)(__int64 a1, const wchar_t *a2, int a3);
     static const int OFFSET = 0x2D4884;
 
     if (!(player_index < 4)) return false;

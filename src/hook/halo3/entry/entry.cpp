@@ -9,6 +9,8 @@ const int MAX_ENTRY = 20;
 static int entryCount = 0;
 static Entry* entryArray[MAX_ENTRY];
 
+__int64 Entry::m_hModule = 0;
+
 Entry::Entry(__int64 offset, __int64 pDetour) : m_offset(offset), m_pDetour(pDetour), m_target(0) {
     assert(entryCount < MAX_ENTRY);
     entryArray[entryCount++] = this;
@@ -38,6 +40,8 @@ bool Entry::update_all(__int64 hModule) {
     bool result = true;
 
     if (hModule == 0) return false;
+
+    m_hModule = hModule;
 
     for (int i = 0; i < entryCount; ++i) result &= entryArray[i]->update(hModule);
 
