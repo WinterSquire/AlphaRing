@@ -9,6 +9,8 @@ public:
 
     // Render Thread
     virtual __int64 draw(__int64 drawType, unsigned int count, void *data, unsigned int size) = 0;
+
+    virtual __int64 draw_line(void *data, unsigned int line_count, unsigned int vertex_size);
 };
 
 extern ICNativeFunc* g_pICNativeFunc;

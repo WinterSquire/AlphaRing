@@ -4,14 +4,17 @@
 
 namespace Halo3::Entry::Render { void Prologue(); void Epilogue(); }
 
-struct Vertex {
-    float x,y,z;
-    unsigned int rgba;
-};
+struct Vertex {float x,y,z;unsigned int rgba;};
 
 const Vertex vertex[] {
-        {-0.347, -19.447, 5.936, 0xff00ff00},
-        {-0.347, -19.447, 10, 0xff00ff00},
+        {0, 0, 6, 0xff00ff00},
+        {0, 1, 6, 0xff00ff00},
+
+        {0, 0, 6, 0xff00ff00},
+        {1, 0, 6, 0xff00ff00},
+
+        {1, 0, 6, 0xff00ff00},
+        {0, 1, 6, 0xff00ff00},
 };
 
 void Halo3::Entry::Render::Prologue() {
@@ -19,5 +22,5 @@ void Halo3::Entry::Render::Prologue() {
 }
 
 void Halo3::Entry::Render::Epilogue() {
-    NativeFunc()->draw(1, 1, (void *) vertex, sizeof(Vertex));
+    NativeFunc()->draw_line((void *)vertex, 3, sizeof(Vertex));
 }
