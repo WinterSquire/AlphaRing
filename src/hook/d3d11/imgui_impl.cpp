@@ -56,6 +56,8 @@ void ImmediateGUI::Initialize(IDXGISwapChain* swapChain)
     bInitialized = true;
 }
 
+namespace UI {extern void ContextEntry();}
+
 void ImmediateGUI::Update()
 {
     if (!bInitialized) return;
@@ -65,7 +67,7 @@ void ImmediateGUI::Update()
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    if (pCallback != nullptr) pCallback();
+    UI::ContextEntry();
 
     ImGui::Render();
     pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);

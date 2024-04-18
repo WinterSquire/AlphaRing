@@ -5,12 +5,10 @@
 
 #include "ExternalConsole.h"
 #include "../hook/Hook.h"
-#include "../ui/Interface.h"
 
 bool Prologue() {
     if (ExternalConsole()->initialize() != ISystem::SYS_OK) return false;
     if (Hook()->initialize() != ISystem::SYS_OK) return false;
-    if (Interface()->initialize() != ISystem::SYS_OK) return false;
     return true;
 }
 
@@ -28,8 +26,6 @@ bool Epilogue() {
     Hook()->shutdown();
 
     ExternalConsole()->shutdown();
-
-    Interface()->shutdown();
 
     return true;
 }

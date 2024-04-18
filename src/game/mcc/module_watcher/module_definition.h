@@ -29,8 +29,4 @@ struct ModuleInfo {
     __int64 p_ppCxxFrameHandler3;
 };
 
-struct ModuleSet {
-    ModuleInfo modules[7];
-};
-
 #endif //MCC_MODULE_DEFINITION_H

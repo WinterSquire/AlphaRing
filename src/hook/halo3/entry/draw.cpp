@@ -12,6 +12,8 @@ namespace Halo3::Entry::Draw {
     ::Entry entry{OFFSET, (__int64)detour};
 }
 
+static bool bWireframe = false;
+
 __int64 __fastcall Halo3::Entry::Draw::detour(
         __int64 *a1,
         unsigned int a2,
@@ -20,9 +22,9 @@ __int64 __fastcall Halo3::Entry::Draw::detour(
         unsigned int a5)
 {
     typedef __int64 (__fastcall* func_t)(__int64 *a1, unsigned int a2, __int64 a3, unsigned int a4, unsigned int a5);
-    auto hModule = ::Entry::gethModule();
     auto func = (func_t)entry.getPointerOriginal();
 
+    auto hModule = ::Entry::gethModule();
     auto pDevice = *(ID3D11Device**)(hModule + 0x46BA830);
     auto pContext = *(ID3D11DeviceContext**)(hModule + 0x46BA828);
 
