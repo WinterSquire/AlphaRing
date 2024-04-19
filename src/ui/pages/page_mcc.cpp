@@ -9,9 +9,19 @@ static void mcc_context() {
     ImVec4 color;
     char buffer[256];
 
+    ImGui::BeginGroup();
+    for (int i = 0; i < 7; ++i) {
+        sprintf_s(buffer, "Module(%s):", ModuleInfo::cTitle[i]);
+        ImGui::Text(buffer);
+    }
+    ImGui::EndGroup();
+
+    ImGui::SameLine();
+
+    ImGui::BeginGroup();
     for (int i = 0; i < 7; ++i) {
         auto status = ModuleWatcher()->getModuleStatus((ModuleInfo::eTitle)i);
-        sprintf_s(buffer, "Module(%s):\t%016llx", ModuleInfo::cTitle[i], status.hModule);
+        sprintf_s(buffer, "%016llx", ModuleInfo::cTitle[i], status.hModule);
         ImGui::Text(buffer);
         ImGui::SameLine();
 
@@ -30,6 +40,7 @@ static void mcc_context() {
         ImGui::Text("*");
         ImGui::PopStyleColor(1);
     }
+    ImGui::EndGroup();
 }
 
 static Page page_mcc{1000, "MCC", mcc_context};
