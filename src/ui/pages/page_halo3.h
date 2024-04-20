@@ -1,7 +1,0 @@
-#ifndef ALPHA_RING_PAGE_HALO3_H
-#define ALPHA_RING_PAGE_HALO3_H
-
-
-
-
-#endif //ALPHA_RING_PAGE_HALO3_H

@@ -9,6 +9,7 @@ enum class eEntry : int {
     object = 7,
     clump = 14,
     lights = 24,
+    time = 25,
     vocalization_records = 27,
     recycling_group = 28,
     effect_location = 29,

@@ -64,19 +64,27 @@ void ImmediateGUI::Initialize(IDXGISwapChain* swapChain)
 namespace UI {extern void ContextEntry();}
 
 static bool bShowContext = true;
+bool ImmediateGUI::isVisible() { return bShowContext; }
+
+static bool bRender = false;
+bool ImmediateGUI::getRender() { return bRender; }
+void ImmediateGUI::setRender(bool value) { bRender = value; }
 
 void ImmediateGUI::Update()
 {
     if (!bInitialized) return;
 
-    // NewFrame
-    ImGui_ImplDX11_NewFrame();
-    ImGui_ImplWin32_NewFrame();
-    ImGui::NewFrame();
+    if (!bRender) {
+        // NewFrame
+        ImGui_ImplDX11_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ImGui::NewFrame();
+    }
 
     if (bShowContext) UI::ContextEntry();
     else ImGui::SetMouseCursor(ImGuiMouseCursor_None);
 
+    setRender(false);
     ImGui::Render();
     pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

@@ -1,7 +1,0 @@
-#ifndef ALPHA_RING_PAGE_MCC_H
-#define ALPHA_RING_PAGE_MCC_H
-
-
-
-
-#endif //ALPHA_RING_PAGE_MCC_H
