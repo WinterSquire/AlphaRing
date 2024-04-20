@@ -9,9 +9,14 @@ static void mcc_context() {
     ImVec4 color;
     char buffer[256];
 
+    ImGui::Text("Module Info");
+
+    ImGui::Indent();
+
     ImGui::BeginGroup();
+    ImGui::Text("Name");
     for (int i = 0; i < 7; ++i) {
-        sprintf_s(buffer, "Module(%s):", ModuleInfo::cTitle[i]);
+        sprintf_s(buffer, "%s", ModuleInfo::cTitle[i]);
         ImGui::Text(buffer);
     }
     ImGui::EndGroup();
@@ -19,12 +24,20 @@ static void mcc_context() {
     ImGui::SameLine();
 
     ImGui::BeginGroup();
+    ImGui::Text("Address");
     for (int i = 0; i < 7; ++i) {
         auto status = ModuleWatcher()->getModuleStatus((ModuleInfo::eTitle)i);
-        sprintf_s(buffer, "%016llx", ModuleInfo::cTitle[i], status.hModule);
+        sprintf_s(buffer, "%016llx", status.hModule);
         ImGui::Text(buffer);
-        ImGui::SameLine();
+    }
+    ImGui::EndGroup();
 
+    ImGui::SameLine();
+
+    ImGui::BeginGroup();
+    ImGui::Text("Status");
+    for (int i = 0; i < 7; ++i) {
+        auto status = ModuleWatcher()->getModuleStatus((ModuleInfo::eTitle)i);
         switch ((int)(status.hModule == 0) + (status.errorCode != 0)) {
             case 0:
                 color = {0.0f, 1.0f, 0.0f, 1.0f};
@@ -41,6 +54,8 @@ static void mcc_context() {
         ImGui::PopStyleColor(1);
     }
     ImGui::EndGroup();
+
+    ImGui::Unindent();
 }
 
 static Page page_mcc{1000, "MCC", mcc_context};

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <root>
     <module name="halo3.dll" version="1.3385.0.0">
-
+        <address name="p_tag_scnr" offset="0xA45A08"/>
+        <address name="p_tag_global" offset="0xA45968"/>
     </module>
 
     <module name="MCC-Win64-Shipping.exe" version="1.3385.0.0">

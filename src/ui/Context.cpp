@@ -7,7 +7,6 @@
 
 namespace UI {void ContextEntry();}
 
-
 const int MAX_PAGE = 32;
 static Page* pages[MAX_PAGE];
 static unsigned int page_count;
@@ -21,14 +20,17 @@ Page::Page(int weight, const char *name, callback_t callback)
 }
 
 void setStyle() {
+    static bool bFirst = true;
     ImGuiStyle& style = ImGui::GetStyle();
-
+    if (!bFirst) return;
+    bFirst = false;
+    ImGui::SetWindowSize({1024, 720});
 }
 
 void left_pane_context() {
     if (page_count == 0) return;
 
-    float height = ImGui::GetWindowHeight() / page_count;
+    float height = (ImGui::GetWindowHeight() - 100.0f) / page_count;
 
     for (int i = 0; i < page_count; ++i) {
         if (ImGui::Selectable(pages[i]->name, i == selected_page, 0, {0, height}))
@@ -48,7 +50,8 @@ void UI::ContextEntry() {
 
     // Left
     {
-        ImGui::BeginChild("left pane", {150, 0}, ImGuiChildFlags_Border);
+        auto width = ImGui::GetWindowWidth() * 0.25f;
+        ImGui::BeginChild("left pane", {width, 0}, ImGuiChildFlags_Border);
         left_pane_context();
         ImGui::EndChild();
     }

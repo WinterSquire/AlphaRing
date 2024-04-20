@@ -46,17 +46,24 @@ void ImmediateGUI::Initialize(IDXGISwapChain* swapChain)
     oWndProc = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR) WndProc);
 
     // IMGUI初始化
+    float scale = 2.0f;
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
     io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
     io.MouseDrawCursor = true;
+    io.IniFilename = nullptr;
+    io.Fonts->Clear();
+    io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 16.0f * scale);
+    ImGui::GetStyle().ScaleAllSizes(scale);
+
     ImGui_ImplWin32_Init(window);
     ImGui_ImplDX11_Init(pDevice, pContext);
-
     bInitialized = true;
 }
 
 namespace UI {extern void ContextEntry();}
+
+static bool bShowContext = true;
 
 void ImmediateGUI::Update()
 {
@@ -67,7 +74,8 @@ void ImmediateGUI::Update()
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    UI::ContextEntry();
+    if (bShowContext) UI::ContextEntry();
+    else ImGui::SetMouseCursor(ImGuiMouseCursor_None);
 
     ImGui::Render();
     pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
@@ -104,6 +112,23 @@ LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
         return true;
+
+    switch (uMsg) {
+        case WM_KEYDOWN:{
+            switch (wParam) {
+                case VK_F4:{
+                    bShowContext = !bShowContext;
+                    break;
+                }
+            }
+            break;
+        }
+        case WM_KEYUP:{
+
+        }
+        default:
+            break;
+    }
 
     return CallWindowProc(oWndProc, hWnd, uMsg, wParam, lParam);
 }

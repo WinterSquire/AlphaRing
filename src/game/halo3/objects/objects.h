@@ -64,4 +64,12 @@ struct Objects_t {
 };
 
 
+class ICObjects {
+public:
+    virtual int getObjectCount() = 0;
+};
+
+extern ICObjects* g_pICObjects;
+inline ICObjects* Objects() {return g_pICObjects;}
+
 #endif //ALPHA_RING_OBJECTS_H
