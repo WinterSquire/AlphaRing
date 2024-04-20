@@ -1,5 +1,0 @@
-#ifndef ALPHA_RING_CONTEXT_H
-#define ALPHA_RING_CONTEXT_H
-
-
-#endif //ALPHA_RING_CONTEXT_H

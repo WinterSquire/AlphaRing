@@ -61,33 +61,51 @@ void ImmediateGUI::Initialize(IDXGISwapChain* swapChain)
     bInitialized = true;
 }
 
-namespace UI {extern void ContextEntry();}
-
 static bool bShowContext = true;
 bool ImmediateGUI::isVisible() { return bShowContext; }
 
 static bool bRender = false;
-bool ImmediateGUI::getRender() { return bRender; }
-void ImmediateGUI::setRender(bool value) { bRender = value; }
+
+void ImmediateGUI::NewFrame() {
+    if (bRender) return;
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+    bRender = true;
+}
+
+void ImmediateGUI::Render() {
+    bRender = false;
+    ImGui::Render();
+    pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+}
+
+static void setStyle() {
+    static bool bFirst = true;
+    ImGuiStyle& style = ImGui::GetStyle();
+    if (!bFirst) return;
+    bFirst = false;
+    ImGui::SetWindowSize({800, 600});
+}
+
+namespace MCC::IMGUI {extern void page_mcc();}
 
 void ImmediateGUI::Update()
 {
     if (!bInitialized) return;
 
-    if (!bRender) {
-        // NewFrame
-        ImGui_ImplDX11_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        ImGui::NewFrame();
-    }
+    ImmediateGUI::NewFrame();
 
-    if (bShowContext) UI::ContextEntry();
+    if (bShowContext) {
+        ImGui::Begin("Alpha Ring");
+        setStyle();
+        MCC::IMGUI::page_mcc();
+        ImGui::End();
+    }
     else ImGui::SetMouseCursor(ImGuiMouseCursor_None);
 
-    setRender(false);
-    ImGui::Render();
-    pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
-    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    ImmediateGUI::Render();
 }
 
 // release MainRenderTargetView

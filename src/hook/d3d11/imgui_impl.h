@@ -14,14 +14,16 @@ namespace ImmediateGUI {
     void ReleaseMainRenderTargetView();
     void CreateMainRenderTargetView();
 
-    bool getRender();
-    void setRender(bool value);
+    void Render();
+    void NewFrame();
     bool isVisible();
 
     IDXGISwapChain* GetSwapChain();
     ID3D11Device* GetDevice();
     ID3D11DeviceContext* GetImmediateContext();
     ID3D11RenderTargetView** GetTargetView();
+
+    void NewFrame();
 };
 
 

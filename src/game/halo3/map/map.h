@@ -12,7 +12,7 @@ public:
     };
 
     virtual void setMapInfo(Info* info) = 0;
-    virtual const LockedResource<Info> getMapInfo() = 0;
+    virtual Info* getMapInfo() = 0;
 };
 
 extern ICMap* g_pICMap;

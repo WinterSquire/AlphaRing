@@ -1,21 +1,10 @@
-#include "Context.h"
-
-#include <cstdio>
+#include "page_mcc.h"
 
 #include "imgui.h"
-#include "game/mcc/module_watcher/module_watcher.h"
 
-namespace UI {void ContextEntry();}
+#include "../module_watcher/module_watcher.h"
 
-void setStyle() {
-    static bool bFirst = true;
-    ImGuiStyle& style = ImGui::GetStyle();
-    if (!bFirst) return;
-    bFirst = false;
-    ImGui::SetWindowSize({1024, 720});
-}
-
-static void mcc_context() {
+void MCC::IMGUI::page_mcc() {
     ImVec4 color;
     char buffer[256];
 
@@ -66,11 +55,4 @@ static void mcc_context() {
     ImGui::EndGroup();
 
     ImGui::Unindent();
-}
-
-void UI::ContextEntry() {
-    ImGui::Begin("Alpha Ring");
-    setStyle();
-    mcc_context();
-    ImGui::End();
 }
