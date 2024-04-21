@@ -6,6 +6,7 @@
 class ICNativeFunc {
 public:
     // Main Thread
+    // Don't use these functions directly in Render Thread!
     virtual bool player_push_message(__int16 player_index, const wchar_t* msg, int type = 2) = 0;
     virtual __int64 player_possess(INDEX player_index, INDEX target) = 0;
 };
