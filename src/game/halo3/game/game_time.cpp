@@ -4,12 +4,12 @@
 
 class CTime : public ICTime {
 public:
-    Time_t *getGameTime() override;
+    game_time_t *getGameTime() override;
 };
 
 static CTime time;
 ICTime* g_pICTime = &time;
 
-Time_t* CTime::getGameTime() {
-    return (Time_t*)NativeInfo()->getEntryAddress((int)eEntry::time);
+game_time_t* CTime::getGameTime() {
+    return (game_time_t*)NativeInfo()->getEntryAddress((int)eEntry::time);
 }

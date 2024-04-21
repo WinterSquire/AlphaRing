@@ -63,7 +63,7 @@ struct TagBlock
     __int32 un;
 };
 
-struct  NavPoint
+struct NavPoint
 {
     INDEX object = -1;
     unsigned int widget[4]{0x00000000,0xFFFFFFFF,0x00000000,0x00000000};
@@ -128,5 +128,20 @@ namespace COLOR3
         return ((red << 16) | (green << 8) | blue);
     }
 }
+
+template<typename T>
+struct entity_manager_t {
+    char m_name[0x20];  // 0x0
+    __int32 m_un0;      // 0x20
+    __int32 m_sizeof;   // 0x24
+    __int32 m_un1[5];   // 0x28
+    __int32 m_capacity; // 0x3C
+    __int32 m_size;     // 0x40
+    __int32 m_un2;      // 0x44
+    __int64 m_data;     // 0x48
+
+    inline T* get(__int16 index) const { return (T*)(m_data + (__int64)m_sizeof * (__int16)index); }
+    inline __int32 INDEX(__int16 index) const { return ((__int32)((__int16)(m_data + index * m_sizeof)) << 16) | index;}
+};
 
 #endif //ALPHA_RING_TYPE_H

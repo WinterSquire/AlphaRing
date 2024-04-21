@@ -3,7 +3,7 @@
 
 #include <windows.h>
 
-#include "../map/map.h"
+#include "game/halo3/game/map.h"
 
 namespace Halo3::Entry::Engine {
     void Prologue() {

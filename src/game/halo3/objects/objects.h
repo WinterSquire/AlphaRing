@@ -1,9 +1,20 @@
 #ifndef ALPHA_RING_OBJECTS_H
 #define ALPHA_RING_OBJECTS_H
 
-#include "../base/type.h"
+#include "../base/base.h"
 
-struct Objects_t {
+struct ObjectInfo;
+
+class ICObjects {
+public:
+    virtual entity_manager_t<ObjectInfo>* getObjectManager() = 0;
+
+};
+
+extern ICObjects* g_pICObjects;
+inline ICObjects* Objects() {return g_pICObjects;}
+
+struct objects_t {
     Datum datum;//0x0
     __int8 v0[8];
     INDEX next_object_index;//0xC
@@ -59,17 +70,17 @@ struct Objects_t {
         EFFECTSCENERY
     };
 
-    bool IsUnit();
+    inline bool isUnit() { return type & (BIPED|GIANT|VEHICLE); }
     __int16 size();
+
 };
 
+struct ObjectInfo {
+    __int64 v0;
+    __int64 v1;
+    objects_t* address;
 
-class ICObjects {
-public:
-    virtual int getObjectCount() = 0;
+    inline bool isValid() {return address != nullptr;}
 };
-
-extern ICObjects* g_pICObjects;
-inline ICObjects* Objects() {return g_pICObjects;}
 
 #endif //ALPHA_RING_OBJECTS_H
