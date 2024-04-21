@@ -1,16 +1,13 @@
 #ifndef ALPHA_RING_NATIVE_FUNC_H
 #define ALPHA_RING_NATIVE_FUNC_H
 
+#include "../base/base.h"
 
 class ICNativeFunc {
 public:
     // Main Thread
-    virtual bool pushMsg(int player_index, const wchar_t* msg, int type = 2) = 0;
-
-    // Render Thread
-    virtual __int64 draw(__int64 drawType, unsigned int count, void *data, unsigned int size) = 0;
-
-    virtual __int64 draw_line(void *data, unsigned int line_count, unsigned int vertex_size);
+    virtual bool player_push_message(__int16 player_index, const wchar_t* msg, int type = 2) = 0;
+    virtual __int64 player_possess(INDEX player_index, INDEX target) = 0;
 };
 
 extern ICNativeFunc* g_pICNativeFunc;

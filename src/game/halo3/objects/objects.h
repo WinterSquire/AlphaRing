@@ -71,6 +71,7 @@ struct objects_t {
     };
 
     inline bool isUnit() { return type & (BIPED|GIANT|VEHICLE); }
+    inline void kill() { damage_flags |= 0x40;}
     __int16 size();
 
 };

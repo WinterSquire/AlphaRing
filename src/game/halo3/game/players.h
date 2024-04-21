@@ -8,8 +8,9 @@ struct player_action_t;
 
 class ICPlayers {
 public:
-    virtual player_info_t* getPlayerInfo(int index) = 0;
     virtual player_action_t* getPlayerAction() = 0;
+    virtual entity_manager_t<player_info_t>* getPlayerManager() = 0;
+
 };
 
 extern ICPlayers* g_pICPlayers;
@@ -22,7 +23,7 @@ struct player_action_t {
 
 struct player_info_t {
     __int8 v0[0x28];
-    INDEX object_INDEX; // 0x28
+    INDEX object_INDEX; // 0x28 can't modify directly
     INDEX restore_INDEX; // 0x2C
     __int8 v1[0x1C];
     Vector3 position;// 0x4C

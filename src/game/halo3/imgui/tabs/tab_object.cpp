@@ -14,19 +14,20 @@ void print_object(__int16 index) {
 )";
     auto mng = Objects()->getObjectManager();
     if (mng == 0 || index < 0 || index > mng->m_capacity) return;
-    auto object = mng->get(index)->address;
-    if (object == nullptr) return;
+    auto p_object = mng->get(index)->address;
+    if (p_object == nullptr) return;
 
     sprintf(buffer, format,
-            object->datum, object->parent_object_index, object->next_object_index,
-            object->position.x, object->position.y, object->position.z,
-            eObjectTypeName[object->type]
+            p_object->datum, p_object->parent_object_index, p_object->next_object_index,
+            p_object->position.x, p_object->position.y, p_object->position.z,
+            eObjectTypeName[p_object->type]
         );
 
     ImGui::Text(buffer);
-    ImGui::SliderFloat("Scale", &object->scale, 0.001f, 100.0f);
-    ImGui::SliderFloat("Health", &object->health, 0.001f, 100.0f);
-    ImGui::SliderFloat("Shield", &object->shield, 0.0f, 100.0f);
+    ImGui::SliderFloat("Scale", &p_object->scale, 0.001f, 10.0f);
+    ImGui::SliderFloat("Health", &p_object->health, 0.001f, 100.0f);
+    ImGui::SliderFloat("Shield", &p_object->shield, 0.0f, 100.0f);
+    if (ImGui::Button("Kill")) p_object->kill();
 }
 
 int selected_object = -1;

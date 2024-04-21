@@ -4,17 +4,16 @@
 
 class CPlayers : public ICPlayers {
 public:
-    player_info_t *getPlayerInfo(int index) override;
     player_action_t *getPlayerAction() override;
+
+    entity_manager_t<player_info_t> *getPlayerManager() override;
 };
 
 static CPlayers players;
 ICPlayers* g_pICPlayers = &players;
 
-player_info_t* CPlayers::getPlayerInfo(int index) {
-    auto entry = NativeInfo()->getEntryAddress((int)eEntry::players);
-    if (entry == 0) return nullptr;
-    return *(player_info_t**)(entry + 0x48) + index;
+entity_manager_t<player_info_t> *CPlayers::getPlayerManager() {
+    return (entity_manager_t<player_info_t>*)NativeInfo()->getEntryAddress((int)eEntry::players);
 }
 
 player_action_t *CPlayers::getPlayerAction() {
