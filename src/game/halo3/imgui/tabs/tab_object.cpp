@@ -30,7 +30,9 @@ void print_object(__int16 index) {
     if (ImGui::Button("Kill")) p_object->kill();
 }
 
-int selected_object = -1;
+static int selected_object = -1;
+
+static bool bFilter[14];
 
 void Halo3::IMGUI::Tabs::tab_object() {
     char buffer[1024];
@@ -44,7 +46,7 @@ void Halo3::IMGUI::Tabs::tab_object() {
         ImGui::BeginChild("Object List", {ImGui::GetWindowWidth() * 0.4f, 0});
         for (int i = 0; i < mng->m_capacity; ++i) {
             auto object = mng->get(i)->address;
-            if (object == nullptr) continue;
+            if (object == nullptr || !bFilter[object->type]) continue;
             auto tag_name = TagFiles()->getTagName(object->datum);
             if (tag_name == nullptr) continue;
             tag_name = strrchr(tag_name, '\\');
@@ -66,5 +68,11 @@ void Halo3::IMGUI::Tabs::tab_object() {
     ImGui::Separator();
     sprintf(buffer, "Capacity: %d\tSize: %d", mng->m_capacity, mng->m_size);
     ImGui::Text(buffer);
+
+    for (int i = 0; i < sizeof(bFilter); ++i) {
+        ImGui::SameLine();
+        if (ImGui::Selectable(eObjectTypeName[i], bFilter[i], 0, {50,0}))
+            bFilter[i] = !bFilter[i];
+    }
 }
 
