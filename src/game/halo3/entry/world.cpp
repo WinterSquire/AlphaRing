@@ -1,36 +1,36 @@
 #include "../native/native.h"
 
 #include "common.h"
+#include <queue>
+#include <mutex>
 
-namespace Halo3::Entry::World { void Prologue(); void Epilogue(); }
-
-static int tick = 0;
-
-static bool bInit = false;
-
-bool bemit = false;
-
-void world_test() {
-    bemit = true;
+namespace Halo3::Entry::World {
+    void Prologue(); void Epilogue();
+    void ExecuteTask(); void AddTask(std::function<void()> func);
+    std::queue<std::function<void()>> tasks; std::mutex tasks_mutex;
 }
 
 void Halo3::Entry::World::Prologue() {
-    if (bemit) {
-        NativeFunc()->player_push_message(0, L"Respawn");
-        NativeFunc()->player_possess(0, NONE);
-        bemit = false;
-    }
-
-    if (bInit) return;
-    if (tick != 300) ++tick;
-    else {
-        NativeFunc()->player_push_message(0, L"Welcome");
-        bInit = true;
-        tick = 0;
-    }
+    ExecuteTask();
 }
 
 void Halo3::Entry::World::Epilogue() {
 
+}
+
+
+void Halo3::Entry::World::AddTask(std::function<void()> func) {
+    std::unique_lock<std::mutex> lock(tasks_mutex);
+    tasks.push(func);
+}
+
+void Halo3::Entry::World::ExecuteTask() {
+    std::function<void()> func = nullptr;
+
+    std::unique_lock<std::mutex> lock(tasks_mutex);
+    if (!tasks.empty()) { func = tasks.front();tasks.pop();}
+    lock.unlock();
+
+    if (func != nullptr) func();
 }
 

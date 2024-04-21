@@ -1,12 +1,13 @@
 #include "tabs.h"
 
+#include <functional>
 
 #include "../../base/base.h"
 #include "../../native/native.h"
 #include "../../game/players.h"
 #include "../../objects/objects.h"
 
-extern void world_test();
+namespace Halo3::Entry::World {extern void AddTask(std::function<void()> func);}
 
 static void print_player(int index) {
     char buffer[1024];
@@ -28,7 +29,9 @@ Player %d
         );
     ImGui::Text(buffer);
     if (ImGui::Button("Respawn")) {
-        world_test();
+        Halo3::Entry::World::AddTask([index] {
+            NativeFunc()->player_possess(index, NONE);
+        });
     }
 }
 
