@@ -61,29 +61,6 @@ enum eHorizontalJustification : unsigned int
     HorizontalJustification_Center
 };
 
-enum eSkull : unsigned int
-{
-    //Primary
-    SKULL_IRON,
-    SKULL_BLACKEYE,
-    SKULL_TOUGHLUCK,
-    SKULL_CATCH,
-    SKULL_FOG,
-    SKULL_FAMINE,
-    SKULL_THUNDERSTORM,
-    SKULL_TILT,
-    SKULL_MYTHIC,
-    //Secondary
-    SKULL_ASSASSIN,
-    SKULL_BLIND,
-    SKULL_COWBELL,
-    SKULL_GRUNTBIRTHDAYPARTY,
-    SKULL_IWHBYD,
-    //etc
-    SKULL_ACROPHOBIA,
-    SKULL_BANDANA
-};
-
 enum eModelChoice : unsigned int
 {
     MODELCHOICE_SP_MASTERCHIEF,

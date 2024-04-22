@@ -25,8 +25,10 @@ void MCC::IMGUI::page_mcc() {
     ImGui::BeginGroup();
     ImGui::Text("Address");
     for (int i = 0; i < 7; ++i) {
-        auto status = ModuleWatcher()->getModuleStatus((ModuleInfo::eTitle)i);
-        sprintf_s(buffer, "%016llx", status.hModule);
+        {
+            auto status = ModuleWatcher()->getModuleStatus((ModuleInfo::eTitle)i);
+            sprintf_s(buffer, "%016llx", status.get().hModule);
+        }
         ImGui::Text(buffer);
     }
     ImGui::EndGroup();
@@ -36,8 +38,12 @@ void MCC::IMGUI::page_mcc() {
     ImGui::BeginGroup();
     ImGui::Text("Status");
     for (int i = 0; i < 7; ++i) {
-        auto status = ModuleWatcher()->getModuleStatus((ModuleInfo::eTitle)i);
-        switch ((int)(status.hModule == 0) + (status.errorCode != 0)) {
+        int code;
+        {
+            auto status = ModuleWatcher()->getModuleStatus((ModuleInfo::eTitle)i);
+            code = (int)(status.get().hModule == 0) + (status.get().errorCode != 0);
+        }
+        switch (code) {
             case 0:
                 color = {0.0f, 1.0f, 0.0f, 1.0f};
                 break;

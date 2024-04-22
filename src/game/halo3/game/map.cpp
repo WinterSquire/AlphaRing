@@ -1,25 +1,18 @@
 #include "map.h"
 
+#include "../native/native.h"
+
 #include <cstring>
 
 class CMap : public ICMap {
 public:
-    void setMapInfo(Info *info) override;
-    Info* getMapInfo() override;
-
-private:
-    Info m_info;
+    map_t *getMap() override;
 
 };
 
-static CMap map;
-ICMap* g_pICMap = &map;
+static CMap s_instance;
+ICMap* g_pICMap = &s_instance;
 
-void CMap::setMapInfo(ICMap::Info *info) {
-    if (info == nullptr) memset(&m_info, 0, sizeof(Info));
-    else memcpy(&m_info, info, sizeof(Info));
-}
-
-ICMap::Info* CMap::getMapInfo() {
-    return &m_info;
+map_t *CMap::getMap() {
+    return (map_t*)NativeInfo()->getEntryAddress((int)eEntry::map);
 }

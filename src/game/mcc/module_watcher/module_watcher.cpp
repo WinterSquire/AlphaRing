@@ -11,10 +11,7 @@ class CModuleWatcher : public ICModuleWatcher {
 public:
     eStatus initialize() override {return SYS_OK;}
     eStatus shutdown() override {return SYS_OK;}
-    ModuleInfo& getModuleStatus(ModuleInfo::eTitle title) const override {
-        std::lock_guard<std::mutex> lock(mutex);
-        return modules[title];
-    }
+    LockedResource<ModuleInfo> getModuleStatus(ModuleInfo::eTitle title) const override {return {mutex, modules[title]};}
 };
 
 static CModuleWatcher moduleWatcher;
