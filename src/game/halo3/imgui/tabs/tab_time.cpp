@@ -1,8 +1,18 @@
-#include "tabs.h"
+#include "../basic_widget.h"
 
 #include "game/halo3/game/game_time.h"
 
-void Halo3::IMGUI::Tabs::tab_time() {
+class TabTime : public BasicWidget {
+public:
+    TabTime(const char* name) : BasicWidget(name) {}
+    void render() override;
+
+};
+
+static TabTime s_instance("Time");
+BasicWidget* tab_time = &s_instance;
+
+void TabTime::render() {
     char buffer[1024];
     auto p_time = Time()->getGameTime();
     __int16 tick_per_second = 0;
@@ -17,4 +27,3 @@ void Halo3::IMGUI::Tabs::tab_time() {
     sprintf(buffer, "Game Time: %d\nTick Per Second: %hd\nSpeed: %.2f", game_time, tick_per_second, speed);
     ImGui::Text(buffer);
 }
-

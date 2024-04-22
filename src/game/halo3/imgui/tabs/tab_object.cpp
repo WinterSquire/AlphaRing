@@ -1,40 +1,26 @@
-#include "tabs.h"
+#include "../basic_widget.h"
 
+#include "game/halo3/native/native.h"
 #include "game/halo3/objects/objects.h"
 #include "game/halo3/tag_files/tag_files.h"
 
-void print_object(__int16 index) {
-    char buffer[1024];
-    const char* format = R"(
-    Datum: %X
-    Parent Object: %X
-    Child Object: %X
-    Position: %.2f %.2f %.2f
-    Type: %s
-)";
-    auto mng = Objects()->getObjectManager();
-    if (mng == 0 || index < 0 || index > mng->m_capacity) return;
-    auto p_object = mng->get(index)->address;
-    if (p_object == nullptr) return;
+class TabObject : public BasicWidget {
+public:
+    TabObject(const char* name) : BasicWidget(name) {}
+    void render() override;
 
-    sprintf(buffer, format,
-            p_object->datum, p_object->parent_object_index, p_object->next_object_index,
-            p_object->position.x, p_object->position.y, p_object->position.z,
-            eObjectTypeName[p_object->type]
-        );
+    static void print_object(__int16 index);
 
-    ImGui::Text(buffer);
-    ImGui::SliderFloat("Scale", &p_object->scale, 0.001f, 10.0f);
-    ImGui::SliderFloat("Health", &p_object->health, 0.001f, 100.0f);
-    ImGui::SliderFloat("Shield", &p_object->shield, 0.0f, 100.0f);
-    if (ImGui::Button("Kill")) p_object->kill();
-}
+private:
+    bool bFilter[14];
+    int selected_object = -1;
 
-static int selected_object = -1;
+};
 
-static bool bFilter[14];
+static TabObject s_instance("Object");
+BasicWidget* tab_object = &s_instance;
 
-void Halo3::IMGUI::Tabs::tab_object() {
+void TabObject::render() {
     char buffer[1024];
     auto mng = Objects()->getObjectManager();
     if (mng == nullptr) return;
@@ -71,8 +57,37 @@ void Halo3::IMGUI::Tabs::tab_object() {
 
     for (int i = 0; i < sizeof(bFilter); ++i) {
         ImGui::SameLine();
-        if (ImGui::Selectable(eObjectTypeName[i], bFilter[i], 0, {50,0}))
+        if (ImGui::Selectable(eObjectTypeName[i], bFilter[i], 0, {100,0}))
             bFilter[i] = !bFilter[i];
     }
 }
 
+void TabObject::print_object(__int16 index) {
+    char buffer[1024];
+    const char* format = R"(
+    Datum: %X
+    Parent Object: %X
+    Child Object: %X
+    Position: %.2f %.2f %.2f
+    Type: %s
+)";
+    auto mng = Objects()->getObjectManager();
+    if (mng == nullptr || index < 0 || index > mng->m_capacity) return;
+    auto p_object = mng->get(index)->address;
+    if (p_object == nullptr) return;
+
+    sprintf(buffer, format,
+            p_object->datum, p_object->parent_object_index, p_object->next_object_index,
+            p_object->position.x, p_object->position.y, p_object->position.z,
+            eObjectTypeName[p_object->type]
+    );
+
+    ImGui::Text(buffer);
+    ImGui::SliderFloat("Scale", &p_object->scale, 0.001f, 10.0f);
+    ImGui::SliderFloat("Health", &p_object->health, 0.001f, 100.0f);
+    ImGui::SliderFloat("Shield", &p_object->shield, 0.0f, 100.0f);
+    if (ImGui::Button("Kill")) p_object->kill();
+    if (p_object->isUnit() && ImGui::Button("Possess")) setState([index]{
+       NativeFunc()->player_possess(0, index);
+    });
+}

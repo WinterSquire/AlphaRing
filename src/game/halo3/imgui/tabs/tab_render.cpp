@@ -1,11 +1,20 @@
-#include "tabs.h"
+#include "../basic_widget.h"
 
-#include "imgui.h"
-#include "../../render/render.h"
+#include "game/halo3/render/render.h"
 
 namespace Halo3::Entry::Draw {extern bool getWireFrame();extern void setWireFrame(bool value);}
 
-void Halo3::IMGUI::Tabs::tab_render() {
+class TabRender : public BasicWidget {
+public:
+    TabRender(const char* name) : BasicWidget(name) {}
+    void render() override;
+
+};
+
+static TabRender s_instance("Render");
+BasicWidget* tab_render = &s_instance;
+
+void TabRender::render() {
     bool bWireFrame = Halo3::Entry::Draw::getWireFrame();
     if (ImGui::Checkbox("Wireframe", &bWireFrame))
         Halo3::Entry::Draw::setWireFrame(bWireFrame);

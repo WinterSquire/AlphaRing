@@ -70,7 +70,7 @@ struct objects_t {
         EFFECTSCENERY
     };
 
-    inline bool isUnit() { return type & (BIPED|GIANT|VEHICLE); }
+    inline bool isUnit() { return (1 << type) & ((1 << BIPED) | (1 << GIANT) | (1 << VEHICLE)); }
     inline void kill() { damage_flags |= 0x40;}
     __int16 size();
 
