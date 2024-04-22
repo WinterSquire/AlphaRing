@@ -18,19 +18,6 @@ enum eAction : unsigned int
     ACTION_vision_trigger = 0x15
 };
 
-enum eCameraMode : unsigned int
-{
-    CAMERAMODE_FOLLOWING,
-    CAMERAMODE_ORBITING,
-    CAMERAMODE_FLYING,
-    CAMERAMODE_FP,
-    CAMERAMODE_DEAD,
-    CAMERAMODE_STATIC,
-    CAMERAMODE_SCRIPTED,
-    CAMERAMODE_AUTHORED,
-    CAMERAMODE_SANDBOX
-};
-
 enum eFont : unsigned int
 {
     FONT_Terminal,// Fixedsys, 9pt
@@ -71,25 +58,6 @@ enum eModelChoice : unsigned int
     MODELCHOICE_MONITER
 };
 
-const static char* eObjectTypeName[] =
-        {
-                "biped",
-                "vehicle",
-                "weapon",
-                "equipment",
-                "terminal",
-                "projectile",
-                "scenery",
-                "machine",
-                "control",
-                "soundscape",
-                "crate",
-                "creature",
-                "giant",
-                "effect scenery"
-        };
-
-
 enum eGameEvent : unsigned int
 {
     GAMEEVENT_GAME_SAVE = 1,
@@ -98,58 +66,6 @@ enum eGameEvent : unsigned int
     GAMEEVENT_GAME_SAVE_CINEMATIC_SKIP
 };
 
-enum eTeamColor : unsigned int
-{
-    TEAMCOLOR_RED,
-    TEAMCOLOR_BLUE,
-    TEAMCOLOR_GREEN,
-    TEAMCOLOR_ORANGE,
-    TEAMCOLOR_PURPLE,
-    TEAMCOLOR_GOLD,
-    TEAMCOLOR_BROWN,
-    TEAMCOLOR_PINK,
-    TEAMCOLOR_Grey
-};
-
-enum eTeamAI : unsigned int
-{
-    TEAMAI_DEFAULT,
-    TEAMAI_PLAYER,
-    TEAMAI_HUMAN,
-    TEAMAI_COVENANT,
-    TEAMAI_FLOOD,
-    TEAMAI_SENTINEL,
-    TEAMAI_HERETIC,
-    TEAMAI_PROPHET,
-    TEAMAI_GUILTY
-};
-
-const static char* eTeamAIName[] =
-        {
-                "Default",
-                "Player",
-                "Human",
-                "Covenant",
-                "Flood",
-                "Sentinel",
-                "Heretic",
-                "Prophet",
-                "Guilty"
-        };
-
-const static char* eTeamColorName[] =
-        {
-                "Red",
-                "Blue",
-                "Green",
-                "Orange",
-                "Purple",
-                "Gold",
-                "Brown",
-                "Pink",
-                "Grey"
-        };
-
 enum eGiveWeapon : unsigned int
 {
     GIVEWEAPON_SPAWN,
@@ -157,11 +73,6 @@ enum eGiveWeapon : unsigned int
     GIVEWEAPON_CLEAR,
     GIVEWEAPON_SHOW,
     GIVEWEAPON_DROP
-};
-
-enum eTlsArray : unsigned int{
-    TLS_ACTOR = 0,
-    TLS_OBJECT = 7,
 };
 
 #endif //ALPHA_RING_ENUM_H

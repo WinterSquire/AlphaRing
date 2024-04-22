@@ -11,8 +11,9 @@ public:
     TabPlayer(const char* name) : BasicWidget(name) {}
     void render() override;
 
-    static void print_player(int index);
+    void print_player(int index);
 
+    int camera_mode = 0;
 };
 
 static TabPlayer s_instance("Player");
@@ -48,10 +49,22 @@ Player %d
               p_player->position.x, p_player->position.y, p_player->position.z,
               p_player->team
     );
+
     ImGui::Text(buffer);
+
     if (ImGui::Button("Respawn")) {
         setState([index] {
             NativeFunc()->player_possess(index, NONE);
         });
+    }
+
+    if (index == 0) {
+        ImGui::ListBox("Camera Mode", &camera_mode, eCameraModeName, sizeof(eCameraModeName) / sizeof(const char*));
+        if (ImGui::Button("Change")) {
+            int mode = camera_mode;
+            setState([mode] {
+                NativeFunc()->player_set_camera(0, (eCameraMode)mode);
+            });
+        }
     }
 }

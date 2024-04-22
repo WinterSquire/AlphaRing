@@ -2,6 +2,7 @@
 #define ALPHA_RING_OBJECTS_H
 
 #include "../base/base.h"
+#include "eObjectType.h"
 
 struct ObjectInfo;
 
@@ -53,24 +54,7 @@ struct objects_t {
     int parent_info;
  * */
 
-    enum {
-        BIPED,
-        VEHICLE,
-        WEAPON,
-        EQUIPMENT,
-        TERMINAL,
-        PROJECTILE,
-        SCENERY,
-        MACHINE,
-        CONTROL,
-        SOUNDSCENERY,
-        CRATE,
-        CREATURE,
-        GIANT,
-        EFFECTSCENERY
-    };
-
-    inline bool isUnit() { return (1 << type) & ((1 << BIPED) | (1 << GIANT) | (1 << VEHICLE)); }
+    inline bool isUnit() { return (1 << type) & ((1 << OBJECTTYPE_BIPED) | (1 << OBJECTTYPE_GIANT) | (1 << OBJECTTYPE_VEHICLE)); }
     inline void kill() { damage_flags |= 0x40;}
     __int16 size();
 

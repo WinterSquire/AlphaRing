@@ -2,6 +2,7 @@
 #define ALPHA_RING_PLAYERS_H
 
 #include "../base/base.h"
+#include "eTeam.h"
 
 struct player_info_t;
 struct player_action_t;
