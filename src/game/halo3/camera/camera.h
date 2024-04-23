@@ -5,14 +5,34 @@
 #include "eCameraMode.h"
 
 struct camera_t {
-    void* pp_func1;
-    void* pp_mode_func;
-    INDEX target;
+    struct cam_t {
+        void* pp_func1;
+        void* pp_mode_func;
+        INDEX target;
+        __int8 un[0x168];
+    } camera[4];
+    __int32 un1;
+    __int32 un2;
+    eCameraMode mode;
+};
+
+struct camera_data_t {
+    __int8 un0[0x11C];
+    struct data_t {
+        Vector3 position;
+        float un;
+        Vector3 velocity;
+        Vector3 v_rotation;
+        Vector3 components;
+    } data;
+    __int8 un1[0x280];
 };
 
 class ICCamera {
 public:
-    virtual camera_t* getCamera(Index player_index) = 0;
+    virtual camera_t* getCamera() = 0;
+    virtual camera_data_t* getCameraData(Index player_index) = 0;
+
 };
 
 extern ICCamera* g_pICCamera;

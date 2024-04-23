@@ -10,6 +10,8 @@ public:
     __int64 getModuleAddress() override;
     __int64 getEntryAddress(int index) override;
 
+    __int64 getEntryAddress(eEntry entry) override;
+
 private:
     ThreadLocalStorage m_tls;
 
@@ -30,4 +32,8 @@ __int64 CNativeInfo::getModuleAddress() {
 
 __int64 CNativeInfo::getEntryAddress(int index) {
     return m_tls[index];
+}
+
+__int64 CNativeInfo::getEntryAddress(eEntry entry) {
+    return m_tls[(int)entry];
 }

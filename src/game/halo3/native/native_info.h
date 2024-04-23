@@ -12,6 +12,7 @@ enum class eEntry : int {
     map = 0x9,
     clump = 0x14,
     time = 25,
+    message = 0x1E,
     lights = 0x24,
     physics_constants = 0x26,
     vocalization_records = 0x27,
@@ -42,13 +43,16 @@ enum class eEntry : int {
     cluster_collideable_object_refe = 0x94,
     collideable_object_cluster_refe = 0x95,
     cluster_noncollideable_object_r = 0x99,
+    cameras_data = 0xAF,
 };
 
 class ICNativeInfo {
 public:
     virtual bool setModuleAddress(__int64 hModule) = 0;
     virtual __int64 getModuleAddress() = 0;
+    virtual __int64 getEntryAddress(eEntry entry) = 0;
     virtual __int64 getEntryAddress(int index) = 0;
+
 };
 
 extern ICNativeInfo* g_pICNativeInfo;

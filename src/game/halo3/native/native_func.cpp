@@ -20,9 +20,9 @@ bool CNativeFunc::player_push_message(Index player_index, const wchar_t *msg, in
     static const int OFFSET = 0x2D4884;
 
     if (player_index < 0 || player_index > 3) return false;
-    if (NativeInfo()->getEntryAddress(30) == 0) return false;
+    if (NativeInfo()->getEntryAddress(eEntry::message) == 0) return false;
 
-    auto p1 = NativeInfo()->getEntryAddress(30) + 0x1F8Ci64 + 0x28C8i64 * player_index;
+    auto p1 = NativeInfo()->getEntryAddress(eEntry::message) + 0x1F8Ci64 + 0x28C8i64 * player_index;
 
     ((func_t)(NativeInfo()->getModuleAddress() + OFFSET))(p1, msg, type);
 
@@ -42,7 +42,7 @@ bool CNativeFunc::player_set_camera(Index player_index, eCameraMode mode, float 
     typedef bool (__fastcall* func_t) (void* a1, unsigned int a2, float a3, char a4);
     static const int OFFSET = 0x1317F0;
 
-    auto p_camera = Camera()->getCamera(player_index);
+    auto p_camera = Camera()->getCamera();
 
     if (p_camera == nullptr) return false;
 
@@ -51,7 +51,7 @@ bool CNativeFunc::player_set_camera(Index player_index, eCameraMode mode, float 
     if (mode == CAMERAMODE_FOLLOWING) {
         auto p_player = Players()->getPlayerManager()->get(player_index);
         if (p_player == nullptr) return false;
-        p_camera->target = p_player->object_INDEX;
+        p_camera->camera[player_index].target = p_player->object_INDEX;
     }
 
     return ((func_t)(NativeInfo()->getModuleAddress() + OFFSET))(p_camera,mode,time,0);

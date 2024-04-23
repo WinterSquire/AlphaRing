@@ -2,9 +2,7 @@
 
 #include <functional>
 
-#include "../../base/base.h"
 #include "../../native/native.h"
-#include "../../game/players.h"
 
 class TabPlayer : public BasicWidget {
 public:
@@ -12,8 +10,6 @@ public:
     void render() override;
 
     void print_player(int index);
-
-    int camera_mode = 0;
 };
 
 static TabPlayer s_instance("Player");
@@ -29,16 +25,6 @@ void TabPlayer::render() {
     auto p_action = Players()->getPlayerAction();
     if (p_action != nullptr)
         ImGui::Checkbox("Disable Action", &p_action->disable_input);
-
-
-    ImGui::Combo("Camera Mode", &camera_mode, eCameraModeName, sizeof(eCameraModeName) / sizeof(const char*));
-    ImGui::SameLine();
-    if (ImGui::Button("Apply")) {
-        int mode = camera_mode;
-        setState([mode] {
-            NativeFunc()->player_set_camera(0, (eCameraMode)mode);
-        });
-    }
 }
 
 void TabPlayer::print_player(int index) {

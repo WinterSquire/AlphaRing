@@ -8,11 +8,13 @@ extern BasicWidget* tab_time;
 extern BasicWidget* tab_render;
 extern BasicWidget* tab_object;
 extern BasicWidget* tab_player;
+extern BasicWidget* tab_camera;
 
 BasicWidget* const tabs[] {
     tab_map,
     tab_time,
     tab_player,
+    tab_camera,
     tab_object,
     tab_actor,
     tab_render,
