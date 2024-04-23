@@ -3,6 +3,7 @@
 
 #include "../base/base.h"
 #include "eObjectType.h"
+#include "../game/eTeam.h"
 
 struct ObjectInfo;
 
@@ -55,9 +56,39 @@ struct objects_t {
  * */
 
     inline bool isUnit() { return (1 << type) & ((1 << OBJECTTYPE_BIPED) | (1 << OBJECTTYPE_GIANT) | (1 << OBJECTTYPE_VEHICLE)); }
+    // damage flags
+    inline bool CannotTakeDamage(){return damage_flags & 0x100u;}
+    inline void CannotTakeDamage(bool b){if(b)damage_flags |= 0x100u;else damage_flags &= ~0x100u;}
+    inline bool CannotDieFromDamage(){return damage_flags & 0x10000u;}
+    inline void CannotDieFromDamage(bool b){if(b)damage_flags |= 0x10000u;else damage_flags &= ~0x10000u;}
+
     inline void kill() { damage_flags |= 0x40;}
+
     __int16 size();
 
+};
+
+struct units_t : objects_t {
+    __int8 v9[0x54];
+    INDEX actor_index;//0x168
+    __int8 v10[0x4];
+    __int32 unit_flags;
+    eTeamAI team;//0x174
+    t_Player player_index;//0x178
+    __int8 v11[0xA0];//0x20C?
+    INDEX aim_target;//0x21C
+    __int8 v12[0x14C];//378 crouch程度 1.0max
+    float camo_time;
+    __int8 v13[0x12C];//378 crouch程度 1.0max
+    INDEX bump_target;//0x49C bump target
+    __int8 bump_close;
+
+    inline bool FlashLight(){return unit_flags & 0x8000000u;}
+    inline void FlashLight(bool b){if(b) unit_flags |= 0x8000000u;else damage_flags &= ~0x8000000u;}
+    inline bool CanMove(){return unit_flags & 0x3u;}
+    inline void CanMove(bool b){if(b) unit_flags |= 0x3u;else unit_flags &= ~0x3u;}
+    inline void EnableCamo() { unit_flags |= 0x10u | 0x8u; }
+    inline void SetCamo(float time) { EnableCamo(); camo_time = time; }
 };
 
 struct ObjectInfo {

@@ -9,7 +9,10 @@ struct camera_t {
         void* pp_func1;
         void* pp_mode_func;
         INDEX target;
-        __int8 un[0x168];
+        __int8 un0[12];
+        Vector3 position;
+        Vector3 rotation;
+        __int8 un[0x144];
     } camera[4];
     __int32 un1;
     __int32 un2;
@@ -28,11 +31,16 @@ struct camera_data_t {
     __int8 un1[0x280];
 };
 
+struct video_setting_t {
+    float fov_fp;
+    float fov_3rd;
+};
+
 class ICCamera {
 public:
     virtual camera_t* getCamera() = 0;
     virtual camera_data_t* getCameraData(Index player_index) = 0;
-
+    virtual video_setting_t* getVideoSetting() = 0;
 };
 
 extern ICCamera* g_pICCamera;
