@@ -17,7 +17,6 @@ ID3D11Device*			pDevice;
 ID3D11DeviceContext*	pContext;
 ID3D11RenderTargetView*	mainRenderTargetView;
 
-ImmediateGUI::IMGUIContextCallback_t pCallback;
 IDXGISwapChain*      ImmediateGUI::GetSwapChain(){return pSwapChain;}
 ID3D11Device*		 ImmediateGUI::GetDevice(){return pDevice;}
 ID3D11DeviceContext* ImmediateGUI::GetImmediateContext() {return pContext;}
@@ -128,8 +127,20 @@ void ImmediateGUI::CreateMainRenderTargetView() {
     pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
 }
 
-void ImmediateGUI::SetCallback(ImmediateGUI::IMGUIContextCallback_t callback) {
-    pCallback = callback;
+void ImmediateGUI::SetStateWireframe() {
+    const D3D11_RASTERIZER_DESC desc {
+            D3D11_FILL_WIREFRAME,D3D11_CULL_NONE,false,
+            0,0.0f,0.0f,
+            true, false, false, false
+    };
+    ID3D11RasterizerState *pRasterizerState;
+
+    pDevice->CreateRasterizerState(&desc, &pRasterizerState);
+    pContext->RSSetState(pRasterizerState);
+}
+
+void ImmediateGUI::SetState(void* ptr) {
+    pContext->RSSetState((ID3D11RasterizerState*)ptr);
 }
 
 // forward declare

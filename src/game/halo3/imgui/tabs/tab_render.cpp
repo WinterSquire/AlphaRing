@@ -2,8 +2,6 @@
 
 #include "game/halo3/render/render.h"
 
-namespace Halo3::Entry::Draw {extern bool getWireFrame();extern void setWireFrame(bool value);}
-
 class TabRender : public BasicWidget {
 public:
     TabRender(const char* name) : BasicWidget(name) {}
@@ -15,9 +13,16 @@ static TabRender s_instance("Render");
 BasicWidget* tab_render = &s_instance;
 
 void TabRender::render() {
-    bool bWireFrame = Halo3::Entry::Draw::getWireFrame();
-    if (ImGui::Checkbox("Wireframe", &bWireFrame))
-        Halo3::Entry::Draw::setWireFrame(bWireFrame);
+    ImGui::Text("Wireframe");
+    auto p_wireframe = Render()->getWireframe();
+    if (p_wireframe != nullptr)
+    {
+        ImGui::Indent();
+        ImGui::Checkbox("model", &p_wireframe->model);
+        ImGui::SameLine();
+        ImGui::Checkbox("structure", &p_wireframe->structure);
+        ImGui::Unindent();
+    }
 
     ImGui::Text("Render");
     auto p_render = Render()->getRender();

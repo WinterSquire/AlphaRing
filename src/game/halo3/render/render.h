@@ -3,15 +3,23 @@
 
 struct chud_flag_t;
 struct render_flag_t;
+struct wireframe_flag_t;
 
 class ICRender {
 public:
     virtual inline chud_flag_t* getChud() = 0;
     virtual inline render_flag_t* getRender() = 0;
+    virtual inline wireframe_flag_t* getWireframe() = 0;
+
 };
 
 extern ICRender* g_pICRender;
 inline ICRender* Render() {return g_pICRender;}
+
+struct wireframe_flag_t {
+    bool model;
+    bool structure;
+};
 
 struct render_flag_t {
     bool motion_blur;

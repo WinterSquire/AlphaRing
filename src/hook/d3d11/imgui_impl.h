@@ -4,10 +4,6 @@
 #include <d3d11.h>
 
 namespace ImmediateGUI {
-    using IMGUIContextCallback_t = void(*)();
-
-    void SetCallback(IMGUIContextCallback_t callback);
-
     bool Initialized();
     void Initialize(IDXGISwapChain *pSwapChain);
     void Update();
@@ -24,6 +20,8 @@ namespace ImmediateGUI {
     ID3D11RenderTargetView** GetTargetView();
 
     void NewFrame();
+    void SetStateWireframe();
+    void SetState(void *ptr);
 };
 
 
