@@ -27,8 +27,18 @@ void TabPlayer::render() {
     for (int i = 0; i < p_player->m_capacity; ++i) print_player(i);
 
     auto p_action = Players()->getPlayerAction();
-    if (p_action == nullptr) return;
-    ImGui::Checkbox("Disable Action", &p_action->disable_input);
+    if (p_action != nullptr)
+        ImGui::Checkbox("Disable Action", &p_action->disable_input);
+
+
+    ImGui::Combo("Camera Mode", &camera_mode, eCameraModeName, sizeof(eCameraModeName) / sizeof(const char*));
+    ImGui::SameLine();
+    if (ImGui::Button("Apply")) {
+        int mode = camera_mode;
+        setState([mode] {
+            NativeFunc()->player_set_camera(0, (eCameraMode)mode);
+        });
+    }
 }
 
 void TabPlayer::print_player(int index) {
@@ -56,15 +66,5 @@ Player %d
         setState([index] {
             NativeFunc()->player_possess(index, NONE);
         });
-    }
-
-    if (index == 0) {
-        ImGui::ListBox("Camera Mode", &camera_mode, eCameraModeName, sizeof(eCameraModeName) / sizeof(const char*));
-        if (ImGui::Button("Change")) {
-            int mode = camera_mode;
-            setState([mode] {
-                NativeFunc()->player_set_camera(0, (eCameraMode)mode);
-            });
-        }
     }
 }

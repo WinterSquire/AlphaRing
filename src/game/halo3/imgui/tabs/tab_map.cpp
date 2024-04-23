@@ -24,26 +24,24 @@ void TabMap::render() {
         auto map_name = strrchr(map->name, '\\');
 
         if (map_name == nullptr) map_name = map->name;
+        else map_name += 1;
 
         sprintf(buffer, "Map: %s (%s)", map_name, map_types[map->game_type]);
 
         ImGui::Text(buffer);
     }
-    {
-        ImGui::Text("Skull");
 
-        const int skull_count = sizeof(eSkullValue) / sizeof(int);
-
-        for (int i = 0; i < skull_count; ++i) {
+    if (ImGui::BeginListBox("Skulls")) {
+        for (int i = 0; i < sizeof(eSkullValue) / 4; ++i) {
             const char *skull_name = eSkullName[i];
             int skull_value = eSkullValue[i];
 
             bool status = map->get_skull((eSkull) skull_value);
 
-            if (i % 4 > 0) ImGui::SameLine();
-
-            if (ImGui::Selectable(skull_name, status, 0, {200, 200}))
+            if (ImGui::Selectable(skull_name, status))
                 map->set_skull((eSkull) skull_value, !status);
         }
+
+        ImGui::EndListBox();
     }
 }

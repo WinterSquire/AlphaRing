@@ -141,7 +141,7 @@ struct entity_manager_t {
     __int64 m_data;     // 0x48
 
     inline T* get(__int16 index) const { return (T*)(m_data + (__int64)m_sizeof * (__int16)index); }
-    inline __int32 INDEX(__int16 index) const { return ((__int32)((__int16)(m_data + index * m_sizeof)) << 16) | index;}
+    inline __int32 INDEX(__int16 index) const { return ((__int32)(*(__int16*)(m_data + index * m_sizeof)) << 16) | index;}
 };
 
 #endif //ALPHA_RING_TYPE_H

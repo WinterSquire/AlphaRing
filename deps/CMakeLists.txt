@@ -3,6 +3,8 @@ project(deps)
 # setup minhook
 file(GLOB_RECURSE SRC_MINHOOK "${CMAKE_CURRENT_SOURCE_DIR}/minhook/src/*.c")
 
+add_compile_definitions(IM_ASSERT="((void)(_EXPR))") # disable assert
+
 add_library(minhook STATIC ${SRC_MINHOOK})
 
 # setup imgui
