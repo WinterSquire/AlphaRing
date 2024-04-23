@@ -1,7 +1,6 @@
 #include "entry.h"
 
 #include "hook/d3d11/imgui_impl.h"
-#include <CommonStates.h>
 
 #include <mutex>
 
@@ -45,8 +44,15 @@ __int64 __fastcall Halo3::Entry::Draw::detour(
             auto pDevice = *(ID3D11Device**)(hModule + 0x46BA830);
             auto pContext = *(ID3D11DeviceContext**)(hModule + 0x46BA828);
 
-            std::unique_ptr<DirectX::CommonStates> states = std::make_unique<DirectX::CommonStates>(pDevice);
-            pContext->RSSetState(states->Wireframe());
+            const D3D11_RASTERIZER_DESC desc {
+                    D3D11_FILL_WIREFRAME,D3D11_CULL_NONE,false,
+                    0,0.0f,0.0f,
+                    true, false, false, false
+            };
+            ID3D11RasterizerState *pRasterizerState;
+
+            pDevice->CreateRasterizerState(&desc, &pRasterizerState);
+            pContext->RSSetState(pRasterizerState);
         }
     }
 

@@ -8,7 +8,6 @@ set(LUA_DIR ${CMAKE_SOURCE_DIR}/deps/lua)
 set(MINHOOK_DIR ${CMAKE_SOURCE_DIR}/deps/minhook)
 set(SPD_LOG_DIR ${CMAKE_SOURCE_DIR}/deps/spdlog)
 set(TINYXML2_DIR ${CMAKE_SOURCE_DIR}/deps/tinyxml2)
-set(DXTK_DIR ${CMAKE_SOURCE_DIR}/deps/dxtk)
 
 add_subdirectory(deps)
 add_subdirectory(src)
