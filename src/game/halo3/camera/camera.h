@@ -11,7 +11,7 @@ struct camera_t {
         INDEX target;
         __int8 un0[12];
         Vector3 position;
-        Vector3 rotation;
+        Radian3 rotation;
         __int8 un[0x144];
     } camera[4];
     __int32 un1;

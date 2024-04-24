@@ -3,5 +3,6 @@
 
 #include "enum.h"
 #include "type.h"
+#include "math.h"
 
 #endif //ALPHA_RING_BASE_H

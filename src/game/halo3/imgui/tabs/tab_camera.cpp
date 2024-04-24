@@ -2,6 +2,7 @@
 
 #include "game/halo3/native/native.h"
 
+// todo timeline editor
 class TabCamera : public BasicWidget {
 public:
     TabCamera(const char* name) : BasicWidget(name) {}
@@ -39,8 +40,8 @@ Camera:
     if (p_video_setting) {
         ImGui::Text("Video Setting");
         ImGui::Indent();
-        ImGui::InputFloat("FOV FP", &p_video_setting->fov_fp);
-        ImGui::InputFloat("FOV 3rd", &p_video_setting->fov_3rd);
+        ImGui::SliderFloat("FOV FP", &p_video_setting->fov_fp, 0, 150);
+        ImGui::SliderFloat("FOV 3rd", &p_video_setting->fov_3rd, 0, 150);
         ImGui::Unindent();
     }
 
@@ -54,7 +55,9 @@ Camera:
 
     if (p_camera->mode == CAMERAMODE_FLYING) {
         ImGui::InputFloat3("Position", &p_camera->camera[0].position.x);
-        ImGui::InputFloat3("Rotation", &p_camera->camera[0].rotation.x);
+        auto rotation = (Degree3)p_camera->camera[0].rotation;
+        if (ImGui::SliderFloat3("Rotation", &rotation.x, 0, 360))
+            p_camera->camera[0].rotation = (Radian3)rotation;
     }
 
 }
