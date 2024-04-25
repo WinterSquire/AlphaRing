@@ -4,6 +4,7 @@
 #include "../base/base.h"
 
 #include "../game/players.h"
+#include "../game/game_time.h"
 #include "../camera/camera.h"
 #include "../objects/objects.h"
 

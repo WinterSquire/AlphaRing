@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 # disable warning c4996
 add_definitions(-D_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS)
+add_definitions(-DIMGUI_DEFINE_MATH_OPERATORS)
 
 # set variables
 set(XML_NAME "data.xml")
