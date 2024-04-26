@@ -6,7 +6,7 @@ class TabActor : public BasicWidget {
 public:
     TabActor(const char* name) : BasicWidget(name) {}
     void render() override;
-
+    void update() override{}
 };
 
 static TabActor s_instance("Actor");
@@ -19,4 +19,3 @@ void TabActor::render() {
 
     ImGui::Checkbox("Enable Ai", &p_actor->enable_ai);
 }
-

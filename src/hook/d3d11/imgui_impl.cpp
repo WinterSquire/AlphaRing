@@ -28,7 +28,6 @@ void ImmediateGUI::Initialize(IDXGISwapChain* swapChain)
 {
     pSwapChain = swapChain;
 
-    // 如果获取device失败则返回
     if (FAILED(pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)&pDevice)))
         return;
 
@@ -44,19 +43,19 @@ void ImmediateGUI::Initialize(IDXGISwapChain* swapChain)
 
     oWndProc = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR) WndProc);
 
-    // IMGUI初始化
     float scale = 2.0f;
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
-    io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
     io.MouseDrawCursor = true;
-    io.IniFilename = nullptr;
+    io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
     io.Fonts->Clear();
     io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 16.0f * scale);
+    ImGui::LoadIniSettingsFromDisk("../../../imgui.ini");
     ImGui::GetStyle().ScaleAllSizes(scale);
 
     ImGui_ImplWin32_Init(window);
     ImGui_ImplDX11_Init(pDevice, pContext);
+
     bInitialized = true;
 }
 
@@ -107,7 +106,6 @@ void ImmediateGUI::Update()
     ImmediateGUI::Render();
 }
 
-// release MainRenderTargetView
 void ImmediateGUI::ReleaseMainRenderTargetView() {
     if (mainRenderTargetView == nullptr) return;
 
@@ -143,7 +141,6 @@ void ImmediateGUI::SetState(void* ptr) {
     pContext->RSSetState((ID3D11RasterizerState*)ptr);
 }
 
-// forward declare
 LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {

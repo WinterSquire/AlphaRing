@@ -28,8 +28,7 @@ struct keyframe_t {
     inline float2 calculate_aligned_handle(const float2 &handle, const float2 &other_handle) const {return keyframe - (handle - keyframe).normalize() * other_handle.distance(keyframe);}
     inline void set_left_handle_position(float2 new_position) { if (new_position.x >= keyframe.x) return; left_handle = new_position; right_handle = calculate_aligned_handle(left_handle, right_handle);}
     inline void set_right_handle_position(float2 new_position) { if (new_position.x <= keyframe.x) return; right_handle = new_position; left_handle = calculate_aligned_handle(right_handle, left_handle);}
-    inline void addValue(float offset) {keyframe.y += offset; left_handle.y += offset; right_handle.y += offset;}
-    inline void setValue(float value) { addValue(keyframe.y - value);}
+    inline void setValue(float value) { auto offset = value - keyframe.y; keyframe.y = value; left_handle.y += offset; right_handle.y += offset;}
     inline void drop() {if (prev) prev->next = next; if (next) next->prev = prev;}
     inline void relocate() {
         keyframe_t *tmp;

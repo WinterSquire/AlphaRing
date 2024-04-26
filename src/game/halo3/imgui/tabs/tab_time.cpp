@@ -6,6 +6,7 @@ class TabTime : public BasicWidget {
 public:
     TabTime(const char* name) : BasicWidget(name) {}
     void render() override;
+    void update() override{}
 
 };
 

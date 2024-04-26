@@ -8,6 +8,7 @@ class TabPlayer : public BasicWidget {
 public:
     TabPlayer(const char* name) : BasicWidget(name) {}
     void render() override;
+    void update() override{}
 
     void print_player(int index);
 };

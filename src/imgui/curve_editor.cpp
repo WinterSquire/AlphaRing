@@ -247,12 +247,6 @@ void ImGui::CustomWidget::CurveEditor::render_center() {
         auto new_zoom = m_zoom + io.MouseWheel * 0.1f;
         if (new_zoom > ZOOM_MIN && new_zoom < ZOOM_MAX) m_zoom = new_zoom;
     }
-
-    if (ImGui::IsItemFocused()) {
-        if (ImGui::IsKeyDown(ImGuiKey_LeftArrow)) --m_frame;
-        else if (ImGui::IsKeyDown(ImGuiKey_RightArrow)) ++m_frame;
-        else if (ImGui::IsKeyDown(ImGuiKey_Space)) b_playing = !b_playing;
-    }
 }
 
 void ImGui::CustomWidget::CurveEditor::render_right() {
@@ -262,9 +256,9 @@ void ImGui::CustomWidget::CurveEditor::render_right() {
     if (m_line < 0 || m_line >= CURVE_COUNT) return;
     if (m_pKeyframe == nullptr) return;
     f = m_pKeyframe->keyframe.x; if (ImGui::DragFloat("Key Frame", &f)) m_curves[m_line].moveKeyframe(m_pKeyframe, {f - m_pKeyframe->keyframe.x, 0});
-    f = m_pKeyframe->keyframe.y; if (ImGui::DragFloat("Value", &f)) m_pKeyframe->setValue(f);
+    f = m_pKeyframe->keyframe.y; if (ImGui::DragFloat("Value", &f, 0.01f)) m_pKeyframe->setValue(f);
     f = m_pKeyframe->left_handle.x; if (ImGui::DragFloat("Frame(l)", &f)) m_pKeyframe->set_left_handle_position({f, m_pKeyframe->left_handle.y});
-    f = m_pKeyframe->left_handle.y; if (ImGui::DragFloat("Value(l)", &f)) m_pKeyframe->set_left_handle_position({m_pKeyframe->left_handle.x, f});
+    f = m_pKeyframe->left_handle.y; if (ImGui::DragFloat("Value(l)", &f, 0.01f)) m_pKeyframe->set_left_handle_position({m_pKeyframe->left_handle.x, f});
     f = m_pKeyframe->right_handle.x; if (ImGui::DragFloat("Frame(r)", &f)) m_pKeyframe->set_right_handle_position({f, m_pKeyframe->right_handle.y});
-    f = m_pKeyframe->right_handle.y; if (ImGui::DragFloat("Value(r)", &f)) m_pKeyframe->set_right_handle_position({m_pKeyframe->right_handle.x, f});
+    f = m_pKeyframe->right_handle.y; if (ImGui::DragFloat("Value(r)", &f, 0.01f)) m_pKeyframe->set_right_handle_position({m_pKeyframe->right_handle.x, f});
 }

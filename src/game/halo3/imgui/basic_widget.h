@@ -11,6 +11,7 @@ public:
 
     inline const char* name() {return m_name;}
     virtual void render() = 0;
+    virtual void update() = 0;
 
 private:
     const char* m_name;

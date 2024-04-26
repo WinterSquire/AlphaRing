@@ -5,6 +5,7 @@
 
 namespace Halo3::IMGUI {
     void page_halo3();
+    void update();
 }
 
 

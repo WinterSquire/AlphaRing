@@ -6,6 +6,7 @@ class TabRender : public BasicWidget {
 public:
     TabRender(const char* name) : BasicWidget(name) {}
     void render() override;
+    void update() override{}
 
 };
 

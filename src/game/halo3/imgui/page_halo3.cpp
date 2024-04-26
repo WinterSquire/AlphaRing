@@ -29,3 +29,9 @@ void Halo3::IMGUI::page_halo3() {
     }
     ImGui::EndTabBar();
 }
+
+void Halo3::IMGUI::update() {
+    for (auto tab : tabs) {
+        tab->update();
+    }
+}

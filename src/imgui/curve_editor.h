@@ -10,7 +10,7 @@ namespace ImGui::CustomWidget {
         CurveEditor();
         void render() override;
 
-        enum eCurve {
+        enum eCurve : int {
             Curve_Pos_X,
             Curve_Pos_Y,
             Curve_Pos_Z,
@@ -21,9 +21,9 @@ namespace ImGui::CustomWidget {
         };
 
         static const int CURVE_COUNT = 7;
-        inline curve_t& getCurve(eCurve curve) {return m_curves[curve];}
+        inline curve_t& getCurve(int curve) {return m_curves[curve];}
         inline float& frame() {return m_frame;}
-        inline bool playing() {return b_playing;}
+        inline bool& playing() {return b_playing;}
     private:
         void render_left();
         void render_center();

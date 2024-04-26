@@ -6,6 +6,7 @@ class TabMap : public BasicWidget {
 public:
     TabMap(const char* name) : BasicWidget(name) {}
     void render() override;
+    void update() override{}
 
 };
 

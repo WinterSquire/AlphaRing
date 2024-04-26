@@ -8,6 +8,7 @@ class TabObject : public BasicWidget {
 public:
     TabObject(const char* name) : BasicWidget(name) {}
     void render() override;
+    void update() override{}
 
     static void print_object(__int16 index);
 
