@@ -6,6 +6,8 @@
 #include "ExternalConsole.h"
 #include "../hook/Hook.h"
 
+extern void waitForDestory();
+
 bool Prologue() {
     if (ExternalConsole()->initialize() != ISystem::SYS_OK) return false;
     if (Hook()->initialize() != ISystem::SYS_OK) return false;
@@ -13,9 +15,8 @@ bool Prologue() {
 }
 
 signed Main() {
-    while (true) {
 
-    }
+    waitForDestory();
 
     return 0;
 }

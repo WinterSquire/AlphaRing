@@ -143,6 +143,18 @@ void ImmediateGUI::SetState(void* ptr) {
 
 LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+#include <mutex>
+#include <condition_variable>
+
+std::mutex cv_m;
+std::condition_variable cv;
+static bool b_shouldDestory = false;
+
+void waitForDestory() {
+    std::unique_lock<std::mutex> lk(cv_m);
+    cv.wait(lk, []{return b_shouldDestory;});
+}
+
 LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
         return true;
@@ -160,6 +172,16 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         case WM_KEYUP:{
 
         }
+
+        case WM_DESTROY:{
+            {
+                std::lock_guard<std::mutex> lk(cv_m);
+                b_shouldDestory = true;
+            }
+            cv.notify_one();
+            break;
+        }
+
         default:
             break;
     }
