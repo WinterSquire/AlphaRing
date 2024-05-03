@@ -1,0 +1,11 @@
+<module>
+    <address name="hook::entry::draw_structure" offset="0x27FDB4"/>
+    <address name="hook::entry::draw_model" offset="0x2B51E0"/>
+    <address name="hook::entry::render" offset="0x1851EC"/>
+    <address name="hook::entry::engine" offset="0xB2A20"/>
+    <address name="hook::entry::world" offset="0xEEDD4"/>
+    <address name="hook::entry::map" offset="0x12E388"/>
+
+    <address name="p_tag_scnr" offset="0xA45A08"/>
+    <address name="p_tag_global" offset="0xA45968"/>
+</module>

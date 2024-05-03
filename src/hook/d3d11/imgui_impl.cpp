@@ -49,8 +49,9 @@ void ImmediateGUI::Initialize(IDXGISwapChain* swapChain)
     io.MouseDrawCursor = true;
     io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
     io.Fonts->Clear();
+    io.IniFilename = "./alpha_ring/imgui.ini";
     io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 16.0f * scale);
-    ImGui::LoadIniSettingsFromDisk("../../../imgui.ini");
+    ImGui::LoadIniSettingsFromDisk("../../../alpha_ring/imgui.ini");
     ImGui::GetStyle().ScaleAllSizes(scale);
 
     ImGui_ImplWin32_Init(window);
@@ -159,6 +160,13 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
         return true;
 
+    if (uMsg == WM_QUIT && hWnd == window) {{
+            std::lock_guard<std::mutex> lk(cv_m);
+            b_shouldDestory = true;
+        }
+        cv.notify_one();
+    }
+
     switch (uMsg) {
         case WM_KEYDOWN:{
             switch (wParam) {
@@ -170,18 +178,8 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             break;
         }
         case WM_KEYUP:{
-
-        }
-
-        case WM_DESTROY:{
-            {
-                std::lock_guard<std::mutex> lk(cv_m);
-                b_shouldDestory = true;
-            }
-            cv.notify_one();
             break;
         }
-
         default:
             break;
     }

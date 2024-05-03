@@ -1,20 +1,19 @@
 #ifndef ALPHA_RING_FILEVERSION_H
 #define ALPHA_RING_FILEVERSION_H
 
-#include <cstdint>
-#include <string>
+union FileVersion {
+    unsigned long long version;
+    unsigned short bits[4];
+    unsigned int dwFileVersion[2];
 
-class FileVersion {
-public:
-    FileVersion(uint64_t version);
-    FileVersion(const char* version);
-    FileVersion(uint16_t a, uint16_t b, uint16_t c, uint16_t d);
+    FileVersion();
+    FileVersion(const char *file);
+    FileVersion(const wchar_t *file);
 
-    std::string toString() const;
-
-    static FileVersion getFileVersion(const char *fileName);
+    void toString(char* buffer, size_t buffer_size);
 private:
-    uint64_t m_version;
+    void set(void* info);
+
 };
 
 #endif //ALPHA_RING_FILEVERSION_H

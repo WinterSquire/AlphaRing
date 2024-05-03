@@ -1,0 +1,4 @@
+<module>
+    <address name="hook::module_load" offset="0x4426AC"/>
+    <address name="hook::module_unload" offset="0x442728"/>
+</module>

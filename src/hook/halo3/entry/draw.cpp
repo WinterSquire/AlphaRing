@@ -1,7 +1,5 @@
 #include "entry.h"
 
-#include "hook/d3d11/imgui_impl.h"
-
 namespace Halo3::Entry::Draw {
     const __int64 OFFSET1 = 0x27FDB4;
     const __int64 OFFSET2 = 0x2B51E0;

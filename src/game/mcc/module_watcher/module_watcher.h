@@ -3,13 +3,12 @@
 
 #include "module_definition.h"
 #include "core/ISystem.h"
-#include "core/LockedResource.h"
 
 class ICModuleWatcher : public ISystem {
 public:
     typedef void(*invoke_t)(__int64 pModule);
 
-    virtual LockedResource<ModuleInfo> getModuleStatus(ModuleInfo::eTitle title) const = 0;
+    virtual ModuleInfo getModuleStatus(eTitle title) const = 0;
 };
 
 extern ICModuleWatcher* g_pModuleWatcher;

@@ -1,77 +1,55 @@
 #include "FileVersion.h"
 
-#include <string>
 #include <Windows.h>
+#include <string>
 
-using std::string;
+FileVersion::FileVersion() : version(0) {
 
-FileVersion::FileVersion(uint64_t version) {
-    m_version = version;
 }
 
-FileVersion::FileVersion(const char *version) {
-    char c;
-    int index = 0;
-    int dot_count = 0;
-    int dots[3];
-
-    while ((c = version[index]) && dot_count != 3) {
-        if (c == '.') {
-            dots[dot_count] = index;
-            ++dot_count;
-        }
-        ++index;
-    }
-
-    FileVersion(std::stoi(string(version, dots[0])),
-                std::stoi(string(version, dots[0], dots[1])),
-                std::stoi(string(version, dots[1], dots[2])),
-                std::stoi(string(version + dots[2]))
-    );
-}
-
-FileVersion::FileVersion(uint16_t a, uint16_t b, uint16_t c, uint16_t d) {
-    m_version = a;
-    m_version = m_version << 16 | b;
-    m_version = m_version << 16 | c;
-    m_version = m_version << 16 | d;
-}
-
-string FileVersion::toString() const {
-    char buffer[256];
-
-    sprintf_s(buffer, "%d.%d.%d.%d",
-              static_cast<uint16_t>(( m_version >> (32 + 16) ) & 0xffff),
-              static_cast<uint16_t>(( m_version >> (32) ) & 0xffff),
-              static_cast<uint16_t>(( m_version >> (16) ) & 0xffff),
-              static_cast<uint16_t>(( m_version >> (0) ) & 0xffff)
-    );
-
-    return {buffer};
-}
-
-FileVersion FileVersion::getFileVersion(const char *fileName) {
+FileVersion::FileVersion(const char *file) : FileVersion() {
     const int BLOCK_SIZE = 2048;
     char block[BLOCK_SIZE];
 
     UINT size;
     DWORD dwHandle;
     LPBYTE lpBuffer;
-    DWORD dwLen = GetFileVersionInfoSizeA(fileName, &dwHandle);
+    DWORD dwLen = GetFileVersionInfoSizeA(file, &dwHandle);
 
-    if (dwLen == NULL || dwLen > BLOCK_SIZE)
-        return {static_cast<uint64_t>(-1)};
+    if (dwLen == NULL || dwLen > BLOCK_SIZE) return;
 
-    if (!GetFileVersionInfoA(fileName, dwHandle, dwLen, block))
-        return {static_cast<uint64_t>(-1)};
+    if (!GetFileVersionInfoA(file, dwHandle, dwLen, block)) return;
 
-    if (!VerQueryValueA(block, "\\", (LPVOID*)&lpBuffer, &size))
-        return {static_cast<uint64_t>(-1)};
+    if (!VerQueryValueA(block, "\\", (LPVOID*)&lpBuffer, &size)) return;
 
-    auto *fileInfo = (VS_FIXEDFILEINFO*) lpBuffer;
+    set(lpBuffer);
+}
 
-    if (fileInfo->dwSignature != 0xFEEF04BD)
-        return {static_cast<uint64_t>(-1)};
+FileVersion::FileVersion(const wchar_t *file) : FileVersion() {
+    const int BLOCK_SIZE = 2048;
+    wchar_t block[BLOCK_SIZE];
 
-    return {static_cast<uint64_t>(fileInfo->dwFileVersionMS) << 32 | fileInfo->dwFileVersionLS};
+    UINT size;
+    DWORD dwHandle;
+    LPBYTE lpBuffer;
+    DWORD dwLen = GetFileVersionInfoSizeW(file, &dwHandle);
+
+    if (dwLen == NULL || dwLen > BLOCK_SIZE) return;
+
+    if (!GetFileVersionInfoW(file, dwHandle, dwLen, block)) return;
+
+    if (!VerQueryValueA(block, "\\", (LPVOID*)&lpBuffer, &size)) return;
+
+    set(lpBuffer);
+}
+
+void FileVersion::set(void *info) {
+    auto *fileInfo = (VS_FIXEDFILEINFO*) info;
+    if (fileInfo == nullptr || fileInfo->dwSignature != 0xfeef04bd) return;
+    this->dwFileVersion[0] = fileInfo->dwFileVersionMS;
+    this->dwFileVersion[1] = fileInfo->dwFileVersionLS;
+}
+
+void FileVersion::toString(char *buffer, size_t buffer_size) {
+    sprintf_s(buffer, buffer_size, "%hd.%hd.%hd.%hd", bits[1], bits[0], bits[3], bits[2]);
 }

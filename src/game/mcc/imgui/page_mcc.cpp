@@ -7,6 +7,7 @@
 void MCC::IMGUI::page_mcc() {
     ImVec4 color;
     char buffer[256];
+    ModuleInfo modules[7];
 
     ImGui::Text("Module Info");
 
@@ -15,7 +16,18 @@ void MCC::IMGUI::page_mcc() {
     ImGui::BeginGroup();
     ImGui::Text("Name");
     for (int i = 0; i < 7; ++i) {
-        sprintf_s(buffer, "%s", ModuleInfo::cTitle[i]);
+        modules[i] = ModuleWatcher()->getModuleStatus((eTitle)i);
+        sprintf_s(buffer, "%s", cTitle[i]);
+        ImGui::Text(buffer);
+    }
+    ImGui::EndGroup();
+
+    ImGui::SameLine();
+
+    ImGui::BeginGroup();
+    ImGui::Text("Version");
+    for (int i = 0; i < 7; ++i) {
+        modules[i].version.toString(buffer, sizeof(buffer));
         ImGui::Text(buffer);
     }
     ImGui::EndGroup();
@@ -25,10 +37,7 @@ void MCC::IMGUI::page_mcc() {
     ImGui::BeginGroup();
     ImGui::Text("Address");
     for (int i = 0; i < 7; ++i) {
-        {
-            auto status = ModuleWatcher()->getModuleStatus((ModuleInfo::eTitle)i);
-            sprintf_s(buffer, "%016llx", status.get().hModule);
-        }
+        sprintf_s(buffer, "%016llx", modules[i].info.hModule);
         ImGui::Text(buffer);
     }
     ImGui::EndGroup();
@@ -38,11 +47,7 @@ void MCC::IMGUI::page_mcc() {
     ImGui::BeginGroup();
     ImGui::Text("Status");
     for (int i = 0; i < 7; ++i) {
-        int code;
-        {
-            auto status = ModuleWatcher()->getModuleStatus((ModuleInfo::eTitle)i);
-            code = (int)(status.get().hModule == 0) + (status.get().errorCode != 0);
-        }
+        int code = (int)(modules[i].info.hModule == 0) + (modules[i].info.errorCode != 0);
         switch (code) {
             case 0:
                 color = {0.0f, 1.0f, 0.0f, 1.0f};

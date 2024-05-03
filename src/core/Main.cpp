@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <TlHelp32.h>
 
 #include "Log.h"
 #include "ISystem.h"
