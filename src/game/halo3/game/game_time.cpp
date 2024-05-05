@@ -11,5 +11,5 @@ static CTime time;
 ICTime* g_pICTime = &time;
 
 game_time_t* CTime::getGameTime() {
-    return (game_time_t*)NativeInfo()->getEntryAddress((int)eEntry::time);
+    return (game_time_t*)NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_TIME);
 }

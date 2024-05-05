@@ -17,11 +17,11 @@ CRender CRender::s_instance;
 ICRender* g_pICRender = &CRender::s_instance;
 
 chud_flag_t *CRender::getChud() {
-    return (chud_flag_t*)(NativeInfo()->getEntryAddress((int)eEntry::chud) + 0x144);
+    return (chud_flag_t*)(NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_CHUD) + 0x144);
 }
 
 render_flag_t *CRender::getRender() {
-    return (render_flag_t*)NativeInfo()->getEntryAddress((int)eEntry::render);
+    return (render_flag_t*)NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_RENDER);
 }
 
 wireframe_flag_t *CRender::getWireframe() {

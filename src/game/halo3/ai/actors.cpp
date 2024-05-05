@@ -12,5 +12,5 @@ static CActor s_instance;
 ICActor* g_pICActor = &s_instance;
 
 actor_t *CActor::getActor() {
-    return (actor_t*)NativeInfo()->getEntryAddress((int)eEntry::loop_actors);
+    return (actor_t*)NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_LOOP_ACTORS);
 }

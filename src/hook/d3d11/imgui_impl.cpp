@@ -5,13 +5,14 @@
 #include "backends/imgui_impl_dx11.h"
 #include <d3d11.h>
 
+#include "imgui/home_page.h"
+
 bool                    bInitialized;
 
 LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 HWND					window;
 WNDPROC					oWndProc;
-
 IDXGISwapChain*         pSwapChain;
 ID3D11Device*			pDevice;
 ID3D11DeviceContext*	pContext;
@@ -21,6 +22,8 @@ IDXGISwapChain*      ImmediateGUI::GetSwapChain(){return pSwapChain;}
 ID3D11Device*		 ImmediateGUI::GetDevice(){return pDevice;}
 ID3D11DeviceContext* ImmediateGUI::GetImmediateContext() {return pContext;}
 ID3D11RenderTargetView** ImmediateGUI::GetTargetView(){return &mainRenderTargetView;}
+
+ImGui::CustomWidget::HomePage home_page;
 
 bool ImmediateGUI::Initialized() {return bInitialized;}
 
@@ -88,7 +91,6 @@ static void setStyle() {
     ImGui::SetWindowSize({800, 600});
 }
 
-namespace MCC::IMGUI {extern void page_mcc();}
 
 void ImmediateGUI::Update()
 {
@@ -99,7 +101,7 @@ void ImmediateGUI::Update()
     if (bShowContext) {
         ImGui::Begin("Alpha Ring");
         setStyle();
-        MCC::IMGUI::page_mcc();
+        home_page.render();
         ImGui::End();
     }
     else ImGui::SetMouseCursor(ImGuiMouseCursor_None);

@@ -1,13 +1,15 @@
-#include "page_mcc.h"
+#include "home_page.h"
 
-#include "imgui.h"
+#include "../module/Module.h"
 
-#include "../module_watcher/module_watcher.h"
-
-void MCC::IMGUI::page_mcc() {
+void ImGui::CustomWidget::HomePage::render() {
+    const int MODULE_COUNT = 8;
     ImVec4 color;
     char buffer[256];
-    ModuleInfo modules[7];
+    struct Module {
+        module_info_t info;
+        FileVersion version;
+    } modules[MODULE_COUNT];
 
     ImGui::Text("Module Info");
 
@@ -15,9 +17,10 @@ void MCC::IMGUI::page_mcc() {
 
     ImGui::BeginGroup();
     ImGui::Text("Name");
-    for (int i = 0; i < 7; ++i) {
-        modules[i] = ModuleWatcher()->getModuleStatus((eTitle)i);
-        sprintf_s(buffer, "%s", cTitle[i]);
+    for (int i = 0; i < MODULE_COUNT; ++i) {
+        auto p_module = Modules()->get((eModule)i);
+        modules[i] = {p_module->info(), p_module->version()};
+        sprintf_s(buffer, "%s", cModuleName[i]);
         ImGui::Text(buffer);
     }
     ImGui::EndGroup();
@@ -26,7 +29,7 @@ void MCC::IMGUI::page_mcc() {
 
     ImGui::BeginGroup();
     ImGui::Text("Version");
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < MODULE_COUNT; ++i) {
         modules[i].version.toString(buffer, sizeof(buffer));
         ImGui::Text(buffer);
     }
@@ -36,7 +39,7 @@ void MCC::IMGUI::page_mcc() {
 
     ImGui::BeginGroup();
     ImGui::Text("Address");
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < MODULE_COUNT; ++i) {
         sprintf_s(buffer, "%016llx", modules[i].info.hModule);
         ImGui::Text(buffer);
     }
@@ -46,7 +49,7 @@ void MCC::IMGUI::page_mcc() {
 
     ImGui::BeginGroup();
     ImGui::Text("Status");
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < MODULE_COUNT; ++i) {
         int code = (int)(modules[i].info.hModule == 0) + (modules[i].info.errorCode != 0);
         switch (code) {
             case 0:

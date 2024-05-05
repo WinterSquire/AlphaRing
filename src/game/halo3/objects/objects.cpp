@@ -16,6 +16,6 @@ static CObjects objects;
 ICObjects* g_pICObjects = &objects;
 
 entity_manager_t<ObjectInfo> *CObjects::getObjectManager() {
-    return (entity_manager_t<ObjectInfo> *)(NativeInfo()->getEntryAddress((int) eEntry::object));
+    return (entity_manager_t<ObjectInfo> *)(NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_OBJECT));
 }
 

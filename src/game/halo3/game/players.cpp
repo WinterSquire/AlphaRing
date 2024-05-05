@@ -13,9 +13,9 @@ static CPlayers players;
 ICPlayers* g_pICPlayers = &players;
 
 entity_manager_t<player_info_t> *CPlayers::getPlayerManager() {
-    return (entity_manager_t<player_info_t>*)NativeInfo()->getEntryAddress((int)eEntry::players);
+    return (entity_manager_t<player_info_t>*)NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_PLAYERS);
 }
 
 player_action_t *CPlayers::getPlayerAction() {
-    return (player_action_t*)NativeInfo()->getEntryAddress((int)eEntry::players_action);
+    return (player_action_t*)NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_PLAYERS_ACTION);
 }

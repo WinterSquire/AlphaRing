@@ -1,7 +1,6 @@
 #include "ExternalConsole.h"
 
 #include <cstdio>
-#include <Windows.h>
 
 class CExternalConsole : public ISystem {
 public:
@@ -24,7 +23,9 @@ ISystem::eStatus CExternalConsole::initialize() {
     freopen("CONOUT$", "w", stdout);
     freopen("CONOUT$", "w", stderr);
 
-    LOG_INFO("ExternalConsole Initialized!");
+
+    LOG_INFO("Version: {}", GAME_VERSION);
+
     return SYS_OK;
 }
 

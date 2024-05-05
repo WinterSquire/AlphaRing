@@ -6,7 +6,7 @@ ModuleDefinition::ModuleDefinition(const char *moduleName, std::initializer_list
     // Get System Directory
     wchar_t systemPath[MAX_PATH];
     if (!GetSystemDirectoryW(systemPath, MAX_PATH)) {
-        MessageBoxA(0, "Unable to load system directory", "Error", 0);
+        MessageBoxA(0, "Unable to load_xml system directory", "Error", 0);
 
         ExitProcess(0);
     }
@@ -15,7 +15,7 @@ ModuleDefinition::ModuleDefinition(const char *moduleName, std::initializer_list
     std::filesystem::path path(systemPath);
     path.append(moduleName);
     if ((m_hModule = LoadLibraryW(path.c_str())) == nullptr) {
-        MessageBoxA(0, (std::string("Unable to load dll: ") + moduleName).c_str(), "Error", 0);
+        MessageBoxA(0, (std::string("Unable to load_xml dll: ") + moduleName).c_str(), "Error", 0);
 
         ExitProcess(0);
     }
@@ -24,7 +24,7 @@ ModuleDefinition::ModuleDefinition(const char *moduleName, std::initializer_list
     void *func_ptr;
     for (auto func: funcs) {
         if ((func_ptr = GetProcAddress(m_hModule, func)) == nullptr) {
-            MessageBoxA(0, (std::string("Unable to load function: ") + func).c_str(), "Error", 0);
+            MessageBoxA(0, (std::string("Unable to load_xml function: ") + func).c_str(), "Error", 0);
 
             ExitProcess(0);
         }

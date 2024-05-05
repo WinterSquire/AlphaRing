@@ -86,7 +86,7 @@ bool FunctionTable::Initialize() {
     {
         ::DestroyWindow(window);
         ::UnregisterClass(wc.lpszClassName, wc.hInstance);
-        return -2;
+        return false;
     }
 
     memcpy(this, *(uintptr_t**)swapChain, 18 * sizeof(uintptr_t));

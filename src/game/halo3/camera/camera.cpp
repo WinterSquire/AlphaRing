@@ -13,11 +13,11 @@ static CCamera s_instance;
 ICCamera* g_pICCamera = &s_instance;
 
 camera_t *CCamera::getCamera() {
-    return (camera_t*)NativeInfo()->getEntryAddress(eEntry::cameras);
+    return (camera_t*)NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_CAMERAS);
 }
 
 camera_data_t *CCamera::getCameraData(Index player_index) {
-    return (camera_data_t*)NativeInfo()->getEntryAddress(eEntry::cameras_data) + player_index;
+    return (camera_data_t*)NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_CAMERAS_DATA) + player_index;
 }
 
 video_setting_t *CCamera::getVideoSetting() {

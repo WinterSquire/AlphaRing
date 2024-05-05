@@ -3,10 +3,6 @@
 #include <Windows.h>
 #include <string>
 
-FileVersion::FileVersion() : version(0) {
-
-}
-
 FileVersion::FileVersion(const char *file) : FileVersion() {
     const int BLOCK_SIZE = 2048;
     char block[BLOCK_SIZE];
@@ -41,6 +37,18 @@ FileVersion::FileVersion(const wchar_t *file) : FileVersion() {
     if (!VerQueryValueA(block, "\\", (LPVOID*)&lpBuffer, &size)) return;
 
     set(lpBuffer);
+}
+
+FileVersion::FileVersion(__int64 hModule) : FileVersion() {
+    if (hModule == 0) return;
+
+    auto pDosHeader = (PIMAGE_DOS_HEADER)hModule;
+    auto pNtHeader = (PIMAGE_NT_HEADERS)(hModule + pDosHeader->e_lfanew);
+    auto pOptionalHeader = (PIMAGE_OPTIONAL_HEADER)&pNtHeader->OptionalHeader;
+    auto dataDirectory2 = (PIMAGE_DATA_DIRECTORY)&pOptionalHeader->DataDirectory[IMAGE_DIRECTORY_ENTRY_RESOURCE];
+    auto pRes = (PIMAGE_RESOURCE_DIRECTORY)(hModule + dataDirectory2->VirtualAddress);
+
+    // todo
 }
 
 void FileVersion::set(void *info) {
