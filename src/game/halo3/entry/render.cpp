@@ -11,13 +11,11 @@ void Halo3::Entry::Render::Epilogue() {
     static bool bShowContext = true;
     Halo3::IMGUI::update();
 
-    if (Renderer()->ShowContext() != bShowContext) {
-        bShowContext = Renderer()->ShowContext();
-        if (bShowContext) {
-            NativeHalo3()->Input()->enableInput(false);
-        } else {
-            NativeHalo3()->Input()->enableInput(true);
-        }
+    bool bShow = Renderer()->ShowContext();
+
+    if (bShowContext != bShow) {
+        bShowContext = bShow;
+        NativeHalo3()->Input()->enableInput(!bShowContext);
     }
 
     if (!bShowContext) return;
