@@ -1,4 +1,91 @@
-#include "function_table.h"
+#include "./d3d11.h"
+
+#include "render/Renderer.h"
+#include "render/Window.h"
+
+#include "MinHook.h"
+
+#include <d3d11.h>
+
+HWND					window;
+WNDPROC					oWndProc;
+
+struct FunctionTable {
+    typedef HRESULT(__stdcall* tPresent) (IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags);
+    typedef HRESULT (__stdcall* tResizeBuffers) (IDXGISwapChain*, UINT, UINT, UINT, DXGI_FORMAT, UINT);
+
+    void* functions[205];
+
+    tPresent Present;
+    tResizeBuffers ResizeBuffers;
+
+    bool Initialize();
+} functionTable;
+
+static LRESULT __stdcall dWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    LRESULT Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam) || Window_WndProc(hWnd, uMsg, wParam, lParam))
+        return true;
+
+    if (uMsg == WM_QUIT && hWnd == window) Window::signalDestroy();
+
+    return CallWindowProc(oWndProc, hWnd, uMsg, wParam, lParam);
+}
+
+static HRESULT __stdcall dPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags) {
+    static bool bInitialized = false;
+    ID3D11Device*			pDevice;
+    ID3D11DeviceContext*	pContext;
+
+    if (!bInitialized &&
+        pSwapChain != nullptr &&
+        SUCCEEDED(pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)&pDevice)) &&
+        pDevice != nullptr && (pDevice->GetImmediateContext(&pContext), pContext != nullptr)) {
+
+        DXGI_SWAP_CHAIN_DESC sd;
+        pSwapChain->GetDesc(&sd);
+        window = sd.OutputWindow;
+        oWndProc = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR) dWndProc);
+
+        Renderer()->Init(window, pSwapChain, pDevice, pContext);
+        bInitialized = true;
+    }
+    else {
+        Renderer()->Render();
+    }
+
+    return functionTable.Present(pSwapChain, SyncInterval, Flags);
+}
+
+static HRESULT dResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags) {
+    Renderer()->ReleaseMainRenderTargetView();
+
+    HRESULT hr = functionTable.ResizeBuffers(pSwapChain, BufferCount, Width, Height, NewFormat, SwapChainFlags);
+
+    Renderer()->CreateMainRenderTargetView();
+
+    Renderer()->Resize(Width, Height);
+
+    return hr;
+}
+
+bool Directx11Hook::Initialize() {
+    functionTable.Initialize();
+
+    // [8]   Present
+    if (MH_CreateHook(functionTable.functions[8], dPresent,(void **) &functionTable.Present) != MH_OK ||
+        MH_EnableHook(functionTable.functions[8]) != MH_OK)
+        return false;
+
+    // [13]  ResizeBuffers
+    if (MH_CreateHook(functionTable.functions[13], dResizeBuffers,(void **) &functionTable.ResizeBuffers) != MH_OK ||
+        MH_EnableHook(functionTable.functions[13]) != MH_OK)
+        return false;
+
+    return true;
+}
 
 bool FunctionTable::Initialize() {
     WNDCLASS wc {

@@ -13,9 +13,9 @@ public:
 };
 
 static CObjects objects;
-ICObjects* g_pICObjects = &objects;
+ICObjects* g_pHalo3ICObjects = &objects;
 
 entity_manager_t<ObjectInfo> *CObjects::getObjectManager() {
-    return (entity_manager_t<ObjectInfo> *)(NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_OBJECT));
+    return (entity_manager_t<ObjectInfo> *)(NativeHalo3()->NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_OBJECT));
 }
 

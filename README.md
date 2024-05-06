@@ -1,3 +1,3 @@
 Alpha Ring
 ====
-A modding tool for halo3.
+A modding tool for mcc.

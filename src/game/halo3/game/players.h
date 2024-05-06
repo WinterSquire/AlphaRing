@@ -14,9 +14,6 @@ public:
 
 };
 
-extern ICPlayers* g_pICPlayers;
-inline ICPlayers* Players() {return g_pICPlayers;};
-
 struct player_action_t {
     __int32 un;
     bool disable_input;

@@ -26,9 +26,9 @@ Camera:
     position: %.2f %.2f %.2f
 )";
 
-    auto p_camera = Camera()->getCamera();
-    auto p_video_setting = Camera()->getVideoSetting();
-    auto p_camera_data = Camera()->getCameraData(0);
+    auto p_camera = NativeHalo3()->Camera()->getCamera();
+    auto p_video_setting = NativeHalo3()->Camera()->getVideoSetting();
+    auto p_camera_data = NativeHalo3()->Camera()->getCameraData(0);
 
     if (!p_camera || !p_camera_data || !p_video_setting) return;
 
@@ -51,7 +51,7 @@ Camera:
     if (ImGui::Combo("Camera Mode", &camera_mode, eCameraModeName, sizeof(eCameraModeName) / sizeof(const char*))) {
         int mode = camera_mode;
         setState([mode] {
-            NativeFunc()->player_set_camera(0, (eCameraMode)mode);
+            NativeHalo3()->NativeFunc()->player_set_camera(0, (eCameraMode)mode);
         });
     }
 
@@ -67,12 +67,12 @@ Camera:
 }
 
 void TabCamera::update() {
-    auto p_camera = Camera()->getCamera();
+    auto p_camera = NativeHalo3()->Camera()->getCamera();
 
     if (!p_camera || p_camera->mode != CAMERAMODE_FLYING) return;
 
-    auto p_game_time = Time()->getGameTime();
-    auto p_video_setting = Camera()->getVideoSetting();
+    auto p_game_time = NativeHalo3()->Time()->getGameTime();
+    auto p_video_setting = NativeHalo3()->Camera()->getVideoSetting();
 
     if ( !p_video_setting || !p_game_time) return;
 

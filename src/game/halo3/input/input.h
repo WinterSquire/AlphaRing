@@ -8,7 +8,4 @@ public:
 
 };
 
-extern ICInput* g_pICInput;
-inline ICInput* Input() {return g_pICInput;}
-
 #endif //ALPHA_RING_INPUT_H

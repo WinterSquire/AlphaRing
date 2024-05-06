@@ -1,23 +1,44 @@
-#include <Windows.h>
-#include <TlHelp32.h>
-
 #include "Log.h"
-#include "ISystem.h"
 
-#include "ExternalConsole.h"
-#include "../hook/Hook.h"
+#include <cstdio>
 
-extern void waitForDestory();
+#include "MinHook.h"
+#include "hook/d3d11.h"
+#include "hook/mcc.h"
+
+#include "render/Window.h"
+
 
 bool Prologue() {
-    if (ExternalConsole()->initialize() != ISystem::SYS_OK) return false;
-    if (Hook()->initialize() != ISystem::SYS_OK) return false;
+    if (AllocConsole() == false)
+        return false;
+
+    freopen("CONIN$", "r", stdin);
+    freopen("CONOUT$", "w", stdout);
+    freopen("CONOUT$", "w", stderr);
+
+    LOG_INFO("Version: {}", GAME_VERSION);
+
+    if (MH_Initialize() != MH_OK) {
+        LOG_ERROR("MinHook Fail To Initialize!");
+        return false;
+    }
+
+    if (!Directx11Hook::Initialize()) {
+        LOG_ERROR("Directx11 Hook Fail To Initialize!");
+        return false;
+    }
+
+    if (!MCCHook::Initialize()) {
+        LOG_ERROR("MCC Hook Fail To Initialize!");
+        return false;
+    }
+
     return true;
 }
 
 signed Main() {
-
-    waitForDestory();
+    Window::waitForDestroy();
 
     return 0;
 }
@@ -25,14 +46,22 @@ signed Main() {
 bool Epilogue() {
     LOG_INFO("Shutdown");
 
-    Hook()->shutdown();
+    MH_DisableHook(MH_ALL_HOOKS);
+    MH_Uninitialize();
 
-    ExternalConsole()->shutdown();
+    fclose(stdin);
+    fclose(stdout);
+    fclose(stderr);
+    FreeConsole();
 
     return true;
 }
 
-void StartupThread(HANDLE hModule) {if (Prologue()) Main(); Epilogue();}
+void StartupThread(HANDLE hModule) {
+    if (Prologue())
+        Main();
+    Epilogue();
+}
 
 BOOL APIENTRY DllMain(HANDLE handle, DWORD reason, LPVOID reserved) {
     if (reason == DLL_PROCESS_ATTACH) {

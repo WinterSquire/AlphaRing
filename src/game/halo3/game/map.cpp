@@ -11,8 +11,8 @@ public:
 };
 
 static CMap s_instance;
-ICMap* g_pICMap = &s_instance;
+ICMap* g_pHalo3ICMap = &s_instance;
 
 map_t *CMap::getMap() {
-    return (map_t*)NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_MAP);
+    return (map_t*)NativeHalo3()->NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_MAP);
 }

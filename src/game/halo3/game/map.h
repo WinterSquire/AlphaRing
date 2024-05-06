@@ -24,7 +24,5 @@ public:
     virtual map_t* getMap() = 0;
 };
 
-extern ICMap* g_pICMap;
-inline ICMap* Map() {return g_pICMap;}
 
 #endif //ALPHA_RING_MAP_H

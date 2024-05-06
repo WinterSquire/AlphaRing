@@ -19,8 +19,4 @@ public:
 
 };
 
-extern ICNativeFunc* g_pICNativeFunc;
-inline ICNativeFunc* NativeFunc() { return g_pICNativeFunc; }
-
-
 #endif //ALPHA_RING_NATIVE_FUNC_H

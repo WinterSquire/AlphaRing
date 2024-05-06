@@ -3,10 +3,12 @@
 
 #include <windows.h>
 
+// todo: Scheduler
+
 namespace Halo3::Entry::Engine {
     void Prologue() {
         LOG_INFO("Engine Prologue");
-        NativeInfo()->setModuleAddress((__int64)GetModuleHandleA("Halo3.dll"));
+        NativeHalo3()->NativeInfo()->update((__int64) GetModuleHandleA("NativeHalo3.dll"));
     }
     void Epilogue() {
         LOG_INFO("Engine Epilogue");

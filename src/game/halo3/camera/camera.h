@@ -43,8 +43,5 @@ public:
     virtual video_setting_t* getVideoSetting() = 0;
 };
 
-extern ICCamera* g_pICCamera;
-inline ICCamera* Camera() {return g_pICCamera;}
-
 
 #endif //ALPHA_RING_CAMERA_H

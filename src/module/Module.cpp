@@ -1,14 +1,12 @@
 #include "Module.h"
 
-#include <windows.h>
+#include <functional>
 
-#include "./halo3/entry.h"
+#include <windows.h>
 
 class CModule : public ICModule {
 public:
-    typedef bool(* func_t)(__int64 hModule);
-
-    CModule(func_t fInit = nullptr) : m_fInit(fInit) {};
+    CModule(std::function<void (__int64)> fInit = nullptr) : m_fInit(fInit) {};
 
     void load_module(const module_info_t &info) override {
         load_module(&info);
@@ -41,18 +39,20 @@ public:
 private:
     FileVersion m_version;
     module_info_t m_info;
-    func_t m_fInit;
+    std::function<void (__int64)> m_fInit;
 
 };
+
+#include "./entry/halo3/halo3.h"
 
 class CModules : public ICModules {
 public:
     ICModule *get(eModule module) override {return m_modules + module;}
 
     CModule m_modules[8] {
-            nullptr,
-            nullptr,
-            Entry::update_all,
+            {nullptr},
+            {nullptr},
+            {[] (__int64 hModule) {Halo3EntrySet()->update(hModule);}},
     };
 
     static CModules m_instance;

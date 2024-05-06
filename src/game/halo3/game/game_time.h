@@ -22,7 +22,5 @@ public:
     virtual game_time_t* getGameTime() = 0;
 };
 
-extern ICTime* g_pICTime;
-inline ICTime* Time() {return g_pICTime;}
 
 #endif //ALPHA_RING_GAME_TIME_H

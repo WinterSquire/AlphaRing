@@ -4,14 +4,13 @@
 
 #include "MinHook.h"
 
-const int MAX_ENTRY = 20;
+Entry::Entry(EntrySet* set, __int64 offset, void *pDetour) {
+    m_pOriginal = nullptr;
+    m_pDetour = pDetour;
+    m_offset = offset;
+    m_target = 0;
 
-static int entryCount = 0;
-static Entry* entryArray[MAX_ENTRY];
-
-Entry::Entry(__int64 offset, void* pDetour) : m_offset(offset), m_pDetour(pDetour), m_target(0) {
-    assert(entryCount < MAX_ENTRY);
-    entryArray[entryCount++] = this;
+    set->append(this);
 }
 
 bool Entry::update(__int64 hModule) {
@@ -34,7 +33,12 @@ bool Entry::update(__int64 hModule) {
     return true;
 }
 
-bool Entry::update_all(__int64 hModule) {
+void EntrySet::append(Entry *entry) {
+    assert(entryCount < MAX_ENTRY);
+    entryArray[entryCount++] = entry;
+}
+
+bool EntrySet::update(__int64 hModule) {
     bool result = true;
 
     if (hModule == 0) return false;

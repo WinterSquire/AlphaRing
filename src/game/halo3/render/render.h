@@ -13,9 +13,6 @@ public:
 
 };
 
-extern ICRender* g_pICRender;
-inline ICRender* Render() {return g_pICRender;}
-
 struct wireframe_flag_t {
     bool model;
     bool structure;

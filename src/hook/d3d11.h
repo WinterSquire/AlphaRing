@@ -4,7 +4,6 @@
 
 namespace Directx11Hook {
     bool Initialize();
-    bool Shutdown();
 }
 
 

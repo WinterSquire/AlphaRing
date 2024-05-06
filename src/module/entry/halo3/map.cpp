@@ -1,16 +1,15 @@
-#include "entry.h"
+#include "./halo3.h"
 
 namespace Halo3::Entry::Map {
-    extern void Prologue(void*);
-    extern void Epilogue(void*);
+    extern void Prologue(void*); extern void Epilogue(void*);
     bool detour(void* map_info);
 
-    ::Entry entry{OFFSET_HALO3_PF_MAP, detour};
+    Halo3Entry(entry, OFFSET_HALO3_PF_MAP, detour);
 }
 
 bool Halo3::Entry::Map::detour(void* map_info) {
     typedef bool (__fastcall *func_t)(void* map_info);
-    auto func = (func_t)entry.pOriginal();
+    auto func = (func_t)entry.m_pOriginal;
 
     Prologue(map_info);
     auto result = func(map_info);

@@ -23,7 +23,7 @@ BasicWidget* tab_object = &s_instance;
 
 void TabObject::render() {
     char buffer[1024];
-    auto mng = Objects()->getObjectManager();
+    auto mng = NativeHalo3()->Objects()->getObjectManager();
     if (mng == nullptr) return;
 
     ImGui::BeginChild("tab_object", {0,0}, 0, ImGuiWindowFlags_MenuBar);
@@ -51,7 +51,7 @@ void TabObject::render() {
             for (int i = 0; i < mng->m_capacity; ++i) {
                 auto object = mng->get(i)->address;
                 if (object == nullptr || !bFilter[object->type]) continue;
-                auto tag_name = TagFiles()->getTagName(object->datum);
+                auto tag_name = NativeHalo3()->TagFiles()->getTagName(object->datum);
                 if (tag_name == nullptr) continue;
                 tag_name = strrchr(tag_name, '\\');
                 if (tag_name == nullptr) continue;
@@ -98,7 +98,7 @@ Unit:
     Bump Target: %X
 )";
 
-    auto mng = Objects()->getObjectManager();
+    auto mng = NativeHalo3()->Objects()->getObjectManager();
     if (mng == nullptr || index < 0 || index > mng->m_capacity) return;
     auto p_object = mng->get(index)->address;
     units_t* p_unit = nullptr;
@@ -146,7 +146,7 @@ Unit:
     if (ImGui::Button("Possess")) {
         INDEX target = mng->INDEX(index);
         setState([target]{
-            NativeFunc()->player_possess(0, target);
+            NativeHalo3()->NativeFunc()->player_possess(0, target);
         });
     }
 }

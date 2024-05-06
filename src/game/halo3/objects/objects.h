@@ -13,9 +13,6 @@ public:
 
 };
 
-extern ICObjects* g_pICObjects;
-inline ICObjects* Objects() {return g_pICObjects;}
-
 struct objects_t {
     Datum datum;//0x0
     __int8 v0[8];

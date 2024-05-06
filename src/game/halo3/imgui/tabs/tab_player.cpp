@@ -17,13 +17,13 @@ static TabPlayer s_instance("Player");
 BasicWidget* tab_player = &s_instance;
 
 void TabPlayer::render() {
-    auto p_player = Players()->getPlayerManager();
+    auto p_player = NativeHalo3()->Players()->getPlayerManager();
 
     if (p_player == nullptr) return;
 
     for (int i = 0; i < p_player->m_capacity; ++i) print_player(i);
 
-    auto p_action = Players()->getPlayerAction();
+    auto p_action = NativeHalo3()->Players()->getPlayerAction();
     if (p_action != nullptr)
         ImGui::Checkbox("Disable Action", &p_action->disable_input);
 }
@@ -38,7 +38,7 @@ Player %d
     Position: %.2f %.2f %.2f
     Team: %d
 )";
-    auto p_player = Players()->getPlayerManager()->get(index);
+    auto p_player = NativeHalo3()->Players()->getPlayerManager()->get(index);
     if (p_player == nullptr) return;
     std::wcstombs(player_name, p_player->name, sizeof(player_name));
     sprintf_s(buffer, format,
@@ -51,7 +51,7 @@ Player %d
 
     if (ImGui::Button("Respawn")) {
         setState([index] {
-            NativeFunc()->player_possess(index, NONE);
+            NativeHalo3()->NativeFunc()->player_possess(index, NONE);
         });
     }
 }

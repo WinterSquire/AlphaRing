@@ -7,9 +7,6 @@ public:
     virtual const char* getTagName(__int16 index) = 0;
 };
 
-extern ICTagFiles* g_pICTagFiles;
-inline ICTagFiles* TagFiles() {return g_pICTagFiles;}
-
 class CharConstant {
 public:
     int magic;
