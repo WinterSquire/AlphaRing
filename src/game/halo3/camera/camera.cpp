@@ -21,5 +21,5 @@ camera_data_t *CCamera::getCameraData(Index player_index) {
 }
 
 video_setting_t *CCamera::getVideoSetting() {
-    return (video_setting_t*)(NativeHalo3()->NativeInfo()->getModuleAddress() + 0x2D3DD70 + 0x8 + 0x6C);
+    return (video_setting_t*)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PV_GLOBAL_VARIABLE + 0x8 + 0x6C);
 }

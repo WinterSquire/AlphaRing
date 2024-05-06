@@ -4,7 +4,7 @@
 
 class CTagFiles : public ICTagFiles {
 public:
-    const char *getTagName(__int16 index) override;
+    tag_names_t* getTagName() override;
 
     static CTagFiles s_instance;
 };
@@ -12,7 +12,6 @@ public:
 CTagFiles CTagFiles::s_instance;
 ICTagFiles* g_pHalo3ICTagFiles = &CTagFiles::s_instance;
 
-const char *CTagFiles::getTagName(__int16 index) {
-    if (index < 0 || index > 0x8000) return nullptr;
-    return *((const char**)(*(__int64*)(NativeHalo3()->NativeInfo()->getModuleAddress() + 0xA48148) + 0x820000) + (__int16)index);
+tag_names_t* CTagFiles::getTagName() {
+    return (tag_names_t*)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PV_TAG_NAMES);
 }

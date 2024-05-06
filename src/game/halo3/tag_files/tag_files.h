@@ -2,9 +2,19 @@
 
 #include "../base/base.h"
 
+struct tag_names_t {
+    inline static const int MAX_TAGS = 0x8000;
+
+    int offset[MAX_TAGS];
+    const char buffer[0x800000];
+    const char* ptr[0x10000];
+
+    inline const char* get(int index) { if (index < 0 || index >= MAX_TAGS) return nullptr; return ptr[index]; }
+};
+
 class ICTagFiles {
 public:
-    virtual const char* getTagName(__int16 index) = 0;
+    virtual tag_names_t* getTagName() = 0;
 };
 
 class CharConstant {

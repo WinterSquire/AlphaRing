@@ -48,10 +48,11 @@ void TabObject::render() {
         ImGui::BeginChild("Object Memory View", {0, -footer_height_to_reserve});
         {
             ImGui::BeginChild("Object List", {ImGui::GetWindowWidth() * 0.4f, 0});
-            for (int i = 0; i < mng->m_capacity; ++i) {
+            auto p_tag_names = NativeHalo3()->TagFiles()->getTagName();
+            for (int i = 0; p_tag_names && i < mng->m_capacity; ++i) {
                 auto object = mng->get(i)->address;
                 if (object == nullptr || !bFilter[object->type]) continue;
-                auto tag_name = NativeHalo3()->TagFiles()->getTagName(object->datum);
+                auto tag_name = p_tag_names->get(object->datum);
                 if (tag_name == nullptr) continue;
                 tag_name = strrchr(tag_name, '\\');
                 if (tag_name == nullptr) continue;

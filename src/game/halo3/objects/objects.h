@@ -7,9 +7,25 @@
 
 struct ObjectInfo;
 
+struct object_info_t {
+    const char* full_name;
+    char magic[4];
+    __int16 size;
+    __int16 un[9];
+    void* func[0x25];
+    void* parent[0x13];
+};
+
+struct object_infos_t {
+    object_info_t* object_infos[14];
+
+    object_info_t* get(eObjectType type) {return object_infos[type];}
+};
+
 class ICObjects {
 public:
     virtual entity_manager_t<ObjectInfo>* getObjectManager() = 0;
+    virtual object_infos_t* getObjectInfos() = 0;
 
 };
 
@@ -60,9 +76,6 @@ struct objects_t {
     inline void CannotDieFromDamage(bool b){if(b)damage_flags |= 0x10000u;else damage_flags &= ~0x10000u;}
 
     inline void kill() { damage_flags |= 0x40;}
-
-    __int16 size();
-
 };
 
 struct units_t : objects_t {
@@ -70,14 +83,16 @@ struct units_t : objects_t {
     INDEX actor_index;//0x168
     __int8 v10[0x4];
     __int32 unit_flags;
-    eTeamAI team;//0x174
-    t_Player player_index;//0x178
-    __int8 v11[0xA0];//0x20C?
-    INDEX aim_target;//0x21C
-    __int8 v12[0x14C];//378 crouch程度 1.0max
+    eTeamAI team; //0x174
+    t_Player player_index; //0x178
+    __int8 v11[0xA0]; //0x20C?
+    INDEX aim_target; //0x21C
+    __int8 v12[0x14C];
     float camo_time;
-    __int8 v13[0x12C];//378 crouch程度 1.0max
-    INDEX bump_target;//0x49C bump target
+    __int64 un;
+    float crouch_progress; // [0, 1.0]
+    __int8 v13[0x120];
+    INDEX bump_target;
     __int8 bump_close;
 
     inline bool FlashLight(){return unit_flags & 0x8000000u;}

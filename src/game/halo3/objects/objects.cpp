@@ -2,14 +2,11 @@
 
 #include "../native/native.h"
 
-__int16 objects_t::size() {
-    return 0;
-//    return *(__int16*)(*(__int64*)(NativeInfo::getTLS().get_hModule() + 0x810D20 + type * 8) + 0x6);
-}
-
 class CObjects : public ICObjects {
 public:
     entity_manager_t<ObjectInfo> *getObjectManager() override;
+    object_infos_t *getObjectInfos() override;
+
 };
 
 static CObjects objects;
@@ -17,5 +14,9 @@ ICObjects* g_pHalo3ICObjects = &objects;
 
 entity_manager_t<ObjectInfo> *CObjects::getObjectManager() {
     return (entity_manager_t<ObjectInfo> *)(NativeHalo3()->NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_OBJECT));
+}
+
+object_infos_t *CObjects::getObjectInfos() {
+    return (object_infos_t*)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PV_OBJECT_INFOS);
 }
 
