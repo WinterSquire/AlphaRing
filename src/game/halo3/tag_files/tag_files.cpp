@@ -13,5 +13,5 @@ CTagFiles CTagFiles::s_instance;
 ICTagFiles* g_pHalo3ICTagFiles = &CTagFiles::s_instance;
 
 tag_names_t* CTagFiles::getTagName() {
-    return (tag_names_t*)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PV_TAG_NAMES);
+    return *(tag_names_t**)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PV_TAG_NAMES);
 }

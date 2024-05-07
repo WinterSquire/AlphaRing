@@ -7,9 +7,9 @@ struct tag_names_t {
 
     int offset[MAX_TAGS];
     const char buffer[0x800000];
-    const char* ptr[0x10000];
+    const char* ptr[MAX_TAGS];
 
-    inline const char* get(int index) { if (index < 0 || index >= MAX_TAGS) return nullptr; return ptr[index]; }
+    inline const char* get(Index index) { if (index < 0 || index >= MAX_TAGS) return nullptr; return ptr[index]; }
 };
 
 class ICTagFiles {
