@@ -1,7 +1,7 @@
 #include "../basic_widget.h"
+#include "imgui/curve_editor.h"
 
 #include "game/halo3/native/native.h"
-#include "imgui/curve_editor.h"
 
 class TabCamera : public BasicWidget {
 public:

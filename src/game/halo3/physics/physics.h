@@ -1,9 +1,9 @@
-#ifndef ALPHA_RING_HALO3_PHYSICSCONSTANT_H
-#define ALPHA_RING_HALO3_PHYSICSCONSTANT_H
+#ifndef ALPHA_RING_PHYSICS_H
+#define ALPHA_RING_PHYSICS_H
 
 #include <cmath>
 
-struct PhysicsConstant {
+struct physics_constant_t {
     float gravity;
     float v0;
     float v1;
@@ -26,9 +26,19 @@ struct PhysicsConstant {
         v5 = cosf(0.61086524);
     }
 
-    inline void set_gravity(float scale) {
-        gravity = scale * GRAVITY;
-    }
+    inline void set_gravity(float scale) {gravity = scale * GRAVITY;}
 };
 
-#endif //ALPHA_RING_HALO3_PHYSICSCONSTANT_H
+struct bump_possession_setting_t {
+    bool enable;
+};
+
+class ICPhysics {
+public:
+    virtual inline physics_constant_t* PhysicsConstant() = 0;
+    virtual inline bump_possession_setting_t* BumpPossessionSetting() = 0;
+
+};
+
+
+#endif //ALPHA_RING_PHYSICS_H

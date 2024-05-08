@@ -15,6 +15,7 @@
 #include "../game/map.h"
 #include "../ai/actors.h"
 #include "../tag_files/tag_files.h"
+#include "../physics/physics.h"
 
 extern ICNativeFunc* g_pICHalo3NativeFunc;
 
@@ -27,6 +28,7 @@ extern ICCamera* g_pHalo3ICCamera;
 extern ICActor* g_pHalo3ICActor;
 extern ICObjects* g_pHalo3ICObjects;
 extern ICTagFiles* g_pHalo3ICTagFiles;
+extern ICPhysics* g_pHalo3ICPhysics;
 
 class ICHalo3 : public ICNative {
 public:
@@ -40,6 +42,7 @@ public:
     inline ICActor* Actor() {return g_pHalo3ICActor;}
     inline ICObjects* Objects() {return g_pHalo3ICObjects;}
     inline ICTagFiles* TagFiles() {return g_pHalo3ICTagFiles;}
+    inline ICPhysics* Physics() {return g_pHalo3ICPhysics;}
 
 };
 

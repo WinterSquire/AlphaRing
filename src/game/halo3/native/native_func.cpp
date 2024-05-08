@@ -31,7 +31,7 @@ bool CNativeFunc::player_push_message(Index player_index, const wchar_t *msg, in
 __int64 CNativeFunc::player_possess(INDEX player_index, INDEX target) {
     typedef __int64 (__fastcall* func_t) (INDEX player_index, INDEX target);
 
-    if (player_index > 15) return false;
+    if ((__int16)player_index > 15) return false;
 
     return ((func_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PF_PLAYER_POSSESS))(player_index, target);
 }

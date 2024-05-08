@@ -1,8 +1,6 @@
 #include "../basic_widget.h"
 
 #include "game/halo3/native/native.h"
-#include "game/halo3/objects/objects.h"
-#include "game/halo3/tag_files/tag_files.h"
 
 class TabObject : public BasicWidget {
 public:
@@ -97,6 +95,7 @@ Unit:
     Player: %X
     Aim Target: %X
     Bump Target: %X
+    Bump Time: %hhd
 )";
 
     auto mng = NativeHalo3()->Objects()->getObjectManager();
@@ -134,7 +133,7 @@ Unit:
 
     sprintf(buffer, unit_format,
             p_unit->actor_index, p_unit->player_index,
-            p_unit->aim_target, p_unit->bump_target
+            p_unit->aim_target, p_unit->bump_target, p_unit->bump_close
     );
 
     ImGui::Text(buffer);

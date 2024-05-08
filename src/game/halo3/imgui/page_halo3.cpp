@@ -9,6 +9,7 @@ extern BasicWidget* tab_render;
 extern BasicWidget* tab_object;
 extern BasicWidget* tab_player;
 extern BasicWidget* tab_camera;
+extern BasicWidget* tab_physics;
 
 BasicWidget* const tabs[] {
     tab_map,
@@ -18,6 +19,7 @@ BasicWidget* const tabs[] {
     tab_object,
     tab_actor,
     tab_render,
+    tab_physics,
 };
 
 void Halo3::IMGUI::page_halo3() {

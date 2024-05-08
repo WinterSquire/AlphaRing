@@ -91,7 +91,7 @@ struct units_t : objects_t {
     float camo_time;
     __int64 un;
     float crouch_progress; // [0, 1.0]
-    __int8 v13[0x120];
+    __int8 v13[0x128];
     INDEX bump_target;
     __int8 bump_close;
 
