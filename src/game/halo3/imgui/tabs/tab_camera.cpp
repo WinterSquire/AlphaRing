@@ -42,8 +42,8 @@ Camera:
     if (p_video_setting) {
         ImGui::Text("Video Setting");
         ImGui::Indent();
-        ImGui::DragFloat("FOV FP", &p_video_setting->fov_fp, 1.0f, 0.0f, 150.0f);
-        ImGui::DragFloat("FOV 3rd", &p_video_setting->fov_3rd, 1.0f, 0.0f, 150.0f);
+        ImGui::DragFloat("FOV FP", &p_video_setting->fov_fp, 1.0f, 0.0f, 179.999f);
+        ImGui::DragFloat("FOV 3rd", &p_video_setting->fov_3rd, 1.0f, 0.0f, 179.999f);
         ImGui::Unindent();
     }
 

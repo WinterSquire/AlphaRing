@@ -4,9 +4,10 @@
 
 class CRender : public ICRender {
 public:
-    chud_flag_t *getChud() override;
+    chud_flag_t *getChudFlag() override;
     render_flag_t *getRender() override;
     wireframe_flag_t *getWireframe() override;
+    chud_t *getChud() override;
 
     wireframe_flag_t m_wireframe_flag;
 
@@ -16,7 +17,7 @@ public:
 CRender CRender::s_instance;
 ICRender* g_pHalo3ICRender = &CRender::s_instance;
 
-chud_flag_t *CRender::getChud() {
+chud_flag_t *CRender::getChudFlag() {
     return (chud_flag_t*)(NativeHalo3()->NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_CHUD) + 0x144);
 }
 
@@ -26,4 +27,8 @@ render_flag_t *CRender::getRender() {
 
 wireframe_flag_t *CRender::getWireframe() {
     return &m_wireframe_flag;
+}
+
+chud_t *CRender::getChud() {
+    return (chud_t*)NativeHalo3()->NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_MESSAGE);
 }

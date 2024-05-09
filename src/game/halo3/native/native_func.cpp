@@ -16,14 +16,15 @@ static CNativeFunc native_func;
 ICNativeFunc* g_pICHalo3NativeFunc = &native_func;
 
 bool CNativeFunc::player_push_message(Index player_index, const wchar_t *msg, int type) {
-    typedef void (__fastcall* func_t)(__int64 a1, const wchar_t *a2, int a3);
+    typedef void (__fastcall* func_t)(chud_t::msg_t* a1, const wchar_t *a2, int a3);
 
     if (player_index > 3) return false;
-    if (NativeHalo3()->NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_MESSAGE) == 0) return false;
 
-    auto p1 = NativeHalo3()->NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_MESSAGE) + 0x1F8Ci64 + 0x28C8i64 * player_index;
+    auto p_chud = NativeHalo3()->Render()->getChud();
 
-    ((func_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PF_PLAYER_PUSH_MESSAGE))(p1, msg, type);
+    if (p_chud == nullptr) return false;
+
+    ((func_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PF_PLAYER_PUSH_MESSAGE))(&p_chud[player_index].msg, msg, type);
 
     return true;
 }

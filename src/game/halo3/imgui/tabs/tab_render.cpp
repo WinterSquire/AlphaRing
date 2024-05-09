@@ -42,7 +42,7 @@ void TabRender::render() {
     }
 
     ImGui::Text("Chud");
-    auto p_chud = NativeHalo3()->Render()->getChud();
+    auto p_chud = NativeHalo3()->Render()->getChudFlag();
     if (p_chud != nullptr) {
         ImGui::Indent();
         ImGui::Checkbox("all", &p_chud->chud_show);
