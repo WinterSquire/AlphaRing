@@ -16,15 +16,15 @@ static CNativeFunc native_func;
 ICNativeFunc* g_pICHalo3NativeFunc = &native_func;
 
 bool CNativeFunc::player_push_message(Index player_index, const wchar_t *msg, int type) {
-    typedef void (__fastcall* func_t)(chud_t::msg_t* a1, const wchar_t *a2, int a3);
+    typedef void (__fastcall* func_t)(chud_t::player_chud_t::msg_t* a1, const wchar_t *a2, int a3);
 
-    if (player_index > 3) return false;
+    if (player_index >= MAX_LOCAL_PLAYERS) return false;
 
     auto p_chud = NativeHalo3()->Render()->getChud();
 
     if (p_chud == nullptr) return false;
 
-    ((func_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PF_PLAYER_PUSH_MESSAGE))(&p_chud[player_index].msg, msg, type);
+    ((func_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PF_PLAYER_PUSH_MESSAGE))(&p_chud->player[player_index].msg, msg, type);
 
     return true;
 }
@@ -32,7 +32,7 @@ bool CNativeFunc::player_push_message(Index player_index, const wchar_t *msg, in
 __int64 CNativeFunc::player_possess(INDEX player_index, INDEX target) {
     typedef __int64 (__fastcall* func_t) (INDEX player_index, INDEX target);
 
-    if ((__int16)player_index > 15) return false;
+    if ((__int16)player_index >= MAX_ONLINE_PLAYERS) return false;
 
     return ((func_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PF_PLAYER_POSSESS))(player_index, target);
 }

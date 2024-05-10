@@ -21,7 +21,7 @@ void Halo3::Entry::Render::Epilogue() {
     if (!bShowContext) return;
 
     Renderer()->NewFrame();
-    ImGui::Begin("NativeHalo3");
+    ImGui::Begin("Halo3");
     Halo3::IMGUI::page_halo3();
     ImGui::End();
 }
