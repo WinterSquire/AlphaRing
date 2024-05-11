@@ -5,30 +5,41 @@
 #include "eCameraMode.h"
 
 struct camera_t {
+    // 0x180
     struct cam_t {
         void* pp_func1;
         void* pp_mode_func;
         INDEX target;
-        __int8 un0[12];
+        __int8 un0[0xC];
         Vector3 position;
         Radian3 rotation;
-        __int8 un[0x144];
-    } camera[4];
-    __int32 un1;
-    __int32 un2;
-    eCameraMode mode;
+        __int8 un[0x120];
+        int index; // 0x158
+        __int8 un1[0x180 - 0x15C];
+    } camera[MAX_LOCAL_PLAYERS];
+
+    __int8 un0[0x604 - MAX_LOCAL_PLAYERS * sizeof(cam_t)];
+
+    // 0x604
+    struct mode_t {
+        int un_mode;
+        eCameraMode mode;
+        int un1;
+    } mode[MAX_LOCAL_PLAYERS];
 };
 
 struct camera_data_t {
-    __int8 un0[0x11C];
-    struct data_t {
-        Vector3 position;
-        float un;
-        Vector3 velocity;
-        Vector3 v_rotation;
-        Vector3 components;
-    } data;
-    __int8 un1[0x280];
+    struct raw_data_t {
+        __int8 un0[0x11C];
+        struct data_t {
+            Vector3 position;
+            float un;
+            Vector3 velocity;
+            Vector3 v_rotation;
+            Vector3 components;
+        } data;
+        __int8 un1[0x280];
+    } data[MAX_LOCAL_PLAYERS];
 };
 
 struct video_setting_t {
@@ -69,11 +80,29 @@ struct texture_camera_t {
     }
 };
 
+struct split_screen_t {
+    char un[0x74];
+    int index[4];// 0x74
+    int un1[3 * 4];// 0x84
+    int screen_count; // 0xB4
+    INDEX player_INDEX[4]; // 0xB8
+    INDEX object_INDEX[4]; // 0xC8
+    __int8 players[4]; // 0xD8
+
+    bool set_player(Index index, INDEX player) {
+        if (index < 0 || index > 3) return false;
+        player_INDEX[index] = player;
+        return true;
+    }
+};
+
 class ICCamera {
 public:
     virtual camera_t* getCamera() = 0;
-    virtual camera_data_t* getCameraData(Index player_index) = 0;
+    virtual camera_data_t* getCameraData() = 0;
     virtual video_setting_t* getVideoSetting() = 0;
+    virtual inline split_screen_t* getSplitScreen() = 0;
+
 };
 
 

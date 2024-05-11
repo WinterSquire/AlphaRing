@@ -7,7 +7,6 @@ struct chud_flag_t;
 struct render_flag_t;
 struct wireframe_flag_t;
 struct chud_t;
-struct split_screen_t;
 
 class ICRender {
 public:
@@ -15,13 +14,7 @@ public:
     virtual inline render_flag_t* getRender() = 0;
     virtual inline wireframe_flag_t* getWireframe() = 0;
     virtual inline chud_t* getChud() = 0;
-    virtual inline split_screen_t* getSplitScreen() = 0;
 
-};
-
-struct split_screen_t {
-    char un[0xB4];
-    __int16 screen_count;
 };
 
 struct wireframe_flag_t {

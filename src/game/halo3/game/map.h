@@ -8,6 +8,13 @@ struct map_t {
     __int8 game_type; // 1 campaign; 2 mp; 3 mainmenu
     __int8 un1[0x43];
     char name[0x104];
+
+//    // offset: 0x200 size: 0xB8
+//    struct player_init_info_t {
+//        bool valid;
+//        bool un;
+//    } player_init_info[4];
+
     __int8 un2[0xFA30];
     // 0xFB88 - 0xFB98
     __int8 skulls[0x10];

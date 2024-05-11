@@ -27,17 +27,19 @@ Camera:
 )";
 
     auto p_camera = NativeHalo3()->Camera()->getCamera();
+    auto p_splitScreen = NativeHalo3()->Camera()->getSplitScreen();
     auto p_video_setting = NativeHalo3()->Camera()->getVideoSetting();
-    auto p_camera_data = NativeHalo3()->Camera()->getCameraData(0);
+    auto p_data = NativeHalo3()->Camera()->getCameraData();
 
-    if (!p_camera || !p_camera_data || !p_video_setting) return;
+    if (!p_camera || !p_data || !p_video_setting || !p_splitScreen) return;
 
-    sprintf(buffer, format,
-            eCameraModeName[p_camera->mode], p_camera->camera[0].target,
-            p_camera_data->data.position.x, p_camera_data->data.position.y, p_camera_data->data.position.z
-    );
-
-    ImGui::Text(buffer);
+    if (p_splitScreen) {
+        ImGui::Text("Split Screen");
+        ImGui::Indent();
+        int v = p_splitScreen->screen_count;
+        if (ImGui::InputInt("count", &v) && v >= 1 && v <= 4) p_splitScreen->screen_count = v;
+        ImGui::Unindent();
+    }
 
     if (p_video_setting) {
         ImGui::Text("Video Setting");
@@ -47,29 +49,50 @@ Camera:
         ImGui::Unindent();
     }
 
-    camera_mode = p_camera->mode;
-    if (ImGui::Combo("Camera Mode", &camera_mode, eCameraModeName, sizeof(eCameraModeName) / sizeof(const char*))) {
-        int mode = camera_mode;
-        setState([mode] {
-            NativeHalo3()->NativeFunc()->player_set_camera(0, (eCameraMode)mode);
-        });
+    for (int i = 0; i < p_splitScreen->screen_count; ++i) {
+        auto p_cam = &p_camera->camera[i];
+        auto p_cam_data = &p_data->data[i];
+        auto p_mode = &p_camera->mode[i].mode;
+
+        ImGui::Text(format,
+                    eCameraModeName[*p_mode], p_cam->target,
+                    p_cam_data->data.position.x, p_cam_data->data.position.y, p_cam_data->data.position.z
+        );
+
+        ImGui::PushID(i << 2 | 0);
+        if (ImGui::Combo("Camera Mode", (int*)p_mode, eCameraModeName, sizeof(eCameraModeName) / sizeof(const char*))) {
+            int mode = *p_mode;
+            setState([i, mode] {
+                NativeHalo3()->NativeFunc()->player_set_camera(i, (eCameraMode)mode);
+            });
+        }
+        ImGui::PopID();
+
+
+        if (*p_mode == CAMERAMODE_FLYING) {
+            ImGui::PushID(i << 2 | 1);
+            ImGui::DragFloat3("Position", &p_cam->position.x, 0.01f);
+            ImGui::PopID();
+
+            auto rotation = (Degree3)p_cam->rotation;
+            ImGui::PushID(i << 2 | 0);
+            if (ImGui::DragFloat3("Rotation", &rotation.x, 1.0f, -360.0f, 360.0f))
+                p_cam->rotation = (Radian3)rotation;
+            ImGui::PopID();
+        }
     }
 
-    if (p_camera->mode != CAMERAMODE_FLYING) return;
-    ImGui::DragFloat3("Position", &p_camera->camera[0].position.x, 0.01f);
-    auto rotation = (Degree3)p_camera->camera[0].rotation;
-    if (ImGui::DragFloat3("Rotation", &rotation.x, 1.0f, -360.0f, 360.0f));
-        p_camera->camera[0].rotation = (Radian3)rotation;
-
-    ImGui::Begin("Curve Editor");
-    curveEditor.render();
-    ImGui::End();
+    if (p_camera->mode[0].mode == CAMERAMODE_FLYING) {
+        ImGui::Begin("Curve Editor");
+        curveEditor.render();
+        ImGui::End();
+    }
 }
 
 void TabCamera::update() {
     auto p_camera = NativeHalo3()->Camera()->getCamera();
 
-    if (!p_camera || p_camera->mode != CAMERAMODE_FLYING) return;
+    if (!p_camera || p_camera->mode[0].mode != CAMERAMODE_FLYING) return;
 
     auto p_game_time = NativeHalo3()->Time()->getGameTime();
     auto p_video_setting = NativeHalo3()->Camera()->getVideoSetting();

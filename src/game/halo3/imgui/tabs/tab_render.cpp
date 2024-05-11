@@ -14,15 +14,6 @@ static TabRender s_instance("Render");
 BasicWidget* tab_render = &s_instance;
 
 void TabRender::render() {
-    ImGui::Text("Split Screen");
-    auto p_splitScreen = NativeHalo3()->Render()->getSplitScreen();
-    if (p_splitScreen != nullptr) {
-        ImGui::Indent();
-        int v = p_splitScreen->screen_count;
-        if (ImGui::InputInt("count", &v) && v >= 1 && v <= 4) p_splitScreen->screen_count = v;
-        ImGui::Unindent();
-    }
-
     ImGui::Text("Wireframe");
     auto p_wireframe = NativeHalo3()->Render()->getWireframe();
     if (p_wireframe != nullptr) {

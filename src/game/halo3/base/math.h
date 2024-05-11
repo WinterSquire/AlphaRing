@@ -20,7 +20,7 @@ public :
     float x = 0,y = 0,z = 0;
     Vector3(float x = 0, float y = 0, float z = 0) : x(x), y(y), z(z){}
     inline void operator = (float v){x = v; y = v; z = v;}
-    inline void operator = (Vector3& v){x = v.x; y = v.y; z = v.z;}
+    inline void operator = (const Vector3& v){x = v.x; y = v.y; z = v.z;}
     inline bool operator == (Vector3& v){return x == v.x && y == v.y && z == v.z;}
     inline Vector3 operator + (const float f) const {return Vector3(x+f,y+f,z+f);}
 };
