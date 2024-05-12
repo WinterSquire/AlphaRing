@@ -38,38 +38,21 @@ void TabPlayer::render() {
 
             if (p_player_mng == nullptr) return;
 
-            auto p_player0 = p_player_mng->get(0);
-
-            auto p_obj = NativeHalo3()
-                    ->Objects()
-                    ->getObjectManager()
-                    ->get(p_player0->object_INDEX)
-                    ->address;
-
-            if (p_obj == nullptr) return;
-
-            INDEX object = NativeHalo3()
-                    ->NativeFunc()
-                    ->object_create(p_obj->datum, p_obj->position);
-
-            if (object == NONE) return;
-
             int index = p_player_mng->m_size;
-            auto player = NativeHalo3()->NativeFunc()->player_add(index);
-            auto p_new_player = p_player_mng->get(index);
 
-            p_new_player->name[0] = 'A' + index;
-            p_new_player->pref_species = p_player0->pref_species;
+            if (index >= MAX_LOCAL_PLAYERS) return;
 
-            if (index >= 0 && index <= 3) {
-                p_split->index[index] = index;
-                p_split->player_INDEX[index] = player;
-                p_split->players[index] = (1 << index);
-            }
-
-            NativeHalo3()
+            p_split->player_INDEX[index] = NativeHalo3()
                 ->NativeFunc()
-                ->player_possess(player, object);
+                ->player_add(index, L"UWU", L"UWU");
+
+            p_split->index[index] = index;
+            p_split->players[index] = (1 << index);
+
+            auto p_new_player = p_player_mng->get(index);
+            p_new_player->primary_color = index * 2 + 0;
+            p_new_player->secondary_color = index * 2 + 1;
+            p_new_player->pref_species = index % 2;
         });
     }
 

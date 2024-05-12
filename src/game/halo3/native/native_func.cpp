@@ -2,6 +2,8 @@
 
 #include "native_halo3.h"
 
+#include <cstring>
+
 class CNativeFunc : public ICNativeFunc {
 public:
     bool player_push_message(Index player_index, const wchar_t *msg, int type) override;
@@ -10,7 +12,7 @@ public:
     bool players_control_camera(bool custom_control) override;
     bool player_set_camera(Index player_index, eCameraMode mode, float time) override;
 
-    INDEX player_add(Index index) override;
+    INDEX player_add(Index index, const wchar_t* name, const wchar_t* id) override;
 
     INDEX object_create(Datum datum, const Vector3 &position) override;
 };
@@ -66,33 +68,42 @@ bool CNativeFunc::players_control_camera(bool custom_control) {
     return ((func_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PF_PLAYERS_CONTROL_CAMERA))(custom_control);
 }
 
-INDEX CNativeFunc::player_add(Index index) {
-    typedef __int64 (__fastcall* func_add_t)(__int64 a1, int a2);
-    typedef __int64 (__fastcall* func_mapping_t)(__int64 a1, int input_user);
+INDEX CNativeFunc::player_add(Index index, const wchar_t* name, const wchar_t* id) {
+    typedef __int64 (__fastcall* func_init_t) (Index index, void* a2, bool a3);
 
-    INDEX player = NONE;
+    // size: 0xB8
+    struct new_player_t {
+        bool v_true;
+        bool v_false;
+        __int16 user_input;
+        int v_NONE;
+        int respawn_flag;
+        char un0[0xC];
+        wchar_t name[0x10]; // 0x18
+        char un1[0x1E];
+        wchar_t id[0x3]; // 0x56
+        char un2[0x34];
+        wchar_t name2[0x10]; // 0x90
+        char un3[0x8];
+    } new_player;
 
-    player = ((func_add_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + 0x130298))(
-            NativeHalo3()->NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_PLAYERS),
-            index
-        );
+    memset(&new_player, 0, sizeof(new_player));
 
-    if (player == NONE) return player;
+    new_player.v_true = true;
+    new_player.user_input = -1;
+    new_player.v_NONE = NONE;
+    new_player.respawn_flag = 0x459D;
 
-    auto p_new_player = NativeHalo3()->Players()->getPlayerManager()->get(index);
+    if (name) {
+        memcpy(new_player.name, name, sizeof(new_player.name));
+        memcpy(new_player.name2, name, sizeof(new_player.name2));
+    }
 
-    p_new_player->coop_index = index;
-    p_new_player->object_INDEX = p_new_player->object_INDEX2 = NONE;
-    p_new_player->restore_INDEX = NONE;
+    if (id) {
+        memcpy(new_player.id, id, sizeof(new_player.id));
+    }
 
-    *(int*)(p_new_player + 0x0) = 0xEC70 | index;
-    *(__int8*)(p_new_player + 0xB) = index;
-
-    player_possess(index, NONE);
-
-    ((func_mapping_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + 0xEDC24))(player, NONE);
-
-    return player;
+    return ((func_init_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + 0xE1DBC))(index, &new_player, false);
 }
 
 INDEX CNativeFunc::object_create(Datum datum, const Vector3 &position) {

@@ -20,7 +20,10 @@ struct player_action_t {
 };
 
 struct player_info_t {
-    __int8 v0[0x28];
+    int Index; // 0x0000EC71
+    char flags_0; // (1 << 3) black screen
+    char flags_1;
+    __int8 v0[0x22];
     INDEX object_INDEX; // 0x28 can't modify directly
     INDEX restore_INDEX; // 0x2C
     __int8 v1[0x1C];
