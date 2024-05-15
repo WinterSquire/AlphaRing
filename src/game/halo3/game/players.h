@@ -15,7 +15,7 @@ public:
 };
 
 struct player_action_t {
-    __int32 un;
+    __int32 player_count;
     bool disable_input;
 };
 

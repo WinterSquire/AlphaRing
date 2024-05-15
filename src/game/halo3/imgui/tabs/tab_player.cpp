@@ -46,6 +46,8 @@ void TabPlayer::render() {
                 ->NativeFunc()
                 ->player_add(index, L"UWU", L"UWU");
 
+            p_split->map_player[index] = 0xEC700000;
+
             p_split->index[index] = index;
             p_split->players[index] = (1 << index);
 

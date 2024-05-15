@@ -81,7 +81,9 @@ struct texture_camera_t {
 };
 
 struct split_screen_t {
-    char un[0x74];
+    int un0;
+    INDEX map_player[4];
+    char un[0x60];
     int index[4];// 0x74
     int un1[3 * 4];// 0x84
     int screen_count; // 0xB4

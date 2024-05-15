@@ -70,6 +70,7 @@ bool CNativeFunc::players_control_camera(bool custom_control) {
 
 INDEX CNativeFunc::player_add(Index index, const wchar_t* name, const wchar_t* id) {
     typedef __int64 (__fastcall* func_init_t) (Index index, void* a2, bool a3);
+    typedef __int64 (__fastcall* func_map_t) (INDEX index, int input_user); //EDC24
 
     // size: 0xB8
     struct new_player_t {
@@ -77,8 +78,9 @@ INDEX CNativeFunc::player_add(Index index, const wchar_t* name, const wchar_t* i
         bool v_false;
         __int16 user_input;
         int v_NONE;
-        int respawn_flag;
-        char un0[0xC];
+        int respawn_flag; // 0x8
+        int unun;
+        __int64 un_flag; // 0x10
         wchar_t name[0x10]; // 0x18
         char un1[0x1E];
         wchar_t id[0x3]; // 0x56
@@ -90,9 +92,10 @@ INDEX CNativeFunc::player_add(Index index, const wchar_t* name, const wchar_t* i
     memset(&new_player, 0, sizeof(new_player));
 
     new_player.v_true = true;
-    new_player.user_input = -1;
+    new_player.user_input = index;
     new_player.v_NONE = NONE;
     new_player.respawn_flag = 0x459D;
+//    new_player.un_flag = 0x000901F8039829FB;
 
     if (name) {
         memcpy(new_player.name, name, sizeof(new_player.name));
