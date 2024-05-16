@@ -16,7 +16,7 @@ public:
     virtual __int64 player_possess(INDEX player_index, INDEX target) = 0;
     virtual bool players_control_camera(bool custom_control) = 0;
     virtual bool player_set_camera(Index player_index, eCameraMode mode, float time = 0.0f) = 0;
-    virtual INDEX player_add(Index index, const wchar_t* name, const wchar_t* id) = 0;
+    virtual INDEX local_player_add(const wchar_t *name, const wchar_t *id) = 0;
 
     virtual INDEX object_create(Datum datum, const Vector3& position) = 0;
 };

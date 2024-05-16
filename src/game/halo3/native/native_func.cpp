@@ -12,7 +12,7 @@ public:
     bool players_control_camera(bool custom_control) override;
     bool player_set_camera(Index player_index, eCameraMode mode, float time) override;
 
-    INDEX player_add(Index index, const wchar_t* name, const wchar_t* id) override;
+    INDEX local_player_add(const wchar_t *name, const wchar_t *id) override;
 
     INDEX object_create(Datum datum, const Vector3 &position) override;
 };
@@ -68,10 +68,9 @@ bool CNativeFunc::players_control_camera(bool custom_control) {
     return ((func_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PF_PLAYERS_CONTROL_CAMERA))(custom_control);
 }
 
-INDEX CNativeFunc::player_add(Index index, const wchar_t* name, const wchar_t* id) {
+INDEX CNativeFunc::local_player_add(const wchar_t *name, const wchar_t *id) {
     typedef __int64 (__fastcall* func_init_t) (Index index, void* a2, bool a3);
     typedef __int64 (__fastcall* func_map_t) (INDEX index, int input_user); //EDC24
-
     // size: 0xB8
     struct new_player_t {
         bool v_true;
@@ -88,6 +87,19 @@ INDEX CNativeFunc::player_add(Index index, const wchar_t* name, const wchar_t* i
         wchar_t name2[0x10]; // 0x90
         char un3[0x8];
     } new_player;
+    INDEX result = NONE;
+
+    auto p_player_mng = NativeHalo3()
+            ->Players()
+            ->getPlayerManager();
+
+    auto p_split = NativeHalo3()
+            ->Camera()
+            ->getSplitScreen();
+
+    Index index = p_player_mng->m_size;
+
+    if (index < 0 || index > 3) return result;
 
     memset(&new_player, 0, sizeof(new_player));
 
@@ -95,7 +107,6 @@ INDEX CNativeFunc::player_add(Index index, const wchar_t* name, const wchar_t* i
     new_player.user_input = index;
     new_player.v_NONE = NONE;
     new_player.respawn_flag = 0x459D;
-//    new_player.un_flag = 0x000901F8039829FB;
 
     if (name) {
         memcpy(new_player.name, name, sizeof(new_player.name));
@@ -106,7 +117,12 @@ INDEX CNativeFunc::player_add(Index index, const wchar_t* name, const wchar_t* i
         memcpy(new_player.id, id, sizeof(new_player.id));
     }
 
-    return ((func_init_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + 0xE1DBC))(index, &new_player, false);
+    result = ((func_init_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + 0xE1DBC))(index, &new_player, false);
+
+    p_split->player_INDEX[index] = result;
+    p_split->input_player[index] = index;
+
+    return result;
 }
 
 INDEX CNativeFunc::object_create(Datum datum, const Vector3 &position) {

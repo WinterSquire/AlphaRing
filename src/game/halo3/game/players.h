@@ -7,11 +7,16 @@
 struct player_info_t;
 struct player_action_t;
 
+struct player_coop_t {
+    bool enable;
+    int count;
+};
+
 class ICPlayers {
 public:
     virtual player_action_t* getPlayerAction() = 0;
     virtual entity_manager_t<player_info_t>* getPlayerManager() = 0;
-
+    virtual player_coop_t* getPlayerCoop() = 0;
 };
 
 struct player_action_t {

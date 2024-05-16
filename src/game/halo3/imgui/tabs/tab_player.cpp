@@ -28,30 +28,19 @@ void TabPlayer::render() {
 
     if (ImGui::Button("Add Player")) {
         setState([] {
-            auto p_split = NativeHalo3()
-                    ->Camera()
-                    ->getSplitScreen();
+            auto index = NativeHalo3()
+                    ->NativeFunc()
+                    ->local_player_add(L"UWU", L"UWU");
 
-            auto p_player_mng = NativeHalo3()
+            if (index == NONE) return;
+
+            index = (__int16)index;
+
+            auto p_new_player = NativeHalo3()
                     ->Players()
-                    ->getPlayerManager();
+                    ->getPlayerManager()
+                    ->get(index);
 
-            if (p_player_mng == nullptr) return;
-
-            int index = p_player_mng->m_size;
-
-            if (index >= MAX_LOCAL_PLAYERS) return;
-
-            p_split->player_INDEX[index] = NativeHalo3()
-                ->NativeFunc()
-                ->player_add(index, L"UWU", L"UWU");
-
-            p_split->map_player[index] = 0xEC700000;
-
-            p_split->index[index] = index;
-            p_split->players[index] = (1 << index);
-
-            auto p_new_player = p_player_mng->get(index);
             p_new_player->primary_color = index * 2 + 0;
             p_new_player->secondary_color = index * 2 + 1;
             p_new_player->pref_species = index % 2;

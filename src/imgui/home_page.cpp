@@ -1,6 +1,8 @@
 #include "home_page.h"
 
 #include "../module/Module.h"
+#include "../game/halo3/native/native.h"
+bool coop;
 
 void ImGui::CustomWidget::HomePage::render() {
     const int MODULE_COUNT = 8;
@@ -69,4 +71,17 @@ void ImGui::CustomWidget::HomePage::render() {
     ImGui::EndGroup();
 
     ImGui::Unindent();
+
+    auto p_coop = NativeHalo3()->Players()->getPlayerCoop();
+
+    if (ImGui::Checkbox("Coop", &coop)) {
+        p_coop->enable = coop;
+    }
+
+    if (coop) {
+        auto count = p_coop->count;
+        if (ImGui::InputInt("Coop Count", &count) && count >= 1 && count <= 4) {
+            p_coop->count = count;
+        }
+    }
 }

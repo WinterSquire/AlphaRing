@@ -36,10 +36,7 @@ struct km_t {
         float un1; // 0x114
         float constant_1; // 0x118
     } mouse;
-
+    // 0x124
 };
-
-
-
 
 #endif //ALPHA_RING_INPUT_H
