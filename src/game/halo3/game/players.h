@@ -14,11 +14,12 @@ public:
     virtual entity_manager_t<player_info_t>* getPlayerManager() = 0;
 };
 
+// size: 0xB8
 struct player_init_t {
     bool v_true;
     bool v_false;
     __int16 user_input;
-    int v_NONE;
+    int input_map;
     int respawn_flag; // 0x8
     int unun;
     __int64 un_flag; // 0x10

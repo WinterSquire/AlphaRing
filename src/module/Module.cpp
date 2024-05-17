@@ -44,6 +44,7 @@ private:
 };
 
 #include "./entry/halo3/halo3.h"
+#include "./entry/haloreach/haloreach.h"
 
 class CModules : public ICModules {
 public:
@@ -53,6 +54,10 @@ public:
             {nullptr},
             {nullptr},
             {[] (__int64 hModule) {Halo3EntrySet()->update(hModule);}},
+            {nullptr},
+            {nullptr},
+            {nullptr},
+            {[] (__int64 hModule) {HaloReachEntrySet()->update(hModule);}},
     };
 
     static CModules m_instance;

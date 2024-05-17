@@ -1,7 +1,8 @@
-#include "imgui.h"
+#include "../native.h"
+#include "../../imgui/page_halo3.h"
 #include "render/Renderer.h"
-#include "../imgui/page_halo3.h"
-#include "../native/native.h"
+
+#include "imgui.h"
 
 namespace Halo3::Entry::Render { void Prologue(); void Epilogue(); }
 

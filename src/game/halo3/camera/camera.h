@@ -92,12 +92,6 @@ struct split_screen_t {
     INDEX player_INDEX[4]; // 0xB8
     INDEX object_INDEX[4]; // 0xC8
     __int8 players[4]; // 0xD8
-
-    bool set_player(Index index, INDEX player) {
-        if (index < 0 || index > 3) return false;
-        player_INDEX[index] = player;
-        return true;
-    }
 };
 
 class ICCamera {

@@ -1,4 +1,4 @@
-#include "../native/native.h"
+#include "../native.h"
 #include "common.h"
 
 namespace Halo3::Entry::Map {void Prologue(void* map_info);void Epilogue(void* map_info);}

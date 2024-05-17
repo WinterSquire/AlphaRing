@@ -6,8 +6,8 @@
 #include "../entry.h"
 
 
-extern EntrySet* g_pHalo3EntrySet;
-inline EntrySet* Halo3EntrySet() {return g_pHalo3EntrySet;};
+extern EntrySet g_pHalo3EntrySet;
+inline EntrySet* Halo3EntrySet() {return &g_pHalo3EntrySet;};
 
 #define Halo3Entry(name, offset, pDetour) ::Entry name(Halo3EntrySet(), offset, pDetour)
 

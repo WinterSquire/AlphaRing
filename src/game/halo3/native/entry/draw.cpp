@@ -1,6 +1,4 @@
-#include "common.h"
-
-#include "../native/native.h"
+#include "../native.h"
 
 #include "render/Renderer.h"
 

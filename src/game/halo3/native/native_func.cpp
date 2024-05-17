@@ -69,43 +69,22 @@ bool CNativeFunc::players_control_camera(bool custom_control) {
 }
 
 INDEX CNativeFunc::local_player_add(const wchar_t *name, const wchar_t *id) {
-    typedef __int64 (__fastcall* func_init_t) (Index index, void* a2, bool a3);
-    typedef __int64 (__fastcall* func_map_t) (INDEX index, int input_user); //EDC24
-    // size: 0xB8
-    struct new_player_t {
-        bool v_true;
-        bool v_false;
-        __int16 user_input;
-        int v_NONE;
-        int respawn_flag; // 0x8
-        int unun;
-        __int64 un_flag; // 0x10
-        wchar_t name[0x10]; // 0x18
-        char un1[0x1E];
-        wchar_t id[0x3]; // 0x56
-        char un2[0x34];
-        wchar_t name2[0x10]; // 0x90
-        char un3[0x8];
-    } new_player;
-    INDEX result = NONE;
+    typedef __int64 (__fastcall* func_init_t) (INDEX index, void* a2, bool a3);
+    player_init_t new_player;
 
     auto p_player_mng = NativeHalo3()
             ->Players()
             ->getPlayerManager();
 
-    auto p_split = NativeHalo3()
-            ->Camera()
-            ->getSplitScreen();
-
     Index index = p_player_mng->m_size;
 
-    if (index < 0 || index > 3) return result;
+    if (index < 0 || index > 3) return NONE;
 
     memset(&new_player, 0, sizeof(new_player));
 
     new_player.v_true = true;
     new_player.user_input = index;
-    new_player.v_NONE = NONE;
+    new_player.input_map = index;
     new_player.respawn_flag = 0x459D;
 
     if (name) {
@@ -117,12 +96,7 @@ INDEX CNativeFunc::local_player_add(const wchar_t *name, const wchar_t *id) {
         memcpy(new_player.id, id, sizeof(new_player.id));
     }
 
-    result = ((func_init_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + 0xE1DBC))(index, &new_player, false);
-
-    p_split->player_INDEX[index] = result;
-    p_split->input_player[index] = index;
-
-    return result;
+    return ((func_init_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + 0xE1DBC))(index, &new_player, false);
 }
 
 INDEX CNativeFunc::object_create(Datum datum, const Vector3 &position) {

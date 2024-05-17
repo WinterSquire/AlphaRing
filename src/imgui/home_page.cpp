@@ -14,7 +14,7 @@ void ImGui::CustomWidget::HomePage::render() {
                 const char* items[] = {"Controller 0", "Controller 1", "Controller 2", "Controller 3", "NONE"};
                 ImGui::Text("Player %d", i);
                 ImGui::PushID(i);
-                ImGui::Combo("Controller", &p_setting->controller_map[i], items, IM_ARRAYSIZE(items));
+                ImGui::Combo("", &p_setting->controller_map[i], items, IM_ARRAYSIZE(items));
                 ImGui::PopID();
             }
         }

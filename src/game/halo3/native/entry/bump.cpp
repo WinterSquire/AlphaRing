@@ -1,4 +1,4 @@
-#include "../native/native.h"
+#include "../native.h"
 
 namespace Halo3::Entry::Bump {
     void Prologue(unsigned int self, unsigned int target);
