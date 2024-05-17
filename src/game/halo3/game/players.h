@@ -6,17 +6,28 @@
 
 struct player_info_t;
 struct player_action_t;
-
-struct player_coop_t {
-    bool enable;
-    int count;
-};
+struct player_init_t;
 
 class ICPlayers {
 public:
     virtual player_action_t* getPlayerAction() = 0;
     virtual entity_manager_t<player_info_t>* getPlayerManager() = 0;
-    virtual player_coop_t* getPlayerCoop() = 0;
+};
+
+struct player_init_t {
+    bool v_true;
+    bool v_false;
+    __int16 user_input;
+    int v_NONE;
+    int respawn_flag; // 0x8
+    int unun;
+    __int64 un_flag; // 0x10
+    wchar_t name[0x10]; // 0x18
+    char un1[0x1E];
+    wchar_t id[0x3]; // 0x56
+    char un2[0x34];
+    wchar_t name2[0x10]; // 0x90
+    char un3[0x8];
 };
 
 struct player_action_t {

@@ -2,16 +2,16 @@
 
 #include "../native/native.h"
 
-class CInput : public ICInput {
+class CH3Input : public ICH3Input {
 public:
     void enableInput(bool value) override;
 
-    static CInput s_instance;
+    static CH3Input s_instance;
 };
 
-CInput CInput::s_instance;
-ICInput* g_pHalo3ICInput = &CInput::s_instance;
+CH3Input CH3Input::s_instance;
+ICH3Input* g_pHalo3ICInput = &CH3Input::s_instance;
 
-void CInput::enableInput(bool value) {
+void CH3Input::enableInput(bool value) {
     *(bool*)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PV_ENABLE_INPUT) = value;
 }

@@ -22,12 +22,12 @@ void TabMap::render() {
     if (map == nullptr) return;
 
     {
-        auto map_name = strrchr(map->name, '\\');
+        auto map_name = strrchr(map->map_info.name, '\\');
 
-        if (map_name == nullptr) map_name = map->name;
+        if (map_name == nullptr) map_name = map->map_info.name;
         else map_name += 1;
 
-        sprintf(buffer, "Map: %s (%s)", map_name, map_types[map->game_type]);
+        sprintf(buffer, "Map: %s (%s)", map_name, map_types[map->map_info.game_type]);
 
         ImGui::Text(buffer);
     }

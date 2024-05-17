@@ -20,7 +20,7 @@
 extern ICNativeFunc* g_pICHalo3NativeFunc;
 
 extern ICRender* g_pHalo3ICRender;
-extern ICInput* g_pHalo3ICInput;
+extern ICH3Input* g_pHalo3ICInput;
 extern ICPlayers* g_pHalo3ICPlayers;
 extern ICMap* g_pHalo3ICMap;
 extern ICTime* g_pHalo3ICTime;
@@ -34,7 +34,7 @@ class ICHalo3 : public ICNative {
 public:
     inline ICNativeFunc* NativeFunc() {return g_pICHalo3NativeFunc;}
     inline ICRender* Render() {return g_pHalo3ICRender;}
-    inline ICInput* Input() {return g_pHalo3ICInput;}
+    inline ICH3Input* Input() {return g_pHalo3ICInput;}
     inline ICPlayers* Players() {return g_pHalo3ICPlayers;};
     inline ICMap* Map() {return g_pHalo3ICMap;}
     inline ICTime* Time() {return g_pHalo3ICTime;}

@@ -6,9 +6,7 @@ class CPlayers : public ICPlayers {
 public:
     player_action_t *getPlayerAction() override;
     entity_manager_t<player_info_t> *getPlayerManager() override;
-    player_coop_t *getPlayerCoop() override;
 
-    player_coop_t coop;
 };
 
 static CPlayers players;
@@ -20,8 +18,4 @@ entity_manager_t<player_info_t> *CPlayers::getPlayerManager() {
 
 player_action_t *CPlayers::getPlayerAction() {
     return (player_action_t*) NativeHalo3()->NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_PLAYERS_ACTION);
-}
-
-player_coop_t *CPlayers::getPlayerCoop() {
-    return &coop;
 }
