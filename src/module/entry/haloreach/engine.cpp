@@ -4,7 +4,7 @@ namespace HaloReach::Entry::Engine {
     extern void Prologue(); extern void Epilogue();
     void detour();
 
-    HaloReachEntry(entry, 0x34818, detour);
+    HaloReachEntry(entry, OFFSET_HALOREACH_PF_ENGINE, detour);
 }
 
 void HaloReach::Entry::Engine::detour() {

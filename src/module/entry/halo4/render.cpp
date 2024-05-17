@@ -1,13 +1,13 @@
-#include "./HaloReach.h"
+#include "Halo4.h"
 
-namespace HaloReach::Entry::World {
+namespace Halo4::Entry::Render {
     extern void Prologue(); extern void Epilogue();
     void detour();
 
-    HaloReachEntry(entry, OFFSET_HALOREACH_PF_WORLD, detour);
+    Halo4Entry(entry, OFFSET_HALO4_PF_RENDER, detour);
 }
 
-void HaloReach::Entry::World::detour() {
+void Halo4::Entry::Render::detour() {
     typedef void (__fastcall* func_t)();
     auto func = (func_t)entry.m_pOriginal;
 

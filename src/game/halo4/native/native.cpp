@@ -2,9 +2,9 @@
 
 #include <cstring>
 
-CHaloReachNative g_pCHaloReach;
+CHalo4Native g_pCHalo4;
 
-INDEX CHaloReachNative::ICNativeFunc::local_player_add(const wchar_t *name, const wchar_t *id) {
+INDEX CHalo4Native::ICNativeFunc::local_player_add(const wchar_t *name, const wchar_t *id) {
     typedef __int64 (__fastcall* func_init_t) (INDEX index, void* a2, bool a3);
     player_init_t new_player;
     int index = 1;
@@ -26,5 +26,5 @@ INDEX CHaloReachNative::ICNativeFunc::local_player_add(const wchar_t *name, cons
         memcpy(new_player.id, id, sizeof(new_player.id));
     }
 
-    return (func_init_t(NativeHaloReach()->NativeInfo()->getModuleAddress() + OFFSET_HALOREACH_PF_ADD_LOCAL_PLAYER))(index, &new_player, false);
+    return (func_init_t(NativeHalo4()->NativeInfo()->getModuleAddress() + OFFSET_HALO4_PF_ADD_LOCAL_PLAYER))(index, &new_player, false);
 }

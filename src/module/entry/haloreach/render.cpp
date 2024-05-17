@@ -4,7 +4,7 @@ namespace HaloReach::Entry::Render {
     extern void Prologue(); extern void Epilogue();
     void detour();
 
-    HaloReachEntry(entry, 0xC3324, detour);
+    HaloReachEntry(entry, OFFSET_HALOREACH_PF_RENDER, detour);
 }
 
 void HaloReach::Entry::Render::detour() {
