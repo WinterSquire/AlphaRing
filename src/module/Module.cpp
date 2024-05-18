@@ -43,14 +43,12 @@ private:
 
 };
 
-#include "entry.h"
-
-EntrySet* Halo2EntrySet();
-EntrySet* Halo3EntrySet();
-EntrySet* Halo4EntrySet();
-EntrySet* GroundHogEntrySet();
-EntrySet* Halo3ODSTEntrySet();
-EntrySet* HaloReachEntrySet();
+#include "game/halo2/native/entry/halo2.h"
+#include "game/halo3/native/entry/halo3.h"
+#include "game/halo3odst/native/entry/halo3odst.h"
+#include "game/haloreach/native/entry/haloreach.h"
+#include "game/halo4/native/entry/halo4.h"
+#include "game/groundhog/native/entry/groundhog.h"
 
 class CModules : public ICModules {
 public:
