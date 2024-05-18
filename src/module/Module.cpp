@@ -43,6 +43,7 @@ private:
 
 };
 
+#include "./entry/halo2/halo2.h"
 #include "./entry/halo3/halo3.h"
 #include "./entry/halo4/halo4.h"
 #include "./entry/haloreach/haloreach.h"
@@ -54,7 +55,7 @@ public:
 
     CModule m_modules[8] {
             {nullptr},
-            {nullptr},
+            {[] (__int64 hModule) {Halo2EntrySet()->update(hModule);}},
             {[] (__int64 hModule) {Halo3EntrySet()->update(hModule);}},
             {[] (__int64 hModule) {Halo4EntrySet()->update(hModule);}},
             {[] (__int64 hModule) {GroundHogEntrySet()->update(hModule);}},
