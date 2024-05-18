@@ -46,6 +46,7 @@ private:
 #include "./entry/halo3/halo3.h"
 #include "./entry/halo4/halo4.h"
 #include "./entry/haloreach/haloreach.h"
+#include "./entry/groundhog/groundhog.h"
 
 class CModules : public ICModules {
 public:
@@ -56,7 +57,7 @@ public:
             {nullptr},
             {[] (__int64 hModule) {Halo3EntrySet()->update(hModule);}},
             {[] (__int64 hModule) {Halo4EntrySet()->update(hModule);}},
-            {nullptr},
+            {[] (__int64 hModule) {GroundHogEntrySet()->update(hModule);}},
             {nullptr},
             {[] (__int64 hModule) {HaloReachEntrySet()->update(hModule);}},
     };
