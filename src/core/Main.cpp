@@ -8,8 +8,15 @@
 
 #include "render/Window.h"
 
+#include <filesystem>
 
 bool Prologue() {
+    const char* home_dir = "../../../alpha_ring";
+
+    if (!std::filesystem::exists(home_dir)) {
+        std::filesystem::create_directories(home_dir);
+    }
+
     if (AllocConsole() == false)
         return false;
 

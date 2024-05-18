@@ -16,7 +16,11 @@ INDEX CHalo3ODSTNative::ICNativeFunc::local_player_add(const wchar_t *name, cons
 
     new_player.v_true = true;
     new_player.user_input = new_player.input_map = index;
-    new_player.respawn_flag = 0x0000459D;
+
+    auto p_action = NativeHalo3ODST()->NativeInfo()->getEntryAddress(OFFSET_HALO3ODST_V_ENTRY_PLAYERS_ACTION);
+
+    new_player.respawn_flag = *(int*)(p_action + 12);
+    new_player.unun = *(__int16*)(p_action + 12 + 4);
 
     if (name) {
         memcpy(new_player.name, name, sizeof(new_player.name));

@@ -15,7 +15,11 @@ INDEX CHalo4Native::CNativeFunc::local_player_add(const wchar_t *name, const wch
 
     new_player.v_true = true;
     new_player.user_input = new_player.input_map = index;
-    new_player.respawn_flag = 0x331715FE;
+
+    auto p_action = NativeHalo4()->NativeInfo()->getEntryAddress(OFFSET_HALO4_V_ENTRY_PLAYERS_ACTION);
+
+    new_player.respawn_flag = *(int*)(p_action + 16);
+    new_player.respawn_flag2 = *(__int16*)(p_action + 20);
 
     if (name) {
         memcpy(new_player.name, name, sizeof(new_player.name));

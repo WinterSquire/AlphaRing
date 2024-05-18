@@ -85,7 +85,11 @@ INDEX CNativeFunc::local_player_add(const wchar_t *name, const wchar_t *id) {
     new_player.v_true = true;
     new_player.user_input = index;
     new_player.input_map = index;
-    new_player.respawn_flag = 0x459D;
+
+    auto p_action = NativeHalo3()->NativeInfo()->getEntryAddress(OFFSET_HALO3_V_ENTRY_PLAYERS_ACTION);
+
+    new_player.respawn_flag = *(int*)(p_action + 12);
+    new_player.unun = *(__int16*)(p_action + 12 + 4);
 
     if (name) {
         memcpy(new_player.name, name, sizeof(new_player.name));

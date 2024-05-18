@@ -11,7 +11,8 @@ struct player_init_t {
     int user_input; // 0x8
     int input_map; // 0xC
     int respawn_flag; // 0x10
-    char un2[0xC];
+    int respawn_flag2; // 0x14
+    char un2[0x8];
     wchar_t name[0x10]; // 0x20
     char un3[36];
     wchar_t id[0x4]; // 0x64

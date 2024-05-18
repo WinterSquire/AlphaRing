@@ -43,6 +43,7 @@ private:
 
 };
 
+#include "game/halo1/native/entry/halo1.h"
 #include "game/halo2/native/entry/halo2.h"
 #include "game/halo3/native/entry/halo3.h"
 #include "game/halo3odst/native/entry/halo3odst.h"
@@ -55,6 +56,7 @@ public:
     ICModule *get(eModule module) override {return m_modules + module;}
 
     CModule m_modules[8] {
+//            {[] (__int64 hModule) {Halo1EntrySet()->update(hModule);}},
             {nullptr},
             {[] (__int64 hModule) {Halo2EntrySet()->update(hModule);}},
             {[] (__int64 hModule) {Halo3EntrySet()->update(hModule);}},

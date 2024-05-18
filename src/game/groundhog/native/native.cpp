@@ -15,7 +15,11 @@ INDEX CGroundHogNative::ICNativeFunc::local_player_add(const wchar_t *name, cons
 
     new_player.v_true = true;
     new_player.user_input = new_player.input_map = index;
-    new_player.respawn_flag = 0x331715FE;
+
+    auto p_action = NativeGroundHog()->NativeInfo()->getEntryAddress(OFFSET_GROUNDHOG_V_ENTRY_PLAYERS_ACTION);
+
+    new_player.respawn_flag = *(int*)(p_action + 16);
+    new_player.respawn_flag2 = *(__int16*)(p_action + 20);
 
     if (name) {
         memcpy(new_player.name, name, sizeof(new_player.name));
