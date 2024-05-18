@@ -5,6 +5,8 @@
 #include "eObjectType.h"
 #include "../game/eTeam.h"
 
+#include "../../ICNative.h"
+
 struct ObjectInfo;
 
 struct object_info_t {
