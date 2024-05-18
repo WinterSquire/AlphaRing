@@ -1,6 +1,7 @@
 #include "../native.h"
 #include "common.h"
 
+#include "haloreach.h"
 
 // todo: Scheduler
 namespace HaloReach::Entry::Engine {
@@ -12,5 +13,11 @@ namespace HaloReach::Entry::Engine {
     }
     void Epilogue() {
         LOG_INFO("Engine Epilogue");
+    }
+
+    HaloReachEntry(entry, OFFSET_HALOREACH_PF_ENGINE, void, detour) {
+        Prologue();
+        ((detour_t)entry.m_pOriginal)();
+        Epilogue();
     }
 }

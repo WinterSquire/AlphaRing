@@ -1,18 +1,20 @@
 #include "../native.h"
+
 #include "imgui.h"
+
+#include "halo2.h"
 #include "render/Renderer.h"
-#include <functional>
 
-#include "halo3odst.h"
+#include <windows.h>
 
-namespace Halo3ODST::Entry::World {void AddTask(const std::function<void()>& func);}
+namespace Halo2::Entry::Load {bool IsLoading();}
 
-namespace Halo3ODST::Entry::Render {
+namespace Halo2::Entry::Game {
     void Prologue() {
+        if (Halo2::Entry::Load::IsLoading()) return;
 
-    }
+        NativeHalo2()->NativeInfo()->update((__int64)GetModuleHandleA("halo2.dll"));
 
-    void Epilogue() {
         static bool bShowContext = true;
 
         bool bShow = Renderer()->ShowContext();
@@ -24,16 +26,18 @@ namespace Halo3ODST::Entry::Render {
         if (!bShowContext) return;
 
         Renderer()->NewFrame();
-        ImGui::Begin("Halo3 ODST");
+        ImGui::Begin("Halo 2");
         if (ImGui::Button("Add Player")) {
-            Halo3ODST::Entry::World::AddTask([]() {
-                NativeHalo3ODST()->NativeFunc()->local_player_add(L"UWU", L"UWU");
-            });
+            NativeHalo2()->NativeFunc()->local_player_add(L"UWU", L"UWU");
         }
         ImGui::End();
     }
 
-    Halo3ODSTEntry(entry, OFFSET_HALO3ODST_PF_RENDER, void, detour) {
+    void Epilogue() {
+
+    }
+
+    Halo2Entry(entry, OFFSET_HALO2_PF_GAME, void, detour) {
         Prologue();
         ((detour_t)entry.m_pOriginal)();
         Epilogue();

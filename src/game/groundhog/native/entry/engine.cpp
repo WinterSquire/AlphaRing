@@ -1,6 +1,7 @@
 #include "../native.h"
 #include "common.h"
 
+#include "groundhog.h"
 
 // todo: Scheduler
 namespace GroundHog::Entry::Engine {
@@ -10,7 +11,14 @@ namespace GroundHog::Entry::Engine {
         // main thread resources will be copied to the render thread
         NativeGroundHog()->NativeInfo()->update((__int64) GetModuleHandleA("groundhog.dll"));
     }
+
     void Epilogue() {
         LOG_INFO("Engine Epilogue");
+    }
+
+    GroundHogEntry(entry, OFFSET_GROUNDHOG_PF_ENGINE, void, detour) {
+        Prologue();
+        ((detour_t)entry.m_pOriginal)();
+        Epilogue();
     }
 }

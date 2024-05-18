@@ -4,10 +4,10 @@
 
 CHalo4Native g_pCHalo4;
 
-INDEX CHalo4Native::ICNativeFunc::local_player_add(const wchar_t *name, const wchar_t *id) {
+INDEX CHalo4Native::CNativeFunc::local_player_add(const wchar_t *name, const wchar_t *id) {
     typedef __int64 (__fastcall* func_init_t) (INDEX index, void* a2, bool a3);
     player_init_t new_player;
-    int index = 1;
+    int index = NativeHalo4()->Players()->PlayerManager()->m_size;
 
     if (index < 0 || index > 3) return NONE;
 

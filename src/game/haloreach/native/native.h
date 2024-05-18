@@ -12,6 +12,18 @@ typedef unsigned int INDEX;
 
 class CHaloReachNative : public ICNative {
 public:
+    template<typename T>
+    struct entity_manager_t {
+        char un[0x48];
+        __int64 m_size;     // 0x48
+    };
+
+    class CPlayers {
+    public:
+        inline entity_manager_t<player_info_t>* PlayerManager() {return (entity_manager_t<player_info_t>*) m_native->NativeInfo()->getEntryAddress(OFFSET_HALOREACH_V_ENTRY_PLAYERS);}
+        CHaloReachNative* m_native;
+    };
+
     class ICNativeFunc {
     public:
         // Main Thread
@@ -21,10 +33,12 @@ public:
 
     inline ICNativeFunc* NativeFunc() {return &m_nativeFunc;}
     inline CNativeInfo *NativeInfo() override {return &m_nativeInfo;};
+    inline CPlayers* Players() {return &m_players;}
 
 private:
     ICNativeFunc m_nativeFunc;
     CNativeInfo m_nativeInfo;
+    CPlayers m_players{this};
 
 };
 

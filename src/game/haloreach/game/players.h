@@ -1,5 +1,8 @@
 #pragma once
 
+struct player_info_t {
+
+};
 
 // size: 0xA0
 struct player_init_t {

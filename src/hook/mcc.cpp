@@ -46,16 +46,16 @@ static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_d
     bool result = false;
     InputDevice* p_device;
 
-    auto p_setting = InputSetting();;
+    auto p_setting = InputSetting();
 
     if (!p_setting->override_input) return ppOriginal_input_get_status(self, player_index, p_data, a4);
 
-    if (!*(bool*)(hModule + 0x3CAB860)) return result;
+    if (!*(bool*)(hModule + OFFSET_MCC_PV_WINDOWFOCUSED)) return result;
 
     if (p_setting->enable_km && !player_index) {
         p_device = self->p_input_device[4];
-        for (auto j = *(__int64**)(hModule + 0x3F9EB38); j != (__int64*)(hModule + 0x3F9EB30); j = (__int64*)j[1] )
-            ((void (__fastcall *)(__int64, __int64 *))(hModule + 0x88D8CC))(((__int64)p_device + 0x20), j);
+        for (auto j = *(__int64**)(hModule + OFFSET_MCC_PV_KEYBEGIN); j != (__int64*)(hModule + OFFSET_MCC_PV_KEYEND); j = (__int64*)j[1] )
+            ((void (__fastcall *)(__int64, __int64 *))(hModule + OFFSET_MCC_PF_KEYCHECK))(((__int64)p_device + 0x20), j);
         if ( *(bool*)((__int64)p_device + 0xF8) && GetKeyState(0xA0) >= 0 )
             *(bool*)((__int64)p_device + 0xF8) = false;
         if ( *(bool*)((__int64)p_device + 249) && (GetKeyState(0xA1) & 0x8000) == 0 )
@@ -98,7 +98,7 @@ bool MCCHook::Initialize() {
             MH_EnableHook(pTarget) != MH_OK)
         return false;
 
-    if ((pTarget = (LPVOID) (hModule + 0x87AB80)),
+    if ((pTarget = (LPVOID) (hModule + OFFSET_MCC_PF_GAMEINPUT)),
             MH_CreateHook(pTarget,input_get_status,(void **) &ppOriginal_input_get_status) != MH_OK ||
             MH_EnableHook(pTarget) != MH_OK)
         return false;

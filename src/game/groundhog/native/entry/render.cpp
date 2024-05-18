@@ -4,29 +4,39 @@
 
 #include <functional>
 
-namespace GroundHog::Entry::Render { void Prologue(); void Epilogue(); }
-
-void GroundHog::Entry::Render::Prologue() {}
+#include "groundhog.h"
 
 namespace GroundHog::Entry::World {void AddTask(const std::function<void()>& func);}
 
-void GroundHog::Entry::Render::Epilogue() {
-    static bool bShowContext = true;
+namespace GroundHog::Entry::Render {
+    void Prologue() {
 
-    bool bShow = Renderer()->ShowContext();
-
-    if (bShowContext != bShow) {
-        bShowContext = bShow;
     }
 
-    if (!bShowContext) return;
+    void Epilogue() {
+        static bool bShowContext = true;
 
-    Renderer()->NewFrame();
-    ImGui::Begin("GroundHog");
-    if (ImGui::Button("Add Player")) {
-        GroundHog::Entry::World::AddTask([]() {
-           NativeGroundHog()->NativeFunc()->local_player_add(L"UWU", L"UWU");
-        });
+        bool bShow = Renderer()->ShowContext();
+
+        if (bShowContext != bShow) {
+            bShowContext = bShow;
+        }
+
+        if (!bShowContext) return;
+
+        Renderer()->NewFrame();
+        ImGui::Begin("GroundHog");
+        if (ImGui::Button("Add Player")) {
+            GroundHog::Entry::World::AddTask([]() {
+                NativeGroundHog()->NativeFunc()->local_player_add(L"UWU", L"UWU");
+            });
+        }
+        ImGui::End();
     }
-    ImGui::End();
+
+    GroundHogEntry(entry, OFFSET_GROUNDHOG_PF_RENDER, void, detour) {
+        Prologue();
+        ((detour_t)entry.m_pOriginal)();
+        Epilogue();
+    }
 }

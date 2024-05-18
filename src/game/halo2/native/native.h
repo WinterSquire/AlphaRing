@@ -5,10 +5,6 @@
 
 #include "offset_Halo2.h"
 
-#include "../game/players.h"
-
-typedef unsigned int INDEX;
-
 class CHalo2Native : public ICNative {
 public:
     class ICNativeFunc {

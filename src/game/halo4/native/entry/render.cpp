@@ -4,29 +4,39 @@
 
 #include <functional>
 
-namespace Halo4::Entry::Render { void Prologue(); void Epilogue(); }
-
-void Halo4::Entry::Render::Prologue() {}
+#include "halo4.h"
 
 namespace Halo4::Entry::World {void AddTask(const std::function<void()>& func);}
 
-void Halo4::Entry::Render::Epilogue() {
-    static bool bShowContext = true;
+namespace Halo4::Entry::Render {
+    void Prologue() {
 
-    bool bShow = Renderer()->ShowContext();
-
-    if (bShowContext != bShow) {
-        bShowContext = bShow;
     }
 
-    if (!bShowContext) return;
+    void Epilogue() {
+        static bool bShowContext = true;
 
-    Renderer()->NewFrame();
-    ImGui::Begin("Halo 4");
-    if (ImGui::Button("Add Player")) {
-        Halo4::Entry::World::AddTask([]() {
-           NativeHalo4()->NativeFunc()->local_player_add(L"UWU", L"UWU");
-        });
+        bool bShow = Renderer()->ShowContext();
+
+        if (bShowContext != bShow) {
+            bShowContext = bShow;
+        }
+
+        if (!bShowContext) return;
+
+        Renderer()->NewFrame();
+        ImGui::Begin("Halo 4");
+        if (ImGui::Button("Add Player")) {
+            Halo4::Entry::World::AddTask([]() {
+                NativeHalo4()->NativeFunc()->local_player_add(L"UWU", L"UWU");
+            });
+        }
+        ImGui::End();
     }
-    ImGui::End();
+
+    Halo4Entry(entry, OFFSET_HALO4_PF_RENDER, void, detour) {
+        Prologue();
+        ((detour_t)entry.m_pOriginal)();
+        Epilogue();
+    }
 }

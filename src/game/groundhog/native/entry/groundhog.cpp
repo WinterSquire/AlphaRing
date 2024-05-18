@@ -1,3 +1,3 @@
-#include "GroundHog.h"
+#include "groundhog.h"
 
 EntrySet g_pGroundHogEntrySet;

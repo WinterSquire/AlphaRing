@@ -1,6 +1,10 @@
 #pragma once
 
 
+struct player_info_t {
+
+};
+
 // size: 0x148
 struct player_init_t {
     bool v_true;

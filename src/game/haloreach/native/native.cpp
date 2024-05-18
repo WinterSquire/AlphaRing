@@ -7,7 +7,7 @@ CHaloReachNative g_pCHaloReach;
 INDEX CHaloReachNative::ICNativeFunc::local_player_add(const wchar_t *name, const wchar_t *id) {
     typedef __int64 (__fastcall* func_init_t) (INDEX index, void* a2, bool a3);
     player_init_t new_player;
-    int index = 1;
+    int index = NativeHaloReach()->Players()->PlayerManager()->m_size;
 
     if (index < 0 || index > 3) return NONE;
 

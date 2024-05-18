@@ -1,9 +1,9 @@
 #include "../native.h"
 #include "common.h"
 
-#include <Windows.h>
-
 // todo: Scheduler
+
+#include "halo3.h"
 
 namespace Halo3::Entry::Engine {
     void Prologue() {
@@ -14,5 +14,11 @@ namespace Halo3::Entry::Engine {
     }
     void Epilogue() {
         LOG_INFO("Engine Epilogue");
+    }
+
+    Halo3Entry(entry, OFFSET_HALO3_PF_ENGINE, void, detour) {
+        Prologue();
+        ((detour_t)entry.m_pOriginal)();
+        Epilogue();
     }
 }
