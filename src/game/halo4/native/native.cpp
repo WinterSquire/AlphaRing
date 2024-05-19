@@ -22,12 +22,12 @@ INDEX CHalo4Native::CNativeFunc::local_player_add(const wchar_t *name, const wch
     new_player.respawn_flag2 = *(__int16*)(p_action + 20);
 
     if (name) {
-        memcpy(new_player.name, name, sizeof(new_player.name));
-        memcpy(new_player.name2, name, sizeof(new_player.name2));
+        wcscpy_s(new_player.name, name);
+        wcscpy_s(new_player.name2, name);
     }
 
     if (id) {
-        memcpy(new_player.id, id, sizeof(new_player.id));
+        wcscpy_s(new_player.id, id);
     }
 
     return (func_init_t(NativeHalo4()->NativeInfo()->getModuleAddress() + OFFSET_HALO4_PF_ADD_LOCAL_PLAYER))(index, &new_player, false);

@@ -22,12 +22,12 @@ INDEX CHaloReachNative::ICNativeFunc::local_player_add(const wchar_t *name, cons
     new_player.respawn_flag2 = *(__int16*)(p_action + 12);
 
     if (name) {
-        memcpy(new_player.name, name, sizeof(new_player.name));
-        memcpy(new_player.name2, name, sizeof(new_player.name2));
+        wcscpy_s(new_player.name, name);
+        wcscpy_s(new_player.name2, name);
     }
 
     if (id) {
-        memcpy(new_player.id, id, sizeof(new_player.id));
+        wcscpy_s(new_player.id, id);
     }
 
     return (func_init_t(NativeHaloReach()->NativeInfo()->getModuleAddress() + OFFSET_HALOREACH_PF_ADD_LOCAL_PLAYER))(index, &new_player, false);

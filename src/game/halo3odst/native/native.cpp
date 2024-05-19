@@ -23,12 +23,12 @@ INDEX CHalo3ODSTNative::ICNativeFunc::local_player_add(const wchar_t *name, cons
     new_player.unun = *(__int16*)(p_action + 12 + 4);
 
     if (name) {
-        memcpy(new_player.name, name, sizeof(new_player.name));
-        memcpy(new_player.name2, name, sizeof(new_player.name2));
+        wcscpy_s(new_player.name, name);
+        wcscpy_s(new_player.name2, name);
     }
 
     if (id) {
-        memcpy(new_player.id, id, sizeof(new_player.id));
+        wcscpy_s(new_player.id, id);
     }
 
     return (func_init_t(m_native->NativeInfo()->getModuleAddress() + OFFSET_HALO3ODST_PF_ADD_LOCAL_PLAYER))(index, &new_player, false);
