@@ -7,6 +7,8 @@
 #include <mutex>
 #include <condition_variable>
 #include <Xinput.h>
+#include <chrono>
+#include <thread>
 
 #pragma comment(lib, "Xinput.lib")
 
@@ -60,6 +62,7 @@ LRESULT Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) {
         bool& b = Renderer()->ShowContext();
         b = !b;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
     return false;
 }
