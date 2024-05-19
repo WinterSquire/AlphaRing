@@ -33,10 +33,6 @@ namespace Halo3::Entry::Map {
         } *t1;
     };
 
-    struct engine_t {
-
-    };
-
     void Prologue(map_info_t* map_info, map_info_t::t1_t::t2_t* p_t2) {
         LOG_INFO("Game Init");
 //        const wchar_t *name = L"UWU";
@@ -45,7 +41,6 @@ namespace Halo3::Entry::Map {
 //        for (int index = 1; index <= 1; ++index) {
 //            p_t2->player_count0 |= (1 << index);
 //            auto &new_player = p_t2 ->initInfo[index];
-//            memset(&new_player, 0, sizeof(new_player));
 //
 //            new_player.unun = index;
 //            new_player.player_index = index;
@@ -53,12 +48,12 @@ namespace Halo3::Entry::Map {
 //            new_player.input_map = index;
 //
 //            if (name) {
-//                wcscpy_s(new_player.name, name);
-//                wcscpy_s(new_player.name2, name);
+//                String::wstrcpy(new_player.name, name);
+//                String::wstrcpy(new_player.name2, name);
 //            }
 //
 //            if (id) {
-//                wcscpy_s(new_player.id, id);
+//                String::wstrcpy(new_player.id, id);
 //            }
 //        }
     }

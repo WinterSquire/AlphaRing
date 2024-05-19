@@ -21,7 +21,7 @@ namespace Halo1::Entry::Render {
 
         if (!bShowContext) return;
 
-        Renderer()->NewFrame();
+        Renderer()->ShowContext() && Renderer()->NewFrame();
 
         auto p_player_count = (__int16*)(NativeHalo1()->NativeInfo()->getModuleAddress() + OFFSET_HALO1_PV_PLAYER_COUNT);
 

@@ -1,4 +1,5 @@
 #include "native.h"
+#include "core/String.h"
 
 #include <cstring>
 
@@ -22,12 +23,12 @@ INDEX CHaloReachNative::ICNativeFunc::local_player_add(const wchar_t *name, cons
     new_player.respawn_flag2 = *(__int16*)(p_action + 12);
 
     if (name) {
-        wcscpy_s(new_player.name, name);
-        wcscpy_s(new_player.name2, name);
+        String::wstrcpy(new_player.name, name);
+        String::wstrcpy(new_player.name2, name);
     }
 
     if (id) {
-        wcscpy_s(new_player.id, id);
+        String::wstrcpy(new_player.id, id);
     }
 
     return (func_init_t(NativeHaloReach()->NativeInfo()->getModuleAddress() + OFFSET_HALOREACH_PF_ADD_LOCAL_PLAYER))(index, &new_player, false);

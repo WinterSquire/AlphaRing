@@ -9,6 +9,8 @@
 #include "MinHook.h"
 #include <Xinput.h>
 
+#include "render/Renderer.h"
+
 static __int64 hModule;
 
 static void (__fastcall *ppOriginal_ModuleLoad)(module_info_t* info, int a2, __int64 a3);
@@ -45,6 +47,8 @@ static bool (__fastcall *ppOriginal_input_get_status)(INPUT_t* self, int player_
 static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_data_t* p_data, char a4) {
     bool result = false;
     InputDevice* p_device;
+
+     if (Renderer()->ShowContext()) return false;
 
     auto p_setting = InputSetting();
 

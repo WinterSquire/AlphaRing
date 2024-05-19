@@ -22,7 +22,6 @@ void Window::signalDestroy() {
 }
 
 LRESULT Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-
     switch (uMsg) {
         case WM_KEYDOWN:{
             switch (wParam) {

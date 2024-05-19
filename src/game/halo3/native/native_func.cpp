@@ -1,6 +1,7 @@
 #include "native_func.h"
 
 #include "native_halo3.h"
+#include "core/String.h"
 
 #include <cstring>
 
@@ -92,12 +93,12 @@ INDEX CNativeFunc::local_player_add(const wchar_t *name, const wchar_t *id) {
     new_player.unun = *(__int16*)(p_action + 12 + 4);
 
     if (name) {
-        wcscpy_s(new_player.name, name);
-        wcscpy_s(new_player.name2, name);
+        String::wstrcpy(new_player.name, name);
+        String::wstrcpy(new_player.name2, name);
     }
 
     if (id) {
-        wcscpy_s(new_player.id, id);
+        String::wstrcpy(new_player.id, id);
     }
 
     return ((func_init_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + 0xE1DBC))(index, &new_player, false);

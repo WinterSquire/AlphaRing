@@ -16,7 +16,7 @@ public:
     void CreateMainRenderTargetView() override;
     void ReleaseMainRenderTargetView() override;
 
-    void NewFrame() override;
+    bool NewFrame() override;
     void Render() override;
     void EndFrame() override;
 
@@ -88,12 +88,12 @@ void CRenderer::ReleaseMainRenderTargetView() {
     mainRenderTargetView = nullptr;
 }
 
-void CRenderer::NewFrame() {
-    if (m_bNewFrame) return;
+bool CRenderer::NewFrame() {
+    if (m_bNewFrame) return false;
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-    m_bNewFrame = true;
+    return m_bNewFrame = true;
 }
 
 void CRenderer::Render() {
@@ -111,6 +111,7 @@ void CRenderer::Render() {
 }
 
 void CRenderer::EndFrame() {
+    if (!m_bNewFrame) return;
     m_bNewFrame = false;
     ImGui::Render();
     pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);

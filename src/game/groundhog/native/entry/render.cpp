@@ -24,7 +24,7 @@ namespace GroundHog::Entry::Render {
 
         if (!bShowContext) return;
 
-        Renderer()->NewFrame();
+        Renderer()->ShowContext() && Renderer()->NewFrame();
         ImGui::Begin("GroundHog");
         if (ImGui::Button("Add Player")) {
             GroundHog::Entry::World::AddTask([]() {

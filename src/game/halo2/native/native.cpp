@@ -1,4 +1,5 @@
 #include "native.h"
+#include "core/String.h"
 
 #include <cstring>
 
@@ -33,11 +34,11 @@ INDEX CHalo2Native::ICNativeFunc::local_player_add(const wchar_t *name, const wc
     new_player.respawn_flag = *(__int64*)(*(__int64*)(hModule + OFFSET_HALO2_PV_RESPAWN) + 0x30);
 
     if (name) {
-        wcscpy_s(new_player.name, name);
+        String::wstrcpy(new_player.name, name);
     }
 
     if (id) {
-        wcscpy_s(new_player.id, id);
+        String::wstrcpy(new_player.id, id);
     }
 
     *(int*)(*(__int64*)(hModule + OFFSET_HALO2_PV_RESPAWN) + 0x2C) |= 1 << index;

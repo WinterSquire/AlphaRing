@@ -15,22 +15,13 @@ namespace Halo2::Entry::Game {
 
         NativeHalo2()->NativeInfo()->update((__int64)GetModuleHandleA("halo2.dll"));
 
-        static bool bShowContext = true;
-
-        bool bShow = Renderer()->ShowContext();
-
-        if (bShowContext != bShow) {
-            bShowContext = bShow;
+        if (Renderer()->ShowContext() && Renderer()->NewFrame()) {
+            ImGui::Begin("Halo 2");
+            if (ImGui::Button("Add Player")) {
+                NativeHalo2()->NativeFunc()->local_player_add(L"UWU", L"UWU");
+            }
+            ImGui::End();
         }
-
-        if (!bShowContext) return;
-
-        Renderer()->NewFrame();
-        ImGui::Begin("Halo 2");
-        if (ImGui::Button("Add Player")) {
-            NativeHalo2()->NativeFunc()->local_player_add(L"UWU", L"UWU");
-        }
-        ImGui::End();
     }
 
     void Epilogue() {

@@ -13,24 +13,15 @@ namespace Halo3ODST::Entry::Render {
     }
 
     void Epilogue() {
-        static bool bShowContext = true;
-
-        bool bShow = Renderer()->ShowContext();
-
-        if (bShowContext != bShow) {
-            bShowContext = bShow;
+        if (Renderer()->ShowContext() && Renderer()->NewFrame()) {
+            ImGui::Begin("Halo3 ODST");
+            if (ImGui::Button("Add Player")) {
+                Halo3ODST::Entry::World::AddTask([]() {
+                    NativeHalo3ODST()->NativeFunc()->local_player_add(L"UWU", L"UWU");
+                });
+            }
+            ImGui::End();
         }
-
-        if (!bShowContext) return;
-
-        Renderer()->NewFrame();
-        ImGui::Begin("Halo3 ODST");
-        if (ImGui::Button("Add Player")) {
-            Halo3ODST::Entry::World::AddTask([]() {
-                NativeHalo3ODST()->NativeFunc()->local_player_add(L"UWU", L"UWU");
-            });
-        }
-        ImGui::End();
     }
 
     Halo3ODSTEntry(entry, OFFSET_HALO3ODST_PF_RENDER, void, detour) {

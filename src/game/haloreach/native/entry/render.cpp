@@ -13,24 +13,15 @@ namespace HaloReach::Entry::Render {
 
     }
     void Epilogue() {
-        static bool bShowContext = true;
-
-        bool bShow = Renderer()->ShowContext();
-
-        if (bShowContext != bShow) {
-            bShowContext = bShow;
+        if (Renderer()->ShowContext() && Renderer()->NewFrame()) {
+            ImGui::Begin("Halo Reach");
+            if (ImGui::Button("Add Player")) {
+                HaloReach::Entry::World::AddTask([]() {
+                    NativeHaloReach()->NativeFunc()->local_player_add(L"UWU", L"UWU");
+                });
+            }
+            ImGui::End();
         }
-
-        if (!bShowContext) return;
-
-        Renderer()->NewFrame();
-        ImGui::Begin("Halo Reach");
-        if (ImGui::Button("Add Player")) {
-            HaloReach::Entry::World::AddTask([]() {
-                NativeHaloReach()->NativeFunc()->local_player_add(L"UWU", L"UWU");
-            });
-        }
-        ImGui::End();
     }
     HaloReachEntry(entry, OFFSET_HALOREACH_PF_RENDER, void, detour) {
         Prologue();
