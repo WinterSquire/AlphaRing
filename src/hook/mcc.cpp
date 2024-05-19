@@ -79,6 +79,8 @@ static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_d
     return result;
 }
 
+static bool b_override_user_id = true;
+
 char (__fastcall* ppOriginal_get_xbox_user_id)(__int64 ,__int64* ,wchar_t *,unsigned int ,unsigned int );
 
 char __fastcall get_xbox_user_id(
@@ -87,9 +89,15 @@ char __fastcall get_xbox_user_id(
         wchar_t *p_gameTag,
         unsigned int size,
         unsigned int player_index) {
+
+    if (!b_override_user_id) return ppOriginal_get_xbox_user_id(p_self,p_userId,p_gameTag,size,player_index);
+
     if (player_index >= 2) return false;
+
     if (p_userId) *p_userId = 1 <<  player_index;
+
     if (p_gameTag) String::wstrcpy(p_gameTag, L"UWU", size >> 1);
+
     return true;
 }
 
