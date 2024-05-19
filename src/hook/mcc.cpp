@@ -9,6 +9,7 @@
 #include "MinHook.h"
 #include <Xinput.h>
 
+#include "core/String.h"
 #include "render/Renderer.h"
 
 static __int64 hModule;
@@ -78,6 +79,20 @@ static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_d
     return result;
 }
 
+char (__fastcall* ppOriginal_get_xbox_user_id)(__int64 ,__int64* ,wchar_t *,unsigned int ,unsigned int );
+
+char __fastcall get_xbox_user_id(
+        __int64 p_self,
+        __int64* p_userId,
+        wchar_t *p_gameTag,
+        unsigned int size,
+        unsigned int player_index) {
+    if (player_index >= 2) return false;
+    if (p_userId) *p_userId = 1 <<  player_index;
+    if (p_gameTag) String::wstrcpy(p_gameTag, L"UWU", size >> 1);
+    return true;
+}
+
 bool MCCHook::Initialize() {
     char buffer[1024];
     void* pTarget;
@@ -104,6 +119,11 @@ bool MCCHook::Initialize() {
 
     if ((pTarget = (LPVOID) (hModule + OFFSET_MCC_PF_GAMEINPUT)),
             MH_CreateHook(pTarget,input_get_status,(void **) &ppOriginal_input_get_status) != MH_OK ||
+            MH_EnableHook(pTarget) != MH_OK)
+        return false;
+
+    if ((pTarget = (LPVOID) (hModule + 0x1E572C)),
+            MH_CreateHook(pTarget,get_xbox_user_id,(void **) &ppOriginal_get_xbox_user_id) != MH_OK ||
             MH_EnableHook(pTarget) != MH_OK)
         return false;
 
