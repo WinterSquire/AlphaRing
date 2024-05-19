@@ -36,6 +36,7 @@ struct input_setting_t {
     bool override_input;
     bool enable_km;
     int controller_map[4] {0, 1, 2, 3};
+    int playercount = 0;
 };
 
 extern input_setting_t g_pInputSetting;
