@@ -56,8 +56,7 @@ public:
     ICModule *get(eModule module) override {return m_modules + module;}
 
     CModule m_modules[8] {
-//            {[] (__int64 hModule) {Halo1EntrySet()->update(hModule);}},
-            {nullptr},
+            {[] (__int64 hModule) {Halo1EntrySet()->update(hModule);}},
             {[] (__int64 hModule) {Halo2EntrySet()->update(hModule);}},
             {[] (__int64 hModule) {Halo3EntrySet()->update(hModule);}},
             {[] (__int64 hModule) {Halo4EntrySet()->update(hModule);}},
