@@ -4,6 +4,7 @@
 
 struct profile_setting {
     bool b_override = false;
+    bool b_override_player0 = false;
     int player_count = 1;
     struct profile_t {
         wchar_t name[MAX_NAME_LENGTH] {L"UWU"};

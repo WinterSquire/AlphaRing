@@ -37,7 +37,7 @@ LRESULT Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     else if (GetControllerState(state)) {
         static bool b_controller = false;
 
-        if (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) {
+        if (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN && state.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
             if (!b_controller) {
                 Renderer()->ToggleContext();
                 b_controller = true;

@@ -4,7 +4,7 @@
 #include "core/String.h"
 
 #define InputInt(name, value, v_min, v_max) int _input_int_##name##_tmp_value = *value; \
-if (ImGui::InputInt(#name, &_input_int_##name##_tmp_value, v_min, v_max)) \
+if (ImGui::InputInt(#name, &_input_int_##name##_tmp_value) && _input_int_##name##_tmp_value >= v_min && _input_int_##name##_tmp_value <= v_max) \
     *value = _input_int_##name##_tmp_value;
 
 static struct Tab {
@@ -39,7 +39,9 @@ static struct Tab {
 
         InputInt(PlayerCount, &p_setting->player_count, 1, 4);
 
-        for (int i = 0; i < p_setting->player_count; ++i) {
+        ImGui::Checkbox("Override Player 1", &p_setting->b_override_player0);
+
+        for (int i = !p_setting->b_override_player0; i < p_setting->player_count; ++i) {
             ImGui::Text("Player %d", i + 1);
             ImGui::PushID(i);
             String::strcpy(buffer, p_setting->profiles[i].name, MAX_NAME_LENGTH);
