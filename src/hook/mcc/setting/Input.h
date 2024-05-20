@@ -1,5 +1,4 @@
-#ifndef ALPHA_RING_INPUT_H
-#define ALPHA_RING_INPUT_H
+#pragma once
 
 inline static const char key_map_list[] = {
         '\x1B', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', '\xC0',
@@ -36,10 +35,7 @@ struct input_setting_t {
     bool override_input;
     bool enable_km;
     int controller_map[4] {0, 1, 2, 3};
-    int playercount = 0;
 };
 
-extern input_setting_t g_pInputSetting;
-inline input_setting_t* InputSetting() {return &g_pInputSetting;};
-
-#endif //ALPHA_RING_INPUT_H
+extern input_setting_t g_inputSetting;
+inline input_setting_t* InputSetting() {return &g_inputSetting;};

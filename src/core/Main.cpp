@@ -4,7 +4,7 @@
 
 #include "MinHook.h"
 #include "hook/d3d11.h"
-#include "hook/mcc.h"
+#include "hook/mcc/mcc.h"
 
 #include "render/Window.h"
 

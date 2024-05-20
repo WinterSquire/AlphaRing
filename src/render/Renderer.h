@@ -12,6 +12,7 @@ public:
     virtual void EndFrame() = 0;
     virtual void Resize(float width, float height) = 0;
     virtual bool& ShowContext() = 0;
+    inline void ToggleContext() { ShowContext() = !ShowContext(); }
 
     virtual void SetState(void* p_state) = 0;
     virtual void SetStateWireframe() = 0;

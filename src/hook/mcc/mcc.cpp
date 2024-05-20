@@ -1,16 +1,16 @@
 #include "mcc.h"
 
+#include "common.h"
 #include "module/Module.h"
 #include "offset_mcc.h"
-#include "input/Input.h"
-
-#include "common.h"
 
 #include "MinHook.h"
 #include <Xinput.h>
 
 #include "core/String.h"
 #include "render/Renderer.h"
+
+#include "./setting/setting.h"
 
 static __int64 hModule;
 
@@ -79,14 +79,6 @@ static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_d
     return result;
 }
 
-struct profile_setting {
-    bool b_override;
-    int player_count;
-    struct profile_t {
-        wchar_t name[0x10] {L"UWU"};
-    } profiles[4];
-} g_profile_setting;
-
 char (__fastcall* ppOriginal_get_xbox_user_id)(__int64 ,__int64* ,wchar_t *,unsigned int ,unsigned int );
 
 char __fastcall get_xbox_user_id(
@@ -95,14 +87,15 @@ char __fastcall get_xbox_user_id(
         wchar_t *p_gameTag,
         unsigned int size,
         unsigned int player_index) {
+    auto p_setting = ProfileSetting();
+    
+    if (!p_setting->b_override) return ppOriginal_get_xbox_user_id(p_self,p_userId,p_gameTag,size,player_index);
 
-    if (!g_profile_setting.b_override) return ppOriginal_get_xbox_user_id(p_self,p_userId,p_gameTag,size,player_index);
-
-    if (player_index >= g_profile_setting.player_count) return false;
+    if (player_index >= p_setting->player_count) return false;
 
     if (p_userId) *p_userId = 1 << player_index;
 
-    if (p_gameTag) String::wstrcpy(p_gameTag, g_profile_setting.profiles[player_index].name, size >> 1);
+    if (p_gameTag) String::wstrcpy(p_gameTag, p_setting->profiles[player_index].name, size >> 1);
 
     return true;
 }

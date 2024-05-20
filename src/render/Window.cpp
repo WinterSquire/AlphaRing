@@ -2,32 +2,16 @@
 #include "Renderer.h"
 #include "String.h"
 
-#include "windows.h"
-
 #include <mutex>
 #include <condition_variable>
-#include <Xinput.h>
-#include <chrono>
-#include <thread>
 
-#pragma comment(lib, "Xinput.lib")
+#include <windows.h>
+#include <Xinput.h>
 
 static std::mutex cv_m;
 static std::condition_variable cv;
 static bool b_shouldDestory = false;
-
-XINPUT_STATE GetControllerState(DWORD controllerIndex = 0) {
-    XINPUT_STATE state;
-    ZeroMemory(&state, sizeof(XINPUT_STATE));
-    DWORD result = XInputGetState(controllerIndex, &state);
-
-    if (result == ERROR_SUCCESS) {
-        return state;
-    }
-    else {
-        throw std::runtime_error("Controller is not connected.");
-    }
-}
+static DWORD (WINAPI* xinput_get_state)(_In_  DWORD dwUserIndex, _Out_ XINPUT_STATE* pState) WIN_NOEXCEPT;
 
 void Window::waitForDestroy() {
     std::unique_lock<std::mutex> lk(cv_m);
@@ -40,16 +24,35 @@ void Window::signalDestroy() {
     cv.notify_one();
 }
 
+inline bool GetControllerState(XINPUT_STATE& state, DWORD controllerIndex = 0) {
+    ZeroMemory(&state, sizeof(XINPUT_STATE));
+    return xinput_get_state(controllerIndex, &state) == ERROR_SUCCESS;
+}
+
 LRESULT Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    XINPUT_STATE state = GetControllerState(0);
+    XINPUT_STATE state;
+
+    if (!xinput_get_state)
+        xinput_get_state = reinterpret_cast<decltype(xinput_get_state)>(GetProcAddress(GetModuleHandleA("XINPUT1_3.dll"), "XInputGetState"));
+    else if (GetControllerState(state)) {
+        static bool b_controller = false;
+
+        if (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) {
+            if (!b_controller) {
+                Renderer()->ToggleContext();
+                b_controller = true;
+            }
+        } else {
+            b_controller = false;
+        }
+    }
+
     switch (uMsg) {
     case WM_KEYDOWN: {
         switch (wParam) {
-        case VK_F4: {
-            bool& b = Renderer()->ShowContext();
-            b = !b;
+        case VK_F4:
+            Renderer()->ToggleContext();
             break;
-        }
         }
         break;
     }
@@ -59,10 +62,6 @@ LRESULT Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     default:
         break;
     }
-    if (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) {
-        bool& b = Renderer()->ShowContext();
-        b = !b;
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
+
     return false;
 }
