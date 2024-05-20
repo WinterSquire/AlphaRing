@@ -43,6 +43,7 @@ private:
 
 };
 
+#include "patch/Patch.h"
 #include "game/halo1/native/entry/halo1.h"
 #include "game/halo2/native/entry/halo2.h"
 #include "game/halo3/native/entry/halo3.h"
@@ -56,13 +57,30 @@ public:
     ICModule *get(eModule module) override {return m_modules + module;}
 
     CModule m_modules[8] {
-            {[] (__int64 hModule) {return; Halo1EntrySet()->update(hModule);}},
-            {[] (__int64 hModule) {return; Halo2EntrySet()->update(hModule);}},
-            {[] (__int64 hModule) {Halo3EntrySet()->update(hModule);}},
-            {[] (__int64 hModule) {return; Halo4EntrySet()->update(hModule);}},
-            {[] (__int64 hModule) {return; GroundHogEntrySet()->update(hModule);}},
-            {[] (__int64 hModule) {return; Halo3ODSTEntrySet()->update(hModule);}},
-            {[] (__int64 hModule) {return; HaloReachEntrySet()->update(hModule);}},
+            {[] (__int64 hModule) {
+                Halo1EntrySet()->update(hModule);
+            }},
+            {[] (__int64 hModule) {
+                Halo2EntrySet()->update(hModule);
+            }},
+            {[] (__int64 hModule) {
+                Patch::apply((void*)(hModule + 0x11DF8), "\x31\xC0\xC3\x90", 4);
+                Halo3EntrySet()->update(hModule);
+            }},
+            {[] (__int64 hModule) {
+//                Halo4EntrySet()->update(hModule);
+            }},
+            {[] (__int64 hModule) {
+//                GroundHogEntrySet()->update(hModule);
+            }},
+            {[] (__int64 hModule) {
+                Patch::apply((void*)(hModule + 0x1258C), "\x31\xC0\xC3\x90", 4);
+//                Halo3ODSTEntrySet()->update(hModule);
+            }},
+            {[] (__int64 hModule) {
+                Patch::apply((void*)(hModule + 0x3971C4), "\x31\xC0\xC3\x90", 4);
+//                HaloReachEntrySet()->update(hModule);
+            }},
     };
 
     static CModules m_instance;

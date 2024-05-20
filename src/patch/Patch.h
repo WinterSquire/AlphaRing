@@ -6,7 +6,7 @@
 
 class Patch {
 public:
-    inline static bool apply(void *dst, void *src, size_t size) {
+    inline static bool apply(void *dst, const void *src, size_t size) {
         bool _flag = false;
         DWORD oldprotect;
 

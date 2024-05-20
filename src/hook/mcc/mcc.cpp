@@ -55,7 +55,7 @@ static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_d
 
     if (!p_setting->override_input) return ppOriginal_input_get_status(self, player_index, p_data, a4);
 
-    if (!*(bool*)(hModule + OFFSET_MCC_PV_WINDOWFOCUSED)) return result;
+//    if (!*(bool*)(hModule + OFFSET_MCC_PV_WINDOWFOCUSED)) return false;
 
     if (p_setting->enable_km && !player_index) {
         p_device = self->p_input_device[4];
@@ -67,7 +67,7 @@ static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_d
             *(bool*)((__int64)p_device + 0xF9) = false;
     } else {
         auto choice = p_setting->controller_map[player_index];
-        if (choice == 4 || (p_device = self->p_input_device[choice]) == nullptr) return result;
+        if (choice == 4 || (p_device = self->p_input_device[choice]) == nullptr) return true;
         memset(&p_device->state, 0, sizeof(XINPUT_STATE));
         xinput_get_state(p_device->input_user, &p_device->state);
         *(__int64 *)((__int64)p_data + 0x10C) = 0i64;
