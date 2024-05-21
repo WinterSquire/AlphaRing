@@ -40,8 +40,10 @@ static struct Tab {
         InputInt(PlayerCount, &p_setting->player_count, 1, 4);
 
         ImGui::Checkbox("Override Player 1", &p_setting->b_override_player0);
+        int playercountcheck = 0;
 
         for (int i = !p_setting->b_override_player0; i < p_setting->player_count; ++i) {
+            playercountcheck = i;
             ImGui::Text("Player %d", i + 1);
             ImGui::PushID(i);
             String::strcpy(buffer, p_setting->profiles[i].name, MAX_NAME_LENGTH);
@@ -49,6 +51,13 @@ static struct Tab {
                 String::wstrcpy(p_setting->profiles[i].name, buffer, MAX_NAME_LENGTH);
             }
             ImGui::PopID();
+            
+        }
+        if (playercountcheck > 1) // Warning message for if Player Count is greater than 2 players. 
+        {
+            ImGui::PushTextWrapPos(ImGui::GetContentRegionAvail().x);
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "WARNING: 3 or 4 Players is only supported in Multiplayer (all games), Firefight and Co-Op in Halo 3, Halo 3: ODST and Halo: Reach. This is not supported for Co-Op in Halo CE, Halo 2, Halo 4 and Spartan Ops. Doing so will cause the map to not load or for the game to crash.");
+            ImGui::PopTextWrapPos();
         }
     } },
 };
