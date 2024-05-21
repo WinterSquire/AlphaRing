@@ -61,13 +61,14 @@ public:
                 Halo1EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
-                Halo2EntrySet()->update(hModule);
+//                Halo2EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
                 Patch::apply((void*)(hModule + 0x11DF8), "\x31\xC0\xC3\x90", 4);
                 Halo3EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
+                Patch::apply((void*)(hModule + 0x566794), "\x31\xC0\xC3\x90", 4);
 //                Halo4EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
