@@ -54,7 +54,8 @@ void CRenderer::Init(void* oWindow, void *p_swapChain, void *p_device, void *p_c
 
     CreateMainRenderTargetView();
 
-    float scale = 2.0f;
+    //todo: custom scaling
+    float scale = 1.5f;
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
     io.MouseDrawCursor = true;

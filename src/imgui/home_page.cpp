@@ -21,12 +21,17 @@ void ImGui::CustomWidget::HomePage::render() {
     auto p_profile_setting = ProfileSetting();
     auto p_input_setting = InputSetting();
 
-    if (ImGui::Checkbox("Enable SplitScreen", &p_profile_setting->b_override)) {
+    if (ImGui::Checkbox("Split Screen", &p_profile_setting->b_override)) {
         p_input_setting->override_input = p_profile_setting->b_override;
     }
 
     if (!p_profile_setting->b_override) return;
-    InputInt(PlayerCount, &p_profile_setting->player_count, 1, 4);
+
+    ImGui::SameLine();
+
+    ImGui::PushItemWidth(150);
+    InputInt(Players, &p_profile_setting->player_count, 1, 4);
+    ImGui::PopItemWidth();
 
     // Warning message for if Player Count is greater than 2 players.
     if (p_profile_setting->player_count > 2) {
@@ -51,6 +56,7 @@ void ImGui::CustomWidget::HomePage::render() {
             ImGui::SameLine();
 
             ImGui::PushID(i << 1 | 0);
+            //todo: Wide Char Input Support
             String::strcpy(buffer, converter.to_bytes(p_profile_setting->profiles[i].name).c_str(), MAX_NAME_LENGTH);
             ImGui::PushItemWidth(200);
             if (ImGui::InputText("", buffer, MAX_NAME_LENGTH, ImGuiInputTextFlags_EnterReturnsTrue))
