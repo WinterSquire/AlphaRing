@@ -71,6 +71,8 @@ void CRenderer::Init(void* oWindow, void *p_swapChain, void *p_device, void *p_c
 }
 
 void CRenderer::CreateMainRenderTargetView() {
+    if (!pSwapChain || !pDevice || !pContext) return;
+
     pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)&pDevice);
     pDevice->GetImmediateContext(&pContext);
 

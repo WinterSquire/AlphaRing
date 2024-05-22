@@ -34,8 +34,9 @@ static LRESULT __stdcall dWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
     return CallWindowProc(oWndProc, hWnd, uMsg, wParam, lParam);
 }
 
-static HRESULT __stdcall dPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags) {
-    static bool bInitialized = false;
+static bool bInitialized = false;
+
+inline void CheckInit(IDXGISwapChain* pSwapChain) {
     ID3D11Device*			pDevice;
     ID3D11DeviceContext*	pContext;
 
@@ -52,23 +53,32 @@ static HRESULT __stdcall dPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval,
         Renderer()->Init(window, pSwapChain, pDevice, pContext);
         bInitialized = true;
     }
-    else {
-        Renderer()->Render();
-    }
+}
+
+static HRESULT __stdcall dPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags) {
+    CheckInit(pSwapChain);
+
+    if (bInitialized) Renderer()->Render();
 
     return functionTable.Present(pSwapChain, SyncInterval, Flags);
 }
 
 static HRESULT dResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags) {
-    Renderer()->ReleaseMainRenderTargetView();
+    CheckInit(pSwapChain);
 
-    HRESULT hr = functionTable.ResizeBuffers(pSwapChain, BufferCount, Width, Height, NewFormat, SwapChainFlags);
+    if (bInitialized) {
+        Renderer()->ReleaseMainRenderTargetView();
 
-    Renderer()->CreateMainRenderTargetView();
+        HRESULT hr = functionTable.ResizeBuffers(pSwapChain, BufferCount, Width, Height, NewFormat, SwapChainFlags);
 
-    Renderer()->Resize(Width, Height);
+        Renderer()->CreateMainRenderTargetView();
 
-    return hr;
+        Renderer()->Resize(Width, Height);
+
+        return hr;
+    } else {
+        return functionTable.ResizeBuffers(pSwapChain, BufferCount, Width, Height, NewFormat, SwapChainFlags);
+    }
 }
 
 bool Directx11Hook::Initialize() {
