@@ -5,9 +5,9 @@
 #include "offset_mcc.h"
 
 #include "MinHook.h"
-#include <Xinput.h>
 
 #include "core/String.h"
+#include "input/Input.h"
 #include "render/Renderer.h"
 
 #include "./setting/setting.h"
@@ -43,7 +43,6 @@ struct INPUT_t {
     InputDevice* p_input_device[5];
 };
 
-static DWORD (WINAPI* xinput_get_state)(_In_  DWORD dwUserIndex, _Out_ XINPUT_STATE* pState) WIN_NOEXCEPT;
 static bool (__fastcall *ppOriginal_input_get_status)(INPUT_t* self, int player_index, input_data_t* p_data, char a4);
 static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_data_t* p_data, char a4) {
     bool result = false;
@@ -69,7 +68,7 @@ static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_d
         auto choice = p_setting->controller_map[player_index];
         if (choice == 4 || (p_device = self->p_input_device[choice]) == nullptr) return true;
         memset(&p_device->state, 0, sizeof(XINPUT_STATE));
-        xinput_get_state(p_device->input_user, &p_device->state);
+        AlphaRing::Input::GetXInputGetState(p_device->input_user, &p_device->state);
         *(__int64 *)((__int64)p_data + 0x10C) = 0i64;
     }
 
@@ -137,8 +136,6 @@ bool MCCHook::Initialize() {
             MH_CreateHook(pTarget,get_xbox_user_id,(void **) &ppOriginal_get_xbox_user_id) != MH_OK ||
             MH_EnableHook(pTarget) != MH_OK)
         return false;
-
-    xinput_get_state = reinterpret_cast<decltype(xinput_get_state)>(GetProcAddress(GetModuleHandleA("XINPUT1_3.dll"), "XInputGetState"));
 
     return true;
 }

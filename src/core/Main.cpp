@@ -7,6 +7,7 @@
 #include "hook/mcc/mcc.h"
 
 #include "render/Window.h"
+#include "input/Input.h"
 
 #include <filesystem>
 
@@ -27,6 +28,11 @@ bool Prologue() {
     freopen("CONOUT$", "w", stderr);
 
     LOG_INFO("Version: {}", GAME_VERSION);
+
+    if (!AlphaRing::Input::Init()) {
+        LOG_ERROR("Input Fail To Initialize!");
+        return false;
+    }
 
     if (MH_Initialize() != MH_OK) {
         LOG_ERROR("MinHook Fail To Initialize!");

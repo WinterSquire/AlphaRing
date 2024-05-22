@@ -6,12 +6,12 @@
 #include <condition_variable>
 
 #include <windows.h>
-#include <Xinput.h>
+
+#include "input/Input.h"
 
 static std::mutex cv_m;
 static std::condition_variable cv;
 static bool b_shouldDestory = false;
-static DWORD (WINAPI* xinput_get_state)(_In_  DWORD dwUserIndex, _Out_ XINPUT_STATE* pState) WIN_NOEXCEPT;
 
 void Window::waitForDestroy() {
     std::unique_lock<std::mutex> lk(cv_m);
@@ -26,15 +26,13 @@ void Window::signalDestroy() {
 
 inline bool GetControllerState(XINPUT_STATE& state, DWORD controllerIndex = 0) {
     ZeroMemory(&state, sizeof(XINPUT_STATE));
-    return xinput_get_state(controllerIndex, &state) == ERROR_SUCCESS;
+    return AlphaRing::Input::GetXInputGetState(controllerIndex, &state);
 }
 
 LRESULT Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     XINPUT_STATE state;
 
-    if (!xinput_get_state)
-        xinput_get_state = reinterpret_cast<decltype(xinput_get_state)>(GetProcAddress(GetModuleHandleA("XINPUT1_3.dll"), "XInputGetState"));
-    else if (GetControllerState(state)) {
+    if (GetControllerState(state)) {
         static bool b_controller = false;
 
         if (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN && state.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
