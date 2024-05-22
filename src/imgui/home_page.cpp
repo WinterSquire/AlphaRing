@@ -12,8 +12,8 @@ if (ImGui::InputInt(#name, &_input_int_##name##_tmp_value) && _input_int_##name#
 
 void ImGui::CustomWidget::HomePage::render() {
     const char* coop_warning_message = R"(WARNING:
-    3 or 4 Players is not supported for Campaign in Halo 2.
-    Doing so will cause the map to not load.
+    3 or 4 Players is not supported for Co-Op in Halo 2.
+    Doing so will cause the game to get stuck at loading.
 )";
 
     char buffer[1024];
