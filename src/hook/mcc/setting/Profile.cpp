@@ -10,9 +10,11 @@ profile_setting::profile_setting() {
     b_override_player0 = false;
     player_count = 1;
 
-    for (auto & profile : profiles) {
-        CoCreateGuid((GUID*)guid);
-        profile.id = guid[0] ^ guid[1];
-        profile.name[0] = 0;
+    CoCreateGuid((GUID*)guid);
+    auto id =guid[0] ^ guid[1];
+
+    for (int i = 0; i < 4; i++) {
+        profiles[i].id = id + i;
+        profiles[i].name[0] = 0;
     }
 }

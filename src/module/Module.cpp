@@ -58,6 +58,7 @@ public:
 
     CModule m_modules[8] {
             {[] (__int64 hModule) {
+//                Patch::apply((void*)(hModule + 0xC3B9C8), "\x31\xC0\xC3\x90", 4);
                 Halo1EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
