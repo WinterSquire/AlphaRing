@@ -1,6 +1,7 @@
 #include "Profile.h"
 
 #include <objbase.h>
+#include <string>
 
 profile_setting g_profile_setting;
 
@@ -15,6 +16,6 @@ profile_setting::profile_setting() {
 
     for (int i = 0; i < 4; i++) {
         profiles[i].id = id + i;
-        profiles[i].name[0] = 0;
+        wprintf(profiles[i].name, L"Player %d", i + 1);
     }
 }
