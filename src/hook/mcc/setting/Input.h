@@ -34,7 +34,7 @@ struct input_data_t {
 struct input_setting_t {
     bool override_input;
     bool enable_km = true;
-    int controller_map[4] {0, 0, 0, 0};
+    int controller_map[4] {3, 0, 1, 2};
 };
 
 extern input_setting_t g_inputSetting;

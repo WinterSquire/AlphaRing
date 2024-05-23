@@ -24,9 +24,8 @@ struct FunctionTable {
 
 static LRESULT __stdcall dWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    LRESULT Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam) || Window_WndProc(hWnd, uMsg, wParam, lParam))
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam) || Window::Window_WndProc(hWnd, uMsg, wParam, lParam))
         return true;
 
     if (uMsg == WM_QUIT && hWnd == window) Window::signalDestroy();

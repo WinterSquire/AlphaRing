@@ -1,13 +1,11 @@
 #include "Window.h"
+
 #include "Renderer.h"
-#include "String.h"
+#include "input/Input.h"
 
 #include <mutex>
 #include <condition_variable>
-
 #include <windows.h>
-
-#include "input/Input.h"
 #include <imgui.h>
 
 static std::mutex cv_m;
@@ -30,64 +28,57 @@ inline bool GetControllerState(XINPUT_STATE& state, DWORD controllerIndex = 0) {
     return AlphaRing::Input::GetXInputGetState(controllerIndex, &state);
 }
 
-LRESULT Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+LRESULT Window::Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     XINPUT_STATE state;
 
     if (GetControllerState(state)) {
-        static bool b_controller = false;
-        ImGuiIO& io = ImGui::GetIO();
-        const int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
-        SHORT sThumbRX = state.Gamepad.sThumbRX;
-        SHORT sThumbRY = state.Gamepad.sThumbRY;
+        static bool b_toggled = false;
+        static bool b_pressed = false;
 
-        if (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN && state.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
-            if (!b_controller) {
+        if (state.Gamepad.wButtons & XINPUT_GAMEPAD_START && state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) {
+            if (!b_toggled) {
                 Renderer()->ToggleContext();
-                b_controller = true;
+                b_toggled = true;
+                return false;
             }
         } else {
-            b_controller = false;
+            b_toggled = false;
         }
 
-        if (state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)
-        {
-            io.MouseDown[0] = true;
+        if (Renderer()->ShowContext()) {
+            const auto f_speed = [](SHORT x, SHORT y) -> ImVec2 {
+                // Mouse Move Speed for Gamepad
+                const auto speed = 5.0f;
+                // Normalize Move Speed
+                const auto f_normalize = [](SHORT sThumb) -> float {
+                    const auto deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
+                    return (abs(sThumb) > deadZone) ? (sThumb / 32767.0f) : 0.0f;
+                };
+                // Get Final Move Speed
+                return {f_normalize(x) * speed, -f_normalize(y) * speed};
+            };
+
+            ImGuiIO& io = ImGui::GetIO();
+
+            if (state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+                if (!b_pressed) {
+                    io.MouseDown[0] = true;
+                    b_pressed = true;
+                }
+            } else if (b_pressed) {
+                io.MouseDown[0] = false;
+                b_pressed = false;
+            }
+
+            io.MousePos += f_speed(state.Gamepad.sThumbRX, state.Gamepad.sThumbRY);
         }
-        else
-        {
-            io.MouseDown[0] = false;
-        }
-
-        //Mapping Gamepad for GUI
-        
-        float mouseX = io.MousePos.x;
-        float mouseY = io.MousePos.y;
-        const float speed = 5.0f; //Mouse movespeed for Gamepad
-
-        float normalizedLX = (abs(sThumbRX) > deadZone) ? (sThumbRX / 32767.0f) : 0.0f;
-        float normalizedLY = (abs(sThumbRY) > deadZone) ? (sThumbRY / 32767.0f) : 0.0f;
-
-        mouseX += normalizedLX * speed;
-        mouseY -= normalizedLY * speed;
-
-        io.MousePos = ImVec2(mouseX, mouseY);
-
     }
 
-    switch (uMsg) {
-    case WM_KEYDOWN: {
-        switch (wParam) {
-        case VK_F4:
-            Renderer()->ToggleContext();
-            break;
-        }
-        break;
-    }
-    case WM_KEYUP: {
-        break;
-    }
-    default:
-        break;
+    //todo: WM_IME_COMPOSITION Support
+
+    if (uMsg == WM_KEYDOWN && wParam == VK_F4) {
+        Renderer()->ToggleContext();
+        return false;
     }
 
     return false;

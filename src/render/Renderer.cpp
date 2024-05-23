@@ -57,13 +57,23 @@ void CRenderer::Init(void* oWindow, void *p_swapChain, void *p_device, void *p_c
     //todo: custom scaling
     float scale = 1.5f;
     ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
-    io.MouseDrawCursor = true;
-    io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
-    io.Fonts->Clear();
-    io.IniFilename = "./alpha_ring/imgui.ini";
-    io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 16.0f * scale);
-    ImGui::LoadIniSettingsFromDisk("../../../alpha_ring/imgui.ini");
+
+    {
+        ImGuiIO &io = ImGui::GetIO();
+
+        // config
+        io.MouseDrawCursor = true;
+        io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
+
+        // ini
+        io.IniFilename = "./alpha_ring/imgui.ini";
+        ImGui::LoadIniSettingsFromDisk("../../../alpha_ring/imgui.ini");
+
+        // fonts
+        io.Fonts->Clear();
+        io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 16.0f * scale, nullptr, io.Fonts->GetGlyphRangesChineseFull());
+    }
+
     ImGui::GetStyle().ScaleAllSizes(scale);
 
     ImGui_ImplWin32_Init(window);

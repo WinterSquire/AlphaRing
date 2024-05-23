@@ -15,7 +15,6 @@ void ImGui::CustomWidget::HomePage::render() {
     3 or 4 Players is not supported for Co-Op in Halo 2.
     Doing so will cause the game to get stuck at loading.
 )";
-
     char buffer[1024];
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
     auto p_profile_setting = ProfileSetting();
@@ -59,7 +58,7 @@ void ImGui::CustomWidget::HomePage::render() {
             //todo: Wide Char Input Support
             String::strcpy(buffer, converter.to_bytes(p_profile_setting->profiles[i].name).c_str(), MAX_NAME_LENGTH);
             ImGui::PushItemWidth(200);
-            if (ImGui::InputText("", buffer, MAX_NAME_LENGTH, ImGuiInputTextFlags_EnterReturnsTrue))
+            if (ImGui::InputText("", buffer, MAX_NAME_LENGTH))
                 String::wstrcpy(p_profile_setting->profiles[i].name, converter.from_bytes(buffer).c_str(), MAX_NAME_LENGTH);
             ImGui::PopItemWidth();
             ImGui::PopID();
