@@ -16,6 +16,15 @@ void ImGui::CustomWidget::HomePage::render() {
     Doing so will cause the game to get stuck at loading.
     In Halo 1 and Halo 4, 3 or 4 Players need to be added after the game starts.
 )";
+
+    const char* tutorial_message = R"(
+TUTORIAL:
+Press "F4" or "DPAD Down + A" to toggle the menu.
+
+To navigate using Controller use the "Right Stick" to move the mouse and "RB" to click.
+
+Having this menu open will pause whichever Halo game you are playing.
+)";
     char buffer[1024];
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
     auto p_profile_setting = ProfileSetting();
@@ -23,6 +32,13 @@ void ImGui::CustomWidget::HomePage::render() {
 
     if (ImGui::Checkbox("Split Screen", &p_profile_setting->b_override)) {
         p_input_setting->override_input = p_profile_setting->b_override;
+    }
+
+    if (!p_profile_setting->b_override)
+    {
+        ImGui::PushTextWrapPos(ImGui::GetContentRegionAvail().x);
+        ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), tutorial_message);
+        ImGui::PopTextWrapPos();
     }
 
     if (!p_profile_setting->b_override) return;
