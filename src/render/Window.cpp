@@ -8,6 +8,7 @@
 #include <windows.h>
 
 #include "input/Input.h"
+#include <imgui.h>
 
 static std::mutex cv_m;
 static std::condition_variable cv;
@@ -34,6 +35,10 @@ LRESULT Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
     if (GetControllerState(state)) {
         static bool b_controller = false;
+        ImGuiIO& io = ImGui::GetIO();
+        const int deadZone = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
+        SHORT sThumbRX = state.Gamepad.sThumbRX;
+        SHORT sThumbRY = state.Gamepad.sThumbRY;
 
         if (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN && state.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
             if (!b_controller) {
@@ -43,6 +48,30 @@ LRESULT Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         } else {
             b_controller = false;
         }
+
+        if (state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)
+        {
+            io.MouseDown[0] = true;
+        }
+        else
+        {
+            io.MouseDown[0] = false;
+        }
+
+        //Mapping Gamepad for GUI
+        
+        float mouseX = io.MousePos.x;
+        float mouseY = io.MousePos.y;
+        const float speed = 5.0f; //Mouse movespeed for Gamepad
+
+        float normalizedLX = (abs(sThumbRX) > deadZone) ? (sThumbRX / 32767.0f) : 0.0f;
+        float normalizedLY = (abs(sThumbRY) > deadZone) ? (sThumbRY / 32767.0f) : 0.0f;
+
+        mouseX += normalizedLX * speed;
+        mouseY -= normalizedLY * speed;
+
+        io.MousePos = ImVec2(mouseX, mouseY);
+
     }
 
     switch (uMsg) {
