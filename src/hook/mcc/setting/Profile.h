@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_NAME_LENGTH 0x10
+#define MAX_NAME_LENGTH 1024
 
 struct profile_setting {
     bool b_override;

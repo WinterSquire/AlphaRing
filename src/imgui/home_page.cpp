@@ -14,6 +14,7 @@ void ImGui::CustomWidget::HomePage::render() {
     const char* coop_warning_message = R"(WARNING:
     3 or 4 Players is not supported for Co-Op in Halo 2.
     Doing so will cause the game to get stuck at loading.
+    In Halo 1 and Halo 4, 3 or 4 Players need to be added after the game starts.
 )";
     char buffer[1024];
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
@@ -56,10 +57,10 @@ void ImGui::CustomWidget::HomePage::render() {
 
             ImGui::PushID(i << 1 | 0);
             //todo: Wide Char Input Support
-            String::strcpy(buffer, converter.to_bytes(p_profile_setting->profiles[i].name).c_str(), MAX_NAME_LENGTH);
+            String::strcpy(buffer, converter.to_bytes(p_profile_setting->profiles[i].name).c_str());
             ImGui::PushItemWidth(200);
-            if (ImGui::InputText("", buffer, MAX_NAME_LENGTH))
-                String::wstrcpy(p_profile_setting->profiles[i].name, converter.from_bytes(buffer).c_str(), MAX_NAME_LENGTH);
+            if (ImGui::InputText("", buffer, sizeof(buffer)))
+                String::wstrcpy(p_profile_setting->profiles[i].name, converter.from_bytes(buffer).c_str());
             ImGui::PopItemWidth();
             ImGui::PopID();
         }

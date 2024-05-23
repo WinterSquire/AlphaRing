@@ -16,6 +16,6 @@ profile_setting::profile_setting() {
 
     for (int i = 0; i < 4; i++) {
         profiles[i].id = id + i;
-        wprintf(profiles[i].name, L"Player %d", i + 1);
+        swprintf(profiles[i].name, L"Player %d", i + 1);
     }
 }
