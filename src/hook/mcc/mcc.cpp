@@ -91,7 +91,7 @@ char __fastcall get_xbox_user_id(
     if (player_index >= p_setting->player_count) return false;
 
     if (p_userId)
-        *p_userId = player_index + 5;
+        *p_userId = p_setting->profiles[player_index].id;
 
     if (p_gameTag)
         String::wstrcpy(p_gameTag, p_setting->profiles[player_index].name, size >> 1);

@@ -23,7 +23,7 @@ Press "F4" or "Start + Back" to toggle the menu.
 
 To navigate using Controller use the "Right Stick" to move the mouse and "RB" to click.
 
-Having this menu open will pause whichever Halo game you are playing.
+Having this menu open will disable inputs or pause the game.
 )";
     char buffer[1024];
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
