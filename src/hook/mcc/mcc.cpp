@@ -45,10 +45,11 @@ struct INPUT_t {
 
 static bool (__fastcall *ppOriginal_input_get_status)(INPUT_t* self, int player_index, input_data_t* p_data, char a4);
 static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_data_t* p_data, char a4) {
+    typedef void (__fastcall* get_player0_input)(INPUT_t* self);
     bool result = false;
     InputDevice* p_device;
 
-     if (Renderer()->ShowContext()) return false;
+    if (Renderer()->ShowContext()) return false;
 
     auto p_setting = InputSetting();
 
@@ -58,12 +59,7 @@ static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_d
 
     if (p_setting->enable_km && !player_index) {
         p_device = self->p_input_device[4];
-        for (auto j = *(__int64**)(hModule + OFFSET_MCC_PV_KEYBEGIN); j != (__int64*)(hModule + OFFSET_MCC_PV_KEYEND); j = (__int64*)j[1] )
-            ((void (__fastcall *)(__int64, __int64 *))(hModule + OFFSET_MCC_PF_KEYCHECK))(((__int64)p_device + 0x20), j);
-        if ( *(bool*)((__int64)p_device + 0xF8) && GetKeyState(0xA0) >= 0 )
-            *(bool*)((__int64)p_device + 0xF8) = false;
-        if ( *(bool*)((__int64)p_device + 249) && (GetKeyState(0xA1) & 0x8000) == 0 )
-            *(bool*)((__int64)p_device + 0xF9) = false;
+        (get_player0_input(hModule + OFFSET_MCC_PF_GET_PLAYER0_INPUT))(self);
     } else {
         auto choice = p_setting->controller_map[player_index];
         if (choice == 4 || (p_device = self->p_input_device[choice]) == nullptr) return true;
