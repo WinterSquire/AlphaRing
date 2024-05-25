@@ -17,6 +17,8 @@ public:
     virtual tag_names_t* getTagName() = 0;
 };
 
+// https://github.com/XboxChaos/Assembly/blob/a9650c010fc6bb8e7d0ea01afe3a024619e4db95/src/Blamite/Util/CharConstant.cs#L9
+
 class CharConstant {
 public:
     int magic;
@@ -35,6 +37,8 @@ public:
 
     const char* ToString(char s[5]) {return CharConstant::ConvertToString(magic, s);}
 };
+
+// https://github.com/XboxChaos/Assembly/blob/a9650c010fc6bb8e7d0ea01afe3a024619e4db95/src/Blamite/Blam/ITagGroup.cs#L6
 
 struct ITagGroup
 {

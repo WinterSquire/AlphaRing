@@ -13,7 +13,11 @@
 
 //todo: filesystem
 
-#define INIT_ERROR(error_message) {LOG_ERROR(error_message); MessageBoxA(0, "Alpha Ring: " ##error_message, "Error", 0); return false;}
+#define INIT_ERROR(error_message) { \
+    LOG_ERROR(error_message); \
+    MessageBoxA(0, "Alpha Ring: " error_message, "Error", 0); \
+    return false; \
+}
 
 bool Prologue() {
     const char* home_dir = "../../../alpha_ring";
@@ -22,8 +26,7 @@ bool Prologue() {
         std::filesystem::create_directories(home_dir);
     }
 
-    if (AllocConsole() == false)
-        return false;
+    if (AllocConsole() == false) INIT_ERROR("Console Fail To Allocate!");
 
     freopen("CONIN$", "r", stdin);
     freopen("CONOUT$", "w", stdout);
