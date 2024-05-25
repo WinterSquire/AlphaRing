@@ -97,7 +97,9 @@ bool Directx11Hook::Initialize() {
 }
 
 bool FunctionTable::Initialize() {
-    WNDCLASS wc {
+    typedef long(__stdcall* D3D11CreateDeviceAndSwapChain_t)(IDXGIAdapter*,D3D_DRIVER_TYPE,HMODULE,UINT,const D3D_FEATURE_LEVEL*,UINT,UINT,const DXGI_SWAP_CHAIN_DESC*,IDXGISwapChain**,ID3D11Device**,D3D_FEATURE_LEVEL*,ID3D11DeviceContext**);
+
+    const WNDCLASS wc {
             CS_HREDRAW | CS_VREDRAW,
             DefWindowProc,
             0,
@@ -112,7 +114,7 @@ bool FunctionTable::Initialize() {
 
     if (!RegisterClass(&wc)) return false;
 
-    HWND window = CreateWindow(wc.lpszClassName, "Directx11 Hook", WS_OVERLAPPEDWINDOW,
+    HWND window = CreateWindow(wc.lpszClassName, wc.lpszClassName, WS_OVERLAPPEDWINDOW,
                                0, 0, 100, 100, nullptr, nullptr, wc.hInstance, nullptr);
 
     if (window == nullptr) return false;
@@ -125,7 +127,8 @@ bool FunctionTable::Initialize() {
         return false;
     }
 
-    void *D3D11CreateDeviceAndSwapChain = GetProcAddress(d3d11, "D3D11CreateDeviceAndSwapChain");
+    auto D3D11CreateDeviceAndSwapChain = (D3D11CreateDeviceAndSwapChain_t)GetProcAddress(
+            d3d11, "D3D11CreateDeviceAndSwapChain");
 
     if (D3D11CreateDeviceAndSwapChain == nullptr) {
         DestroyWindow(window);
@@ -133,53 +136,39 @@ bool FunctionTable::Initialize() {
         return false;
     }
 
-    D3D_FEATURE_LEVEL featureLevel;
-    const D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_11_0 };
-
-    DXGI_RATIONAL refreshRate;
-    refreshRate.Numerator = 60;
-    refreshRate.Denominator = 1;
-
-    DXGI_MODE_DESC bufferDesc;
-    bufferDesc.Width = 100;
-    bufferDesc.Height = 100;
-    bufferDesc.RefreshRate = refreshRate;
-    bufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    bufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-    bufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-
-    DXGI_SAMPLE_DESC sampleDesc;
-    sampleDesc.Count = 1;
-    sampleDesc.Quality = 0;
-
-    DXGI_SWAP_CHAIN_DESC swapChainDesc;
-    swapChainDesc.BufferDesc = bufferDesc;
-    swapChainDesc.SampleDesc = sampleDesc;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDesc.BufferCount = 1;
-    swapChainDesc.OutputWindow = window;
-    swapChainDesc.Windowed = 1;
-    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-    swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-
     IDXGISwapChain* swapChain;
     ID3D11Device* device;
     ID3D11DeviceContext* context;
 
-    if (((long(__stdcall*)(
-            IDXGIAdapter*,
-            D3D_DRIVER_TYPE,
-            HMODULE,
-            UINT,
-            const D3D_FEATURE_LEVEL*,
-            UINT,
-            UINT,
-            const DXGI_SWAP_CHAIN_DESC*,
-            IDXGISwapChain**,
-            ID3D11Device**,
-            D3D_FEATURE_LEVEL*,
-            ID3D11DeviceContext**))(D3D11CreateDeviceAndSwapChain))(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, featureLevels, 2, D3D11_SDK_VERSION, &swapChainDesc, &swapChain, &device, &featureLevel, &context) < 0)
-    {
+    D3D_FEATURE_LEVEL featureLevel;
+    const D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_11_0 };
+
+    const DXGI_SWAP_CHAIN_DESC swapChainDesc {
+            {
+                    100,
+                    100,
+                    {
+                            60,
+                            1
+                    },
+                    DXGI_FORMAT_R8G8B8A8_UNORM,
+                    DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED,
+                    DXGI_MODE_SCALING_UNSPECIFIED
+            },
+            {
+                    1,
+                    0
+            },
+            DXGI_USAGE_RENDER_TARGET_OUTPUT,
+            1,
+            window,
+            1,
+            DXGI_SWAP_EFFECT_DISCARD,
+            DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH
+    };
+
+    if (FAILED(D3D11CreateDeviceAndSwapChain(0, D3D_DRIVER_TYPE_HARDWARE, 0, 0, featureLevels, 2, D3D11_SDK_VERSION,
+                                             &swapChainDesc, &swapChain, &device, &featureLevel, &context))) {
         ::DestroyWindow(window);
         ::UnregisterClass(wc.lpszClassName, wc.hInstance);
         return false;

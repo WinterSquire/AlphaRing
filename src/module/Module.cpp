@@ -65,22 +65,22 @@ public:
 //                Halo2EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
-                Patch::apply((void*)(hModule + 0x11DF8), "\x31\xC0\xC3\x90", 4);
+                Patch::apply((void*)(hModule + OFFSET_HALO3_PF_COOP_JOIN), "\x31\xC0\xC3\x90", 4);
                 Halo3EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
-                Patch::apply((void*)(hModule + 0x566794), "\x31\xC0\xC3\x90", 4);
+                Patch::apply((void*)(hModule + OFFSET_HALO4_PF_COOP_JOIN), "\x31\xC0\xC3\x90", 4);
 //                Halo4EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
 //                GroundHogEntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
-                Patch::apply((void*)(hModule + 0x1258C), "\x31\xC0\xC3\x90", 4);
+                Patch::apply((void*)(hModule + OFFSET_HALO3ODST_PF_COOP_JOIN), "\x31\xC0\xC3\x90", 4);
 //                Halo3ODSTEntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
-                Patch::apply((void*)(hModule + 0x3971C4), "\x31\xC0\xC3\x90", 4);
+                Patch::apply((void*)(hModule + OFFSET_HALOREACH_PF_COOP_JOIN), "\x31\xC0\xC3\x90", 4);
 //                HaloReachEntrySet()->update(hModule);
             }},
     };

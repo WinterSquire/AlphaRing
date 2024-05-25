@@ -128,7 +128,7 @@ bool MCCHook::Initialize() {
             MH_EnableHook(pTarget) != MH_OK)
         return false;
 
-    if ((pTarget = (LPVOID) (hModule + 0x1E572C)),
+    if ((pTarget = (LPVOID) (hModule + OFFSET_MCC_PF_GET_USER_ID)),
             MH_CreateHook(pTarget,get_xbox_user_id,(void **) &ppOriginal_get_xbox_user_id) != MH_OK ||
             MH_EnableHook(pTarget) != MH_OK)
         return false;

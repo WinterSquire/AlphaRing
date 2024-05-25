@@ -13,6 +13,8 @@
 
 //todo: filesystem
 
+#define INIT_ERROR(error_message) {LOG_ERROR(error_message); MessageBoxA(0, "Alpha Ring: " ##error_message, "Error", 0); return false;}
+
 bool Prologue() {
     const char* home_dir = "../../../alpha_ring";
 
@@ -29,25 +31,13 @@ bool Prologue() {
 
     LOG_INFO("Version: {}", GAME_VERSION);
 
-    if (!AlphaRing::Input::Init()) {
-        LOG_ERROR("Input Fail To Initialize!");
-        return false;
-    }
+    if (!AlphaRing::Input::Init()) INIT_ERROR("Input Fail To Initialize!");
 
-    if (MH_Initialize() != MH_OK) {
-        LOG_ERROR("MinHook Fail To Initialize!");
-        return false;
-    }
+    if (MH_Initialize() != MH_OK) INIT_ERROR("MinHook Fail To Initialize!");
 
-    if (!Directx11Hook::Initialize()) {
-        LOG_ERROR("Directx11 Hook Fail To Initialize!");
-        return false;
-    }
+    if (!Directx11Hook::Initialize()) INIT_ERROR("DirectX11 Hook Fail To Initialize!");
 
-    if (!MCCHook::Initialize()) {
-        LOG_ERROR("MCC Hook Fail To Initialize!");
-        return false;
-    }
+    if (!MCCHook::Initialize()) INIT_ERROR("MCC Hook Fail To Initialize!");
 
     return true;
 }
