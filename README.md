@@ -5,15 +5,15 @@
 
 ### Showcase
 
-![](https://raw.githubusercontent.com/WinterSquire/Images/master/AlphaRing/Camera.PNG)
+![](https://raw.githubusercontent.com/WinterSquire/AlphaRing/master/img/CameraTool.png)
 
-![](https://raw.githubusercontent.com/WinterSquire/Images/master/AlphaRing/Object.PNG)
+![](https://raw.githubusercontent.com/WinterSquire/AlphaRing/master/img/ObjectBrowser.png)
 
-![](https://raw.githubusercontent.com/WinterSquire/Images/master/AlphaRing/Splitscreen%208%20players.png)
+![](https://raw.githubusercontent.com/WinterSquire/AlphaRing/master/img/SplitscreenHR.png)
 
-![](https://raw.githubusercontent.com/WinterSquire/Images/master/AlphaRing/Splitscreen%20H3.PNG)
+![](https://raw.githubusercontent.com/WinterSquire/AlphaRing/master/img/SplitscreenH3.png)
 
-![](https://raw.githubusercontent.com/WinterSquire/Images/master/AlphaRing/Splitscreen%20With%20Mod.PNG)
+![](https://raw.githubusercontent.com/WinterSquire/AlphaRing/master/img/SplitscreenH1.png)
 
 ### Features
 * Splitscreen (all games)
