@@ -25,7 +25,7 @@ Download the latest stable build from the [Releases](https://github.com/WinterSq
 
 Place the DLL into the "Halo The Master Chief Collection\mcc\binaries\win64" directory and launch the game with EAC off.
 
-For running on Steam Deck, add the following command in the Launch Options:
+For Running on Steam Deck/Linux, add the following command in the Steam Game Launch Options:
 ``` 
 WINEDLLOVERRIDES="WTSAPI32=n,b" %command%
 ```
