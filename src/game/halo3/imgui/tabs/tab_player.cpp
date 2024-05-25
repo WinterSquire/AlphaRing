@@ -26,27 +26,6 @@ void TabPlayer::render() {
 
     ImGui::SameLine();
 
-    if (ImGui::Button("Add Player")) {
-        setState([] {
-            auto index = NativeHalo3()
-                    ->NativeFunc()
-                    ->local_player_add(L"UWU", L"UWU");
-
-            if (index == NONE) return;
-
-            index = (__int16)index;
-
-            auto p_new_player = NativeHalo3()
-                    ->Players()
-                    ->getPlayerManager()
-                    ->get(index);
-
-            p_new_player->primary_color = index * 2 + 0;
-            p_new_player->secondary_color = index * 2 + 1;
-            p_new_player->pref_species = index % 2;
-        });
-    }
-
     for (int i = 0; i < p_player->m_capacity; ++i) print_player(i);
 }
 
