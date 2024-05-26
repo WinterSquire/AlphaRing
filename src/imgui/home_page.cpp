@@ -14,7 +14,6 @@ void ImGui::CustomWidget::HomePage::render() {
     const char* coop_warning_message = R"(WARNING:
     3 or 4 Players is not supported for Co-Op in Halo 2.
     Doing so will cause the game to get stuck at loading.
-    In Halo 1 and Halo 4, 3 or 4 Players need to be added after the game starts.
 )";
 
     const char* tutorial_message = R"(TUTORIAL:

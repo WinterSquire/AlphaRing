@@ -58,8 +58,8 @@ public:
 
     CModule m_modules[8] {
             {[] (__int64 hModule) {
-//                Patch::apply((void*)(hModule + 0xC3B9C8), "\x31\xC0\xC3\x90", 4);
-                Halo1EntrySet()->update(hModule);
+                Patch::apply((void*)(hModule + OFFSET_HALO1_PF_4PLAYERS), "\x90\x90", 2);
+//                Halo1EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
 //                Halo2EntrySet()->update(hModule);
@@ -71,6 +71,7 @@ public:
             {[] (__int64 hModule) {
                 Patch::apply((void*)(hModule + OFFSET_HALO4_PF_COOP_JOIN), "\x31\xC0\xC3\x90", 4);
                 Patch::apply((void*)(hModule + OFFSET_HALO4_PF_COOP_REJOIN), "\xEB", 1);
+                Patch::apply((void*)(hModule + OFFSET_HALO4_PF_COOP_PLAYER_LIMIT), "\x90\x90\x90\x90\x90\x90", 6);
 //                Halo4EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
