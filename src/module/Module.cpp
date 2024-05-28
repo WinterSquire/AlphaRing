@@ -62,6 +62,9 @@ public:
 //                Halo1EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
+                Patch::apply((void*)(hModule + OFFSET_HALO2_PF_PLAYER_VALID), "\x31\xC0\xB0\x01\xC3\x90", 6);
+                Patch::apply((void*)(hModule + OFFSET_HALO2_PF_PLAYER_COUNT1), "\x04", 1);
+                Patch::apply((void*)(hModule + OFFSET_HALO2_PF_PLAYER_COUNT2), "\x04", 1);
 //                Halo2EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {

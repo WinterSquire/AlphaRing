@@ -11,11 +11,6 @@ if (ImGui::InputInt(#name, &_input_int_##name##_tmp_value) && _input_int_##name#
     *value = _input_int_##name##_tmp_value;
 
 void ImGui::CustomWidget::HomePage::render() {
-    const char* coop_warning_message = R"(WARNING:
-    3 or 4 Players is not supported for Co-Op in Halo 2.
-    Doing so will cause the game to get stuck at loading.
-)";
-
     const char* tutorial_message = R"(TUTORIAL:
 
 Press "F4" or "Start + Back" to toggle the menu.
@@ -45,13 +40,6 @@ Having this menu open will disable inputs or pause the game.
     ImGui::PushItemWidth(150);
     InputInt(Players, &p_profile_setting->player_count, 1, 4);
     ImGui::PopItemWidth();
-
-    // Warning message for if Player Count is greater than 2 players.
-    if (p_profile_setting->player_count > 2) {
-        ImGui::PushTextWrapPos(ImGui::GetContentRegionAvail().x);
-        ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), coop_warning_message);
-        ImGui::PopTextWrapPos();
-    }
 
     for (int i = 0; i < p_profile_setting->player_count; ++i) {
         ImGui::Text("Player %d\n", i + 1);

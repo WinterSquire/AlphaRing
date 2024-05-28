@@ -8,6 +8,7 @@
 
 #include "core/String.h"
 #include "input/Input.h"
+#include "patch/Patch.h"
 #include "render/Renderer.h"
 
 #include "./setting/setting.h"
@@ -132,6 +133,10 @@ bool MCCHook::Initialize() {
             MH_CreateHook(pTarget,get_xbox_user_id,(void **) &ppOriginal_get_xbox_user_id) != MH_OK ||
             MH_EnableHook(pTarget) != MH_OK)
         return false;
+
+    Patch::apply(GetProcAddress(GetModuleHandleA("KERNEL32.DLL"), "IsDebuggerPresent"),
+                 "\x31\xC0\xC3\x90\x90\x90\x90",
+                 7);
 
     return true;
 }
