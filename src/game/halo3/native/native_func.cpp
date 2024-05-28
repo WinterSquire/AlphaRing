@@ -138,3 +138,9 @@ INDEX CNativeFunc::object_create(Datum datum, const Vector3 &position) {
 
     return result;
 }
+
+void ICNativeFunc::object_change_color(INDEX object_index) {
+    typedef void (__fastcall* func_t)(INDEX object_index, bool b);
+
+    ((func_t)(NativeHalo3()->NativeInfo()->getModuleAddress() + OFFSET_HALO3_PF_OBJECT_CHANGE_COLOR))(object_index, true);
+}

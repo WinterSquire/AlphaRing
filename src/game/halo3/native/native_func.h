@@ -19,6 +19,8 @@ public:
     virtual INDEX local_player_add(const wchar_t *name, const wchar_t *id) = 0;
 
     virtual INDEX object_create(Datum datum, const Vector3& position) = 0;
+
+    void object_change_color(INDEX i);
 };
 
 #endif //ALPHA_RING_NATIVE_FUNC_H
