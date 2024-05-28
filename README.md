@@ -12,7 +12,6 @@ A Modding Tool for MCC
 
 ### Features
 * Splitscreen (all games)
-    - 3/4 players is not supported in Halo 2 Co-Op. Attempting to do so will cause the game to get stuck at loading screen.
 * Camera Tool (H3)
 * Object Browser (H3)
 
