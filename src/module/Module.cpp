@@ -78,6 +78,7 @@ public:
 //                Halo4EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
+                Patch::apply((void*)(hModule + OFFSET_GROUNDHOG_PF_COOP_JOIN), "\x31\xC0\xC3\x90", 4);
                 Patch::apply((void*)(hModule + OFFSET_GROUNDHOG_PF_REJOIN), "\xEB", 1);
 //                GroundHogEntrySet()->update(hModule);
             }},
