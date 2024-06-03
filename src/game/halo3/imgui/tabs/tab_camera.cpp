@@ -1,7 +1,7 @@
 #include "../basic_widget.h"
 #include "imgui/curve_editor.h"
 
-#include "game/halo3/native/native.h"
+#include "game/halo3/native_halo3.h"
 
 class TabCamera : public BasicWidget {
 public:
@@ -26,10 +26,10 @@ Camera:
     position: %.2f %.2f %.2f
 )";
 
-    auto p_camera = NativeHalo3()->Camera()->getCamera();
-    auto p_splitScreen = NativeHalo3()->Camera()->getSplitScreen();
-    auto p_video_setting = NativeHalo3()->Camera()->getVideoSetting();
-    auto p_data = NativeHalo3()->Camera()->getCameraData();
+    auto p_camera = Halo3::Native::Camera();
+    auto p_splitScreen = Halo3::Native::SplitScreen();
+    auto p_video_setting = Halo3::Native::VideoSetting();
+    auto p_data = Halo3::Native::CameraData();
 
     if (!p_camera || !p_data || !p_video_setting || !p_splitScreen) return;
 
@@ -63,7 +63,7 @@ Camera:
         if (ImGui::Combo("Camera Mode", (int*)p_mode, eCameraModeName, sizeof(eCameraModeName) / sizeof(const char*))) {
             int mode = *p_mode;
             setState([i, mode] {
-                NativeHalo3()->NativeFunc()->player_set_camera(i, (eCameraMode)mode);
+                Halo3::Native::Function::player_set_camera(i, (eCameraMode)mode);
             });
         }
         ImGui::PopID();
@@ -90,12 +90,12 @@ Camera:
 }
 
 void TabCamera::update() {
-    auto p_camera = NativeHalo3()->Camera()->getCamera();
+    auto p_camera = Halo3::Native::Camera();
 
     if (!p_camera || p_camera->mode[0].mode != CAMERAMODE_FLYING) return;
 
-    auto p_game_time = NativeHalo3()->Time()->getGameTime();
-    auto p_video_setting = NativeHalo3()->Camera()->getVideoSetting();
+    auto p_game_time = Halo3::Native::Time();
+    auto p_video_setting = Halo3::Native::VideoSetting();
 
     if ( !p_video_setting || !p_game_time) return;
 

@@ -1,5 +1,5 @@
-#include "../native.h"
-#include "../../imgui/page_halo3.h"
+#include "../native_halo3.h"
+#include "game/halo3/imgui/page_halo3.h"
 #include "render/Renderer.h"
 
 #include "imgui.h"

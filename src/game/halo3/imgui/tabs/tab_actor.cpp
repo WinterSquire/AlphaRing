@@ -1,6 +1,6 @@
 #include "../basic_widget.h"
 
-#include "game/halo3/native/native.h"
+#include "game/halo3/native_halo3.h"
 
 class TabActor : public BasicWidget {
 public:
@@ -13,7 +13,7 @@ static TabActor s_instance("Actor");
 BasicWidget* tab_actor = &s_instance;
 
 void TabActor::render() {
-    auto p_actor = NativeHalo3()->Actor()->getActor();
+    auto p_actor = Halo3::Native::Actor();
 
     if (p_actor == nullptr) return;
 

@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "../../native/native.h"
+#include "game/halo3/native_halo3.h"
 #include "core/Log.h"
 
 class TabPlayer : public BasicWidget {
@@ -12,8 +12,8 @@ public:
     }
 
     void render() override {
-        auto p_player = NativeHalo3()->Players()->getPlayerManager();
-        auto p_action = NativeHalo3()->Players()->getPlayerAction();
+        auto p_player = Halo3::Native::Players();
+        auto p_action = Halo3::Native::PlayersAction();
 
         if (!p_player || !p_action) return;
 
@@ -42,10 +42,7 @@ Player %d
     Position: %.2f %.2f %.2f
     Team: %d
 )";
-        auto p_player = NativeHalo3()
-                ->Players()
-                ->getPlayerManager()
-                ->get(index);
+        auto p_player = Halo3::Native::Players()->get(index);
 
         if (p_player == nullptr) return;
 
@@ -60,7 +57,7 @@ Player %d
 
         if (ImGui::Button("Respawn")) {
             setState([index] {
-                NativeHalo3()->NativeFunc()->player_possess(index, NONE);
+                Halo3::Native::Function::player_possess(index, NONE);
             });
         }
     };

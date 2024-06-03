@@ -1,6 +1,6 @@
 #include "../basic_widget.h"
 
-#include "game/halo3/native/native.h"
+#include "game/halo3/native_halo3.h"
 
 class TabRender : public BasicWidget {
 public:
@@ -15,7 +15,7 @@ BasicWidget* tab_render = &s_instance;
 
 void TabRender::render() {
     ImGui::Text("Wireframe");
-    auto p_wireframe = NativeHalo3()->Render()->getWireframe();
+    auto p_wireframe = Halo3::Render::WireFrame();
     if (p_wireframe != nullptr) {
         ImGui::Indent();
         ImGui::Checkbox("model", &p_wireframe->model);
@@ -25,7 +25,7 @@ void TabRender::render() {
     }
 
     ImGui::Text("Render");
-    auto p_render = NativeHalo3()->Render()->getRender();
+    auto p_render = Halo3::Native::RenderFlag();
     if (p_render != nullptr) {
         ImGui::Indent();
         ImGui::Checkbox("motion_blur", &p_render->motion_blur);
@@ -41,7 +41,7 @@ void TabRender::render() {
     }
 
     ImGui::Text("Chud");
-    auto p_chud = NativeHalo3()->Render()->getChudFlag();
+    auto p_chud = Halo3::Native::Chud();
     if (p_chud != nullptr) {
         ImGui::Indent();
         ImGui::Checkbox("all", &p_chud->chud_show);

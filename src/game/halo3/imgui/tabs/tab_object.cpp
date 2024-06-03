@@ -1,7 +1,9 @@
 #include "../basic_widget.h"
 
 #include "core/Log.h"
-#include "game/halo3/native/native.h"
+#include "game/halo3/native_halo3.h"
+
+using units_t = Halo3::Native::Objects_t::units_t;
 
 class TabObject : public BasicWidget {
 private:
@@ -14,7 +16,7 @@ public:
 
     void render() override {
         char buffer[1024];
-        auto mng = NativeHalo3()->Objects()->getObjectManager();
+        auto mng = Halo3::Native::Objects();
         if (mng == nullptr) return;
 
         ImGui::BeginChild("tab_object", {0,0}, 0, ImGuiWindowFlags_MenuBar);
@@ -39,8 +41,8 @@ public:
             ImGui::BeginChild("Object Memory View", {0, -footer_height_to_reserve});
             {
                 ImGui::BeginChild("Object List", {ImGui::GetWindowWidth() * 0.4f, 0});
-                auto p_tag_names = NativeHalo3()->TagFiles()->getTagName();
-                for (int i = 0; p_tag_names && i < mng->m_capacity; ++i) {
+                auto p_tag_names = Halo3::Native::TagName();
+                for (Index i = 0; p_tag_names && i < mng->m_capacity; ++i) {
                     auto object = mng->get(i)->address;
                     if (object == nullptr || !bFilter[object->type]) continue;
                     auto tag_name = p_tag_names->get(object->datum);
@@ -95,7 +97,7 @@ Unit:
         bool b;
         char buffer[1024];
 
-        auto mng = NativeHalo3()->Objects()->getObjectManager();
+        auto mng = Halo3::Native::Objects();
 
         if (mng == nullptr || index < 0 || index > mng->m_capacity) return;
 
@@ -143,7 +145,7 @@ Unit:
             if (ImGui::SliderFloat3("Color", (float*)((__int64)p_object + offset + 12 * i), 0.0f, 1.0f)) {
                 int INDEX = mng->INDEX(index);
                 setState([INDEX]{
-                    NativeHalo3()->NativeFunc()->object_change_color(INDEX);
+                    Halo3::Native::Function::object_change_color(INDEX);
                 });
             }
             ImGui::PopID();
@@ -167,7 +169,7 @@ Unit:
         if (ImGui::Button("Possess")) {
             INDEX target = mng->INDEX(index);
             setState([target]{
-                NativeHalo3()->NativeFunc()->player_possess(0, target);
+                Halo3::Native::Function::player_possess(0, target);
             });
         }
     };

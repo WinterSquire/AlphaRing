@@ -1,4 +1,4 @@
-#include "../native.h"
+#include "../native_halo3.h"
 
 #include "common.h"
 #include <queue>

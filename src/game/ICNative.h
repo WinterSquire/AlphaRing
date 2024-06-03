@@ -36,4 +36,28 @@ struct entity_manager_t {
     inline __int32 INDEX(__int16 index) const { return ((__int32)(*(__int16*)(m_data + index * m_sizeof)) << 16) | index;}
 };
 
+#define DefNative(name) \
+    namespace name::Native { extern CNativeInfo s_nativeInfo;} \
+    namespace name::Native
+
+#define DefEntry(name, index) \
+        struct name##_t;      \
+        inline name##_t* name() {return (name##_t*)s_nativeInfo.getEntryAddress(index);} \
+        struct name##_t
+
+#define DefPtr(name, offset) \
+        struct name##_t;      \
+        inline name##_t* name() {return (name##_t*)(s_nativeInfo.getModuleAddress() + offset);} \
+        struct name##_t
+
+#define DefPPtr(name, offset1, offset2) \
+        struct name##_t;      \
+        inline name##_t* name() {return (name##_t*)(*(__int64*)(s_nativeInfo.getModuleAddress() + offset1) + offset2);} \
+        struct name##_t
+
+#define DefEntryEntity(name, index) \
+        struct name##_t;             \
+        inline entity_manager_t<name##_t>* name() {return (entity_manager_t<name##_t>*)s_nativeInfo.getEntryAddress(index);} \
+        struct name##_t
+
 #endif //ALPHA_RING_ICNATIVE_H

@@ -46,7 +46,7 @@ private:
 #include "patch/Patch.h"
 #include "game/halo1/native/entry/halo1.h"
 #include "game/halo2/native/entry/halo2.h"
-#include "game/halo3/native/entry/halo3.h"
+#include "game/halo3/entry/halo3.h"
 #include "game/halo3odst/native/entry/halo3odst.h"
 #include "game/haloreach/native/entry/haloreach.h"
 #include "game/halo4/native/entry/halo4.h"

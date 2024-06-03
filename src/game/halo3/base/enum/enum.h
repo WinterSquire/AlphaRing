@@ -1,6 +1,10 @@
 #ifndef ALPHA_RING_ENUM_H
 #define ALPHA_RING_ENUM_H
 
+#include "eSkull.h"
+#include "eTeam.h"
+#include "eObjectType.h"
+#include "eCameraMode.h"
 
 enum eAction : unsigned int
 {

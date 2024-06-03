@@ -1,4 +1,4 @@
-#include "../native.h"
+#include "../native_halo3.h"
 #include "common.h"
 
 // todo: Scheduler
@@ -10,7 +10,7 @@ namespace Halo3::Entry::Engine {
         LOG_INFO("Engine Prologue");
         // open access to main thread resources
         // main thread resources will be copied to the render thread
-        NativeHalo3()->NativeInfo()->update((__int64) GetModuleHandleA("halo3.dll"));
+        Halo3::Native::s_nativeInfo.update((__int64) GetModuleHandleA("halo3.dll"));
     }
     void Epilogue() {
         LOG_INFO("Engine Epilogue");

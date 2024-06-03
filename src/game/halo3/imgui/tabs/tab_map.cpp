@@ -1,6 +1,6 @@
 #include "../basic_widget.h"
 
-#include "game/halo3/native/native.h"
+#include "game/halo3/native_halo3.h"
 
 class TabMap : public BasicWidget {
 public:
@@ -17,7 +17,7 @@ void TabMap::render() {
     const char* map_types[4] = {"", "Campaign", "Multiplayer", "MainMenu"};
     char buffer[1024];
 
-    auto map = NativeHalo3()->Map()->getMap();
+    auto map = Halo3::Native::Map();
 
     if (map == nullptr) return;
 

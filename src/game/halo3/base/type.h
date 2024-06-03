@@ -35,6 +35,26 @@ struct NavPoint
     Vector3 position;
 };
 
+// https://github.com/XboxChaos/Assembly/blob/a9650c010fc6bb8e7d0ea01afe3a024619e4db95/src/Blamite/Util/CharConstant.cs#L9
+class CharConstant {
+public:
+    int magic;
+public:
+    static const char* ConvertToString(int constant, char s[5]) {
+        int index = 4;
+        while (constant > 0) {
+            index--;
+            s[index] = (char) (constant & 0xFF);
+            constant >>= 8;
+        }
+        s[4] = '\0';
+        if (index == 4) return "";
+        else return s;
+    }
+
+    const char* ToString(char s[5]) {return CharConstant::ConvertToString(magic, s);}
+};
+
 namespace COLOR3
 {
     static float PureRed = 0xFF0000;

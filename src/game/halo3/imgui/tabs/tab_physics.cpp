@@ -1,6 +1,6 @@
 #include "../basic_widget.h"
 
-#include "game/halo3/native/native.h"
+#include "game/halo3/native_halo3.h"
 
 class TabPhysics : public BasicWidget {
 public:
@@ -13,13 +13,10 @@ static TabPhysics s_instance("Physics");
 BasicWidget* tab_physics = &s_instance;
 
 void TabPhysics::render() {
-    auto p_physics = NativeHalo3()->Physics();
+    ImGui::Checkbox("Enable Bump Possession", &Halo3::Physics::BumpPossession()->enable);
 
-    if (p_physics == nullptr) return;
+    auto p_physics_constant = Halo3::Native::PhysicsConstant();
 
-    ImGui::Checkbox("Enable Bump Possession", &p_physics->BumpPossessionSetting()->enable);
-
-    auto p_physics_constant = p_physics->PhysicsConstant();
     if (p_physics_constant != nullptr) {
         ImGui::DragFloat("Gravity", &p_physics_constant->gravity, 0.1f);
         if (ImGui::Button("Reset Gravity")) {
