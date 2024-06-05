@@ -104,7 +104,7 @@ bool MCCHook::Initialize() {
     char buffer[1024];
     void* pTarget;
 
-    if ((hModule = (__int64)GetModuleHandleA("MCC-Win64-Shipping.exe")) == 0) return false;
+    if ((hModule = (__int64)GetModuleHandleA(nullptr)) == 0) return false;
 
     auto p_mcc = Modules()->get(MCC);
 
