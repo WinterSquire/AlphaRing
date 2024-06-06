@@ -135,13 +135,5 @@ bool MCCHook::Initialize() {
             return false;
     }
 
-    HMODULE tmp_m;
-    FARPROC tmp_p;
-
-    if ((tmp_m = GetModuleHandleA("KERNEL32.DLL")) != nullptr &&
-        (tmp_p = GetProcAddress(tmp_m, "IsDebuggerPresent"))) {
-        Patch::apply(tmp_p,"\x31\xC0\xC3\x90\x90\x90\x90",7);
-    }
-
     return true;
 }
