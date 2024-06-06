@@ -44,9 +44,9 @@ struct INPUT_t {
     InputDevice* p_input_device[5];
 };
 
+static void (__fastcall* get_player0_input)(INPUT_t* self);
 static bool (__fastcall *ppOriginal_input_get_status)(INPUT_t* self, int player_index, input_data_t* p_data, char a4);
 static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_data_t* p_data, char a4) {
-    typedef void (__fastcall* get_player0_input)(INPUT_t* self);
     bool result = false;
     InputDevice* p_device;
 
@@ -56,11 +56,9 @@ static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_d
 
     if (!p_setting->override_input) return ppOriginal_input_get_status(self, player_index, p_data, a4);
 
-//    if (!*(bool*)(hModule + OFFSET_MCC_PV_WINDOWFOCUSED)) return false;
-
     if (p_setting->enable_km && !player_index) {
         p_device = self->p_input_device[4];
-        (get_player0_input(hModule + OFFSET_MCC_PF_GET_PLAYER0_INPUT))(self);
+        get_player0_input(self);
     } else {
         auto choice = p_setting->controller_map[player_index];
         if (choice == 4 || (p_device = self->p_input_device[choice]) == nullptr) return true;
@@ -101,10 +99,26 @@ char __fastcall get_xbox_user_id(
 }
 
 bool MCCHook::Initialize() {
-    char buffer[1024];
-    void* pTarget;
+    struct {__int64 offset_steam; __int64 offset_ws; void* detour;void** ppOriginal; } hooks[] {
+            {OFFSET_MCC_PF_MODULELOAD, OFFSET_MCC_WS_PF_MODULELOAD,  MODULE_LOAD_DETOUR, (void **)&ppOriginal_ModuleLoad},
+            {OFFSET_MCC_PF_MODULEUNLOAD, OFFSET_MCC_WS_PF_MODULEUNLOAD, MODULE_UNLOAD_DETOUR, (void **)&ppOriginal_ModuleUnload},
+            {OFFSET_MCC_PF_GAMEINPUT, OFFSET_MCC_WS_PF_GAMEINPUT, input_get_status, (void **)&ppOriginal_input_get_status},
+            {OFFSET_MCC_PF_GET_USER_ID, OFFSET_MCC_WS_PF_GET_USER_ID, get_xbox_user_id, (void **)&ppOriginal_get_xbox_user_id},
+    };
 
-    if ((hModule = (__int64)GetModuleHandleA(nullptr)) == 0) return false;
+    bool isWS;
+    void* pTarget;
+    char buffer[1024];
+
+    if ((isWS = (hModule = (__int64)GetModuleHandleA("MCC-Win64-Shipping.exe")) == 0) &&
+        (hModule = (__int64)GetModuleHandleA("MCCWinStore-Win64-Shipping.exe")) == 0)
+        return false;
+
+    if (isWS) {
+        get_player0_input = (void (__fastcall*)(INPUT_t*)) (hModule + OFFSET_MCC_WS_PF_GET_PLAYER0_INPUT);
+    } else {
+        get_player0_input = (void (__fastcall*)(INPUT_t*)) (hModule + OFFSET_MCC_PF_GET_PLAYER0_INPUT);
+    }
 
     auto p_mcc = Modules()->get(MCC);
 
@@ -112,31 +126,22 @@ bool MCCHook::Initialize() {
 
     p_mcc->version().toString(buffer, sizeof(buffer));
 
-    LOG_INFO("Game Version: {}", buffer);
+    LOG_INFO("Game Version: {}({})", buffer, isWS ? "Windows Store" : "Steam");
 
-    if ((pTarget = (LPVOID) (hModule + OFFSET_MCC_PF_MODULELOAD)),
-            MH_CreateHook(pTarget, MODULE_LOAD_DETOUR,(void **) &ppOriginal_ModuleLoad) != MH_OK ||
-            MH_EnableHook(pTarget) != MH_OK)
-        return false;
+    for (auto &hook : hooks) {
+        if ((pTarget = (LPVOID) (hModule + (isWS ? hook.offset_ws : hook.offset_steam))),
+                MH_CreateHook(pTarget, hook.detour, hook.ppOriginal) != MH_OK ||
+                MH_EnableHook(pTarget) != MH_OK)
+            return false;
+    }
 
-    if ((pTarget = (LPVOID) (hModule + OFFSET_MCC_PF_MODULEUNLOAD)),
-            MH_CreateHook(pTarget,MODULE_UNLOAD_DETOUR,(void **) &ppOriginal_ModuleUnload) != MH_OK ||
-            MH_EnableHook(pTarget) != MH_OK)
-        return false;
+    HMODULE tmp_m;
+    FARPROC tmp_p;
 
-    if ((pTarget = (LPVOID) (hModule + OFFSET_MCC_PF_GAMEINPUT)),
-            MH_CreateHook(pTarget,input_get_status,(void **) &ppOriginal_input_get_status) != MH_OK ||
-            MH_EnableHook(pTarget) != MH_OK)
-        return false;
-
-    if ((pTarget = (LPVOID) (hModule + OFFSET_MCC_PF_GET_USER_ID)),
-            MH_CreateHook(pTarget,get_xbox_user_id,(void **) &ppOriginal_get_xbox_user_id) != MH_OK ||
-            MH_EnableHook(pTarget) != MH_OK)
-        return false;
-
-    Patch::apply(GetProcAddress(GetModuleHandleA("KERNEL32.DLL"), "IsDebuggerPresent"),
-                 "\x31\xC0\xC3\x90\x90\x90\x90",
-                 7);
+    if ((tmp_m = GetModuleHandleA("KERNEL32.DLL")) != nullptr &&
+        (tmp_p = GetProcAddress(tmp_m, "IsDebuggerPresent"))) {
+        Patch::apply(tmp_p,"\x31\xC0\xC3\x90\x90\x90\x90",7);
+    }
 
     return true;
 }
