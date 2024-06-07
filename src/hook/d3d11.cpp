@@ -3,7 +3,7 @@
 #include "render/Renderer.h"
 #include "render/Window.h"
 
-#include "MinHook.h"
+#include <minhook/MinHook.h>
 
 #include <d3d11.h>
 
