@@ -52,15 +52,18 @@ static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_d
 
     if (Renderer()->ShowContext()) return false;
 
-    auto p_setting = InputSetting();
+    auto p_input_setting = InputSetting();
+    auto p_profile_setting = ProfileSetting();
 
-    if (!p_setting->override_input) return ppOriginal_input_get_status(self, player_index, p_data, a4);
+    if (!p_input_setting->override_input) return ppOriginal_input_get_status(self, player_index, p_data, a4);
 
-    if (p_setting->enable_km && !player_index) {
+    if (player_index >= p_profile_setting->player_count) return false;
+
+    if (p_input_setting->enable_km && !player_index) {
         p_device = self->p_input_device[4];
         get_player0_input(self);
     } else {
-        auto choice = p_setting->controller_map[player_index];
+        auto choice = p_input_setting->controller_map[player_index];
         if (choice == 4 || (p_device = self->p_input_device[choice]) == nullptr) return true;
         memset(&p_device->state, 0, sizeof(XINPUT_STATE));
         AlphaRing::Input::GetXInputGetState(p_device->input_user, &p_device->state);
