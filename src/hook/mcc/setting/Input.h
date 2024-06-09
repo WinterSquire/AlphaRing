@@ -1,5 +1,8 @@
 #pragma once
 
+#include <windows.h>
+#include <xinput.h>
+
 inline static const char key_map_list[] = {
         '\x1B', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', '\xC0',
         '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
@@ -16,10 +19,31 @@ inline static const char key_map_list[] = {
         '\x00', '\x00', '\x00', '\x00'
 };
 
+struct INPUT_t {
+    void** pp_method_table;
+    struct InputDevice {
+        struct method_table_t {
+            char un[0x38];
+            __int64 (__fastcall *set_state)(InputDevice*, float, void*);
+            void (__fastcall *check)(InputDevice*);
+        } *p_method_table;
+        char un0[2040];
+        bool enable_mouse;
+        char un[0x7];
+        int input_user;// 0x808
+        char un1[0x110];
+        XINPUT_STATE state; // 0x91C
+    } *p_input_device[5];
+    char buffer[0x90];
+    HWND hwnd; // 0xC0
+    LARGE_INTEGER qpc; // 0xC8
+};
+
 // 0x130
 struct input_data_t {
     int un;
     bool keyState[sizeof(key_map_list)]; // 0x4
+    char buffer[0x94];
     struct mouse_t {
         float mouse_delta_x;//0x104
         float mouse_delta_y;//0x108
@@ -28,7 +52,6 @@ struct input_data_t {
         float un1; // 0x114
         float constant_1; // 0x118
     } mouse;
-    // 0x124
 };
 
 struct input_setting_t {

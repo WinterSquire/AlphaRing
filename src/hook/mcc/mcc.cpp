@@ -13,115 +13,108 @@
 
 #include "./setting/setting.h"
 
-static __int64 hModule;
+#define DefDetourFunction(return_type, call_type, name, ...) \
+    static return_type (call_type *ppOriginal_##name)(__VA_ARGS__); \
+    static return_type call_type name(__VA_ARGS__)
 
-static void (__fastcall *ppOriginal_ModuleLoad)(module_info_t* info, int a2, __int64 a3);
-static void __fastcall MODULE_LOAD_DETOUR(module_info_t* info, int a2, __int64 a3) {
-    ppOriginal_ModuleLoad(info, a2, a3);
+static float (__fastcall* deltaTime)(long long qpc);
+static void (__fastcall* get_player0_input)(INPUT_t* self);
+
+DefDetourFunction(void, __fastcall, module_load, module_info_t* info, int a2, __int64 a3) {
+    ppOriginal_module_load(info, a2, a3);
     Modules()->get((eModule)info->title)->load_module(info);
 }
 
-static __int64 (__fastcall *ppOriginal_ModuleUnload)(module_info_t* info);
-static __int64 __fastcall MODULE_UNLOAD_DETOUR(module_info_t* info) {
-    auto result = ppOriginal_ModuleUnload(info);
+DefDetourFunction(__int64, __fastcall, module_unload, module_info_t* info) {
+    auto result = ppOriginal_module_unload(info);
     Modules()->get((eModule)info->title)->unload_module();
     return result;
 }
 
-struct InputDevice {
-    struct method_table_t {
-        char un[0x38];
-        __int64 (__fastcall *set_state)(InputDevice*, float, void*);
-        void (__fastcall *check)(InputDevice*);
-    } *p_method_table;
-    char un0[0x800];
-    int input_user;// 0x808
-    char un1[0x110];
-    XINPUT_STATE state; // 0x91C
-};
-struct INPUT_t {
-    void** pp_method_table;
-    InputDevice* p_input_device[5];
-};
+DefDetourFunction(char, __fastcall, get_xbox_user_id, void* pSelf, __int64* pId, wchar_t *pName, int size, int index) {
+    auto p_setting = ProfileSetting();
 
-static void (__fastcall* get_player0_input)(INPUT_t* self);
-static bool (__fastcall *ppOriginal_input_get_status)(INPUT_t* self, int player_index, input_data_t* p_data, char a4);
-static bool __fastcall input_get_status(INPUT_t* self, int player_index, input_data_t* p_data, char a4) {
-    bool result = false;
-    InputDevice* p_device;
+    if (!p_setting->b_override || (!p_setting->b_override_player0 && !index))
+        return ppOriginal_get_xbox_user_id(pSelf,pId,pName,size,index);
 
-    if (Renderer()->ShowContext()) return false;
+    if (index >= p_setting->player_count)
+        return false;
+
+    if (pId)
+        *pId = p_setting->profiles[index].id;
+
+    if (pName)
+        String::wstrcpy(pName, p_setting->profiles[index].name, size >> 1);
+
+    return true;
+}
+
+DefDetourFunction(bool, __fastcall, input_get_status, INPUT_t* self, int index, input_data_t* pData, char a4) {
+    bool result;
+    LARGE_INTEGER qpc;
+    float delta_time = 0;
+    INPUT_t::InputDevice* p_device;
+
+    if (Renderer()->ShowContext())
+        return false;
 
     auto p_input_setting = InputSetting();
     auto p_profile_setting = ProfileSetting();
 
-    if (!p_input_setting->override_input) return ppOriginal_input_get_status(self, player_index, p_data, a4);
+    if (!p_input_setting->override_input)
+        return ppOriginal_input_get_status(self, index, pData, a4);
 
-    if (player_index >= p_profile_setting->player_count) return false;
+    if (index >= p_profile_setting->player_count)
+        return false;
 
-    if (p_input_setting->enable_km && !player_index) {
+    if (p_input_setting->enable_km && !index) {
         p_device = self->p_input_device[4];
         get_player0_input(self);
+
+        QueryPerformanceCounter(&qpc);
+        auto v1 = qpc.QuadPart - self->qpc.QuadPart;
+        auto v2 = self->qpc.QuadPart - qpc.QuadPart;
+        delta_time = fminf(fmaxf(deltaTime(v1 >= v2 ? v2 : v1) * 1000.0,0.1), 1000.0);
+        self->qpc = qpc;
     } else {
-        auto choice = p_input_setting->controller_map[player_index];
-        if (choice == 4 || (p_device = self->p_input_device[choice]) == nullptr) return true;
+        auto choice = p_input_setting->controller_map[index];
+        if (choice == 4 || (p_device = self->p_input_device[choice]) == nullptr)
+            return true;
+
         memset(&p_device->state, 0, sizeof(XINPUT_STATE));
         AlphaRing::Input::GetXInputGetState(p_device->input_user, &p_device->state);
-        *(__int64 *)((__int64)p_data + 0x10C) = 0i64;
     }
 
-    result = p_device->p_method_table->set_state(p_device, 0, p_data);
+    result = p_device
+            ->p_method_table
+            ->set_state(p_device, delta_time, pData);
+
     p_device->p_method_table->check(p_device);
 
     return result;
 }
 
-char (__fastcall* ppOriginal_get_xbox_user_id)(__int64 ,__int64* ,wchar_t *,unsigned int ,unsigned int );
-
-char __fastcall get_xbox_user_id(
-        __int64 p_self,
-        __int64* p_userId,
-        wchar_t *p_gameTag,
-        unsigned int size,
-        unsigned int player_index) {
-    auto p_setting = ProfileSetting();
-    
-    if (!p_setting->b_override) return ppOriginal_get_xbox_user_id(p_self,p_userId,p_gameTag,size,player_index);
-
-    if (!p_setting->b_override_player0 && !player_index) return ppOriginal_get_xbox_user_id(p_self,p_userId,p_gameTag,size,player_index);
-
-    if (player_index >= p_setting->player_count) return false;
-
-    if (p_userId)
-        *p_userId = p_setting->profiles[player_index].id;
-
-    if (p_gameTag)
-        String::wstrcpy(p_gameTag, p_setting->profiles[player_index].name, size >> 1);
-
-    return true;
-}
-
 bool MCCHook::Initialize() {
+    bool isWS;
+    void* pTarget;
+    __int64 hModule;
+    char buffer[1024];
+
     struct {__int64 offset_steam; __int64 offset_ws; void* detour;void** ppOriginal; } hooks[] {
-            {OFFSET_MCC_PF_MODULELOAD, OFFSET_MCC_WS_PF_MODULELOAD,  MODULE_LOAD_DETOUR, (void **)&ppOriginal_ModuleLoad},
-            {OFFSET_MCC_PF_MODULEUNLOAD, OFFSET_MCC_WS_PF_MODULEUNLOAD, MODULE_UNLOAD_DETOUR, (void **)&ppOriginal_ModuleUnload},
+            {OFFSET_MCC_PF_MODULELOAD, OFFSET_MCC_WS_PF_MODULELOAD,  module_load, (void **)&ppOriginal_module_load},
+            {OFFSET_MCC_PF_MODULEUNLOAD, OFFSET_MCC_WS_PF_MODULEUNLOAD, module_unload, (void **)&ppOriginal_module_unload},
             {OFFSET_MCC_PF_GAMEINPUT, OFFSET_MCC_WS_PF_GAMEINPUT, input_get_status, (void **)&ppOriginal_input_get_status},
             {OFFSET_MCC_PF_GET_USER_ID, OFFSET_MCC_WS_PF_GET_USER_ID, get_xbox_user_id, (void **)&ppOriginal_get_xbox_user_id},
     };
 
-    bool isWS;
-    void* pTarget;
-    char buffer[1024];
+    struct {__int64 offset_steam; __int64 offset_ws; void** ppf;} funcs[] {
+            {OFFSET_MCC_PF_GET_PLAYER0_INPUT, OFFSET_MCC_WS_PF_GET_PLAYER0_INPUT, (void**)&get_player0_input},
+            {OFFSET_MCC_PF_DELTA_TIME, OFFSET_MCC_WS_PF_DELTA_TIME, (void**)&deltaTime},
+    };
 
     if ((isWS = (hModule = (__int64)GetModuleHandleA("MCC-Win64-Shipping.exe")) == 0) &&
         (hModule = (__int64)GetModuleHandleA("MCCWinStore-Win64-Shipping.exe")) == 0)
         return false;
-
-    if (isWS) {
-        get_player0_input = (void (__fastcall*)(INPUT_t*)) (hModule + OFFSET_MCC_WS_PF_GET_PLAYER0_INPUT);
-    } else {
-        get_player0_input = (void (__fastcall*)(INPUT_t*)) (hModule + OFFSET_MCC_PF_GET_PLAYER0_INPUT);
-    }
 
     auto p_mcc = Modules()->get(MCC);
 
@@ -130,6 +123,12 @@ bool MCCHook::Initialize() {
     p_mcc->version().toString(buffer, sizeof(buffer));
 
     LOG_INFO("Game Version: {}({})", buffer, isWS ? "Windows Store" : "Steam");
+
+    for (auto &func : funcs) {
+        if (func.ppf == nullptr)
+            return false;
+        *func.ppf = (void*)(hModule + (isWS ? func.offset_ws : func.offset_steam));
+    }
 
     for (auto &hook : hooks) {
         if ((pTarget = (LPVOID) (hModule + (isWS ? hook.offset_ws : hook.offset_steam))),
