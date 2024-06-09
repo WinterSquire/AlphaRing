@@ -1,8 +1,8 @@
 #ifndef CUSTOM_WIDGET_BASIC_WIDGET_H
 #define CUSTOM_WIDGET_BASIC_WIDGET_H
 
-#include "imgui.h"
-#include "imgui_internal.h"
+#include "imgui/imgui.h"
+#include <imgui/imgui_internal.h>
 
 namespace ImGui::CustomWidget {
     class BasicWidget {

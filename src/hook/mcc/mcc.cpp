@@ -4,7 +4,7 @@
 #include "module/Module.h"
 #include "offset_mcc.h"
 
-#include "MinHook.h"
+#include <minhook/MinHook.h>
 
 #include "core/String.h"
 #include "input/Input.h"

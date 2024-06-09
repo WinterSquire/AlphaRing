@@ -1,0 +1,15 @@
+[submodule "minhook"]
+	url = https://github.com/WinterSquire/minhook.git
+	branch = master
+[submodule "imgui"]
+	url = https://github.com/ocornut/imgui
+	branch = master
+[submodule "lua"]
+	url = https://github.com/lua/lua.git
+    branch = master
+[submodule "tinyxml2"]
+	url = https://github.com/leethomason/tinyxml2.git
+    branch = master
+[submodule "spdlog"]
+	url = https://github.com/gabime/spdlog
+	branch = master

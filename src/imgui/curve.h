@@ -1,7 +1,7 @@
 #ifndef CUSTOM_WIDGET_CURVE_H
 #define CUSTOM_WIDGET_CURVE_H
 
-#include "imgui.h"
+#include "imgui/imgui.h"
 #include "keyframe.h"
 
 #include <set>

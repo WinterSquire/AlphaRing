@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "MinHook.h"
+#include <minhook/MinHook.h>
 
 Entry::Entry(EntrySet* set, __int64 offset, void *pDetour) {
     m_pOriginal = nullptr;

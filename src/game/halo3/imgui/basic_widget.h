@@ -1,7 +1,7 @@
 #ifndef ALPHA_RING_BASIC_WIDGET_H
 #define ALPHA_RING_BASIC_WIDGET_H
 
-#include <imgui.h>
+#include "imgui/imgui.h"
 #include <functional>
 
 class BasicWidget {

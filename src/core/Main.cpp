@@ -2,7 +2,7 @@
 
 #include <cstdio>
 
-#include "MinHook.h"
+#include <minhook/MinHook.h>
 #include "hook/d3d11.h"
 #include "hook/mcc/mcc.h"
 
