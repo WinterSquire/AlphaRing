@@ -41,6 +41,8 @@ Having this menu open will disable inputs or pause the game.
     InputInt(Players, &p_profile_setting->player_count, 1, 4);
     ImGui::PopItemWidth();
 
+    ImGui::Checkbox("Use Player1's Profile", &p_profile_setting->b_use_player0_profile);
+
     for (int i = 0; i < p_profile_setting->player_count; ++i) {
         ImGui::Text("Player %d\n", i + 1);
 

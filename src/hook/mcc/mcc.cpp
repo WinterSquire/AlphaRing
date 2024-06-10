@@ -34,6 +34,9 @@ DefDetourFunction(__int64, __fastcall, module_unload, module_info_t* info) {
 DefDetourFunction(char, __fastcall, get_xbox_user_id, void* pSelf, __int64* pId, wchar_t *pName, int size, int index) {
     auto p_setting = ProfileSetting();
 
+    if (p_setting->profiles[0].xid == 0)
+        ppOriginal_get_xbox_user_id(pSelf, &p_setting->profiles[0].xid, nullptr, 0, 0);
+
     if (!p_setting->b_override || (!p_setting->b_override_player0 && !index))
         return ppOriginal_get_xbox_user_id(pSelf,pId,pName,size,index);
 
@@ -94,6 +97,13 @@ DefDetourFunction(bool, __fastcall, input_get_status, INPUT_t* self, int index, 
     return result;
 }
 
+DefDetourFunction(__int64, __fastcall, get_player_profile, __int64 self, __int64 xid) {
+    auto p_setting = ProfileSetting();
+    if (p_setting->b_override && p_setting->b_use_player0_profile && p_setting->profiles[0].xid != 0)
+        xid = p_setting->profiles[0].xid;
+    return ppOriginal_get_player_profile(self, xid);
+}
+
 bool MCCHook::Initialize() {
     bool isWS;
     void* pTarget;
@@ -105,6 +115,7 @@ bool MCCHook::Initialize() {
             {OFFSET_MCC_PF_MODULEUNLOAD, OFFSET_MCC_WS_PF_MODULEUNLOAD, module_unload, (void **)&ppOriginal_module_unload},
             {OFFSET_MCC_PF_GAMEINPUT, OFFSET_MCC_WS_PF_GAMEINPUT, input_get_status, (void **)&ppOriginal_input_get_status},
             {OFFSET_MCC_PF_GET_USER_ID, OFFSET_MCC_WS_PF_GET_USER_ID, get_xbox_user_id, (void **)&ppOriginal_get_xbox_user_id},
+            {0x1E5404, 0x1E5404, get_player_profile, (void **)&ppOriginal_get_player_profile},
     };
 
     struct {__int64 offset_steam; __int64 offset_ws; void** ppf;} funcs[] {

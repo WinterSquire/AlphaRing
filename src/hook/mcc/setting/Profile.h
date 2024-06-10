@@ -5,8 +5,10 @@
 struct profile_setting {
     bool b_override;
     bool b_override_player0;
+    bool b_use_player0_profile;
     int player_count;
     struct profile_t {
+        __int64 xid;
         __int64 id;
         wchar_t name[MAX_NAME_LENGTH];
     } profiles[4];
