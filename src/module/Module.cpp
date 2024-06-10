@@ -45,12 +45,12 @@ private:
 
 #include "patch/Patch.h"
 #include "game/halo1/native/entry/halo1.h"
-#include "game/halo2/native/entry/halo2.h"
+#include "offset_halo2.h"
 #include "game/halo3/entry/halo3.h"
-#include "game/halo3odst/native/entry/halo3odst.h"
-#include "game/haloreach/native/entry/haloreach.h"
-#include "game/halo4/native/entry/halo4.h"
-#include "game/groundhog/native/entry/groundhog.h"
+#include "game/halo3odst/entry/halo3odst.h"
+#include "game/haloreach/entry/haloreach.h"
+#include "game/halo4/entry/halo4.h"
+#include "game/groundhog/entry/groundhog.h"
 
 class CModules : public ICModules {
 public:
@@ -76,12 +76,12 @@ public:
                 Patch::apply((void*)(hModule + OFFSET_HALO4_PF_COOP_JOIN), "\x31\xC0\xC3\x90", 4);
                 Patch::apply((void*)(hModule + OFFSET_HALO4_PF_COOP_REJOIN), "\xEB", 1);
                 Patch::apply((void*)(hModule + OFFSET_HALO4_PF_COOP_PLAYER_LIMIT), "\x90\x90\x90\x90\x90\x90", 6);
-//                Halo4EntrySet()->update(hModule);
+                Halo4EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
                 Patch::apply((void*)(hModule + OFFSET_GROUNDHOG_PF_COOP_JOIN), "\x31\xC0\xC3\x90", 4);
                 Patch::apply((void*)(hModule + OFFSET_GROUNDHOG_PF_REJOIN), "\xEB", 1);
-//                GroundHogEntrySet()->update(hModule);
+                GroundHogEntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
                 Patch::apply((void*)(hModule + OFFSET_HALO3ODST_PF_COOP_JOIN), "\x31\xC0\xC3\x90", 4);
@@ -90,7 +90,7 @@ public:
             {[] (__int64 hModule) {
                 Patch::apply((void*)(hModule + OFFSET_HALOREACH_PF_COOP_JOIN), "\x31\xC0\xC3\x90", 4);
                 Patch::apply((void*)(hModule + OFFSET_HALOREACH_PF_COOP_REJOIN), "\xEB", 1);
-//                HaloReachEntrySet()->update(hModule);
+                HaloReachEntrySet()->update(hModule);
             }},
     };
 

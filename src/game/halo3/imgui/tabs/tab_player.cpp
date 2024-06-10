@@ -36,7 +36,7 @@ public:
         char buffer[1024];
         char player_name[256];
         const char* format = R"(
-Player %d
+Player %d (xid: %llX)
     Name: %s
     INDEX: %X
     Position: %.2f %.2f %.2f
@@ -48,7 +48,7 @@ Player %d
 
         std::wcstombs(player_name, p_player->name, sizeof(player_name));
         sprintf_s(buffer, format,
-                  index, player_name, p_player->object_INDEX,
+                  index, p_player->xid, player_name, p_player->object_INDEX,
                   p_player->position.x, p_player->position.y, p_player->position.z,
                   p_player->team
         );

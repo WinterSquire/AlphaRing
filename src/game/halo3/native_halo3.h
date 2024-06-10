@@ -10,19 +10,19 @@
 
 #include <cmath>
 
-namespace Halo3::Native::Function {
-    // Main Thread
-    // Don't use these functions directly in Render Thread!
-    bool player_push_message(Index player_index, const wchar_t* msg, int type = 2);
-    __int64 player_possess(INDEX player_index, INDEX target);
-    bool players_control_camera(bool custom_control);
-    bool player_set_camera(Index player_index, eCameraMode mode, float time = 0.0f);
-    INDEX local_player_add(const wchar_t *name, const wchar_t *id);
-    INDEX object_create(Datum datum, const Vector3& position);
-    void object_change_color(INDEX object_index);
-}
-
 DefNative(Halo3) {
+    namespace Function {
+        // Main Thread
+        // Don't use these functions directly in Render Thread!
+        bool player_push_message(Index player_index, const wchar_t* msg, int type = 2);
+        __int64 player_possess(INDEX player_index, INDEX target);
+        bool players_control_camera(bool custom_control);
+        bool player_set_camera(Index player_index, eCameraMode mode, float time = 0.0f);
+        INDEX local_player_add(const wchar_t *name, const wchar_t *id);
+        INDEX object_create(Datum datum, const Vector3& position);
+        void object_change_color(INDEX object_index);
+    }
+
     // ================================ Actor ================================
     DefEntry(Actor, OFFSET_HALO3_V_ENTRY_LOOP_ACTORS) {
         bool enable_ai;
@@ -196,7 +196,7 @@ DefNative(Halo3) {
                 int input_map;
                 int respawn_flag; // 0x8
                 int unun;
-                __int64 un_flag; // 0x10
+                __int64 xid; // 0x10
                 wchar_t name[0x10]; // 0x18
                 char un1[0x1E];
                 wchar_t id[0x3]; // 0x56
@@ -317,7 +317,9 @@ DefNative(Halo3) {
         int Index; // 0x0000EC71
         char flags_0; // (1 << 3) black screen
         char flags_1;
-        __int8 v0[0x22];
+        char buffer[2];
+        __int64 xid;
+        __int8 v0[22];
         INDEX object_INDEX; // 0x28 can't modify directly
         INDEX restore_INDEX; // 0x2C
         __int8 v1[0x1C];
