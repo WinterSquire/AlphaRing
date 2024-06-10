@@ -6,9 +6,7 @@
 #include <minhook/MinHook.h>
 
 #include <d3d11.h>
-
-HWND					window;
-WNDPROC					oWndProc;
+#include <memory>
 
 struct FunctionTable {
     typedef HRESULT(__stdcall* tPresent) (IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags);
@@ -18,20 +16,10 @@ struct FunctionTable {
 
     tPresent Present;
     tResizeBuffers ResizeBuffers;
+    long(__stdcall* p_fD3D11CreateDeviceAndSwapChain)(IDXGIAdapter*,D3D_DRIVER_TYPE,HMODULE,UINT,const D3D_FEATURE_LEVEL*,UINT,UINT,const DXGI_SWAP_CHAIN_DESC*,IDXGISwapChain**,ID3D11Device**,D3D_FEATURE_LEVEL*,ID3D11DeviceContext**);
 
     bool Initialize();
 } functionTable;
-
-static LRESULT __stdcall dWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam) || Window::Window_WndProc(hWnd, uMsg, wParam, lParam))
-        return true;
-
-    if (uMsg == WM_QUIT && hWnd == window) Window::signalDestroy();
-
-    return CallWindowProc(oWndProc, hWnd, uMsg, wParam, lParam);
-}
 
 static bool bInitialized = false;
 
@@ -46,10 +34,9 @@ inline void CheckInit(IDXGISwapChain* pSwapChain) {
 
         DXGI_SWAP_CHAIN_DESC sd;
         pSwapChain->GetDesc(&sd);
-        window = sd.OutputWindow;
-        oWndProc = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR) dWndProc);
 
-        Renderer()->Init(window, pSwapChain, pDevice, pContext);
+        MainWindow()->init(sd.OutputWindow, pSwapChain, pDevice, pContext);
+        Renderer()->Init(sd.OutputWindow, pSwapChain, pDevice, pContext);
         bInitialized = true;
     }
 }
@@ -97,44 +84,19 @@ bool Directx11Hook::Initialize() {
 }
 
 bool FunctionTable::Initialize() {
-    typedef long(__stdcall* D3D11CreateDeviceAndSwapChain_t)(IDXGIAdapter*,D3D_DRIVER_TYPE,HMODULE,UINT,const D3D_FEATURE_LEVEL*,UINT,UINT,const DXGI_SWAP_CHAIN_DESC*,IDXGISwapChain**,ID3D11Device**,D3D_FEATURE_LEVEL*,ID3D11DeviceContext**);
+    auto p_window = std::make_unique<CWindow>(
+            100, 100, "Directx11 Hook", "Directx11 Hook");
 
-    const WNDCLASS wc {
-            CS_HREDRAW | CS_VREDRAW,
-            DefWindowProc,
-            0,
-            0,
-            GetModuleHandle(nullptr),
-            nullptr,
-            nullptr,
-            nullptr,
-            nullptr,
-            "Directx11 Hook",
-    };
+    if (p_window->getHandle() == nullptr) return false;
 
-    if (!RegisterClass(&wc)) return false;
+    auto d3d11 = GetModuleHandle("d3d11.dll");
 
-    HWND window = CreateWindow(wc.lpszClassName, wc.lpszClassName, WS_OVERLAPPEDWINDOW,
-                               0, 0, 100, 100, nullptr, nullptr, wc.hInstance, nullptr);
+    if (d3d11 == nullptr) return false;
 
-    if (window == nullptr) return false;
-
-    HMODULE d3d11 = GetModuleHandle("d3d11.dll");
-
-    if (d3d11 == nullptr) {
-        DestroyWindow(window);
-        UnregisterClass(wc.lpszClassName, wc.hInstance);
-        return false;
-    }
-
-    auto D3D11CreateDeviceAndSwapChain = (D3D11CreateDeviceAndSwapChain_t)GetProcAddress(
+    p_fD3D11CreateDeviceAndSwapChain = (decltype(p_fD3D11CreateDeviceAndSwapChain))GetProcAddress(
             d3d11, "D3D11CreateDeviceAndSwapChain");
 
-    if (D3D11CreateDeviceAndSwapChain == nullptr) {
-        DestroyWindow(window);
-        UnregisterClass(wc.lpszClassName, wc.hInstance);
-        return false;
-    }
+    if (p_fD3D11CreateDeviceAndSwapChain == nullptr) return false;
 
     IDXGISwapChain* swapChain;
     ID3D11Device* device;
@@ -161,34 +123,24 @@ bool FunctionTable::Initialize() {
             },
             DXGI_USAGE_RENDER_TARGET_OUTPUT,
             1,
-            window,
+            p_window->getHandle(),
             1,
             DXGI_SWAP_EFFECT_DISCARD,
             DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH
     };
 
-    if (FAILED(D3D11CreateDeviceAndSwapChain(0, D3D_DRIVER_TYPE_HARDWARE, 0, 0, featureLevels, 2, D3D11_SDK_VERSION,
-                                             &swapChainDesc, &swapChain, &device, &featureLevel, &context))) {
-        ::DestroyWindow(window);
-        ::UnregisterClass(wc.lpszClassName, wc.hInstance);
+    if (FAILED(p_fD3D11CreateDeviceAndSwapChain(0, D3D_DRIVER_TYPE_HARDWARE, 0, 0, featureLevels, 2, D3D11_SDK_VERSION,
+                                             &swapChainDesc, &swapChain, &device, &featureLevel, &context)))
         return false;
-    }
+
 
     memcpy(this, *(uintptr_t**)swapChain, 18 * sizeof(uintptr_t));
     memcpy(((uintptr_t*)this) + 18, *(uintptr_t**)device, 43 * sizeof(uintptr_t));
     memcpy(((uintptr_t*)this) + 18 + 43, *(uintptr_t**)context, 144 * sizeof(uintptr_t));
 
     swapChain->Release();
-    swapChain = NULL;
-
     device->Release();
-    device = NULL;
-
     context->Release();
-    context = NULL;
-
-    DestroyWindow(window);
-    UnregisterClass(wc.lpszClassName, wc.hInstance);
 
     return true;
 }

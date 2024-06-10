@@ -46,7 +46,7 @@ bool Prologue() {
 }
 
 signed Main() {
-    Window::waitForDestroy();
+    MainWindow()->waitForDestroy();
 
     return 0;
 }

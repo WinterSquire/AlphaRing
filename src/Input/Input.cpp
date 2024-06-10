@@ -21,6 +21,7 @@ namespace AlphaRing {
 
         bool GetXInputGetState(DWORD dwUserIndex, XINPUT_STATE* pState) {
             if (!g_pfnXInputGetState || !pState) return false;
+            memset(pState, 0, sizeof(XINPUT_STATE));
             return g_pfnXInputGetState(dwUserIndex, pState) == ERROR_SUCCESS;
         }
     };

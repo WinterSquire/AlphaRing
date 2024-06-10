@@ -1,37 +1,60 @@
 #include "Window.h"
 
+#include "./core/String.h"
 #include "Renderer.h"
 #include "input/Input.h"
 
-#include <mutex>
-#include <condition_variable>
-#include <windows.h>
 #include "imgui/imgui.h"
 
-static std::mutex cv_m;
-static std::condition_variable cv;
-static bool b_shouldDestory = false;
+CMainWindow CMainWindow::s_instance;
 
-void Window::waitForDestroy() {
-    std::unique_lock<std::mutex> lk(cv_m);
-    cv.wait(lk, [] {return b_shouldDestory; });
+CWindow::CWindow(int width, int height, const char* title, const char* className)
+        : m_title {'\0'}, m_className {'\0'}, m_wc {
+        CS_HREDRAW | CS_VREDRAW,
+        DefWindowProc,
+        0,
+        0,
+        GetModuleHandle(nullptr),
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        m_className
+} {
+    String::strcpy(m_title, title);
+    String::strcpy(m_className, className);
+
+    if (!(m_registered = RegisterClass(&m_wc))) return;
+
+    m_hWnd = CreateWindow(className, title, WS_OVERLAPPEDWINDOW,
+                          0, 0, width, height, nullptr, nullptr, m_wc.hInstance, nullptr);
 }
 
-void Window::signalDestroy() {
-    std::lock_guard<std::mutex> lk(cv_m);
-    b_shouldDestory = true;
-    cv.notify_one();
+void CMainWindow::init(HWND hWnd, IDXGISwapChain* pSwapChain, ID3D11Device* pDevice, ID3D11DeviceContext* pContext) {
+    m_hWnd = hWnd;
+    m_pSwapChain = pSwapChain;
+    m_pDevice = pDevice;
+    m_pContext = pContext;
+    setWndProc(dWndProc);
 }
 
-inline bool GetControllerState(XINPUT_STATE& state, DWORD controllerIndex = 0) {
-    ZeroMemory(&state, sizeof(XINPUT_STATE));
-    return AlphaRing::Input::GetXInputGetState(controllerIndex, &state);
+LRESULT CMainWindow::dWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam) ||
+        WndProc(hWnd, uMsg, wParam, lParam))
+        return true;
+
+    if ((uMsg == WM_QUIT || uMsg == WM_DESTROY || uMsg == WM_CLOSE) && hWnd == s_instance.m_hWnd)
+        CMainWindow::signalDestroy();
+
+    return CallWindowProc(s_instance.m_old_pWndProc, hWnd, uMsg, wParam, lParam);
 }
 
-LRESULT Window::Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+LRESULT CMainWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     XINPUT_STATE state;
 
-    if (GetControllerState(state)) {
+    if (AlphaRing::Input::GetXInputGetState(0, &state)) {
         static bool b_toggled = false;
         static bool b_pressed = false;
 
@@ -82,4 +105,15 @@ LRESULT Window::Window_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
     }
 
     return false;
+}
+
+void CMainWindow::waitForDestroy() {
+    std::unique_lock<std::mutex> lk(CMainWindow::s_instance.m_mutex);
+    CMainWindow::s_instance.m_cv.wait(lk, [] {return CMainWindow::s_instance.m_exit;});
+}
+
+void CMainWindow::signalDestroy() {
+    std::lock_guard<std::mutex> lk(CMainWindow::s_instance.m_mutex);
+    CMainWindow::s_instance.m_exit = true;
+    CMainWindow::s_instance.m_cv.notify_one();
 }
