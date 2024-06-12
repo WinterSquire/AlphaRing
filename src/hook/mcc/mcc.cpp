@@ -115,7 +115,7 @@ bool MCCHook::Initialize() {
             {OFFSET_MCC_PF_MODULEUNLOAD, OFFSET_MCC_WS_PF_MODULEUNLOAD, module_unload, (void **)&ppOriginal_module_unload},
             {OFFSET_MCC_PF_GAMEINPUT, OFFSET_MCC_WS_PF_GAMEINPUT, input_get_status, (void **)&ppOriginal_input_get_status},
             {OFFSET_MCC_PF_GET_USER_ID, OFFSET_MCC_WS_PF_GET_USER_ID, get_xbox_user_id, (void **)&ppOriginal_get_xbox_user_id},
-            {0x1E5404, 0x1E5404, get_player_profile, (void **)&ppOriginal_get_player_profile},
+            {OFFSET_MCC_PF_GET_PROFILE, OFFSET_MCC_WS_PF_GET_PROFILE, get_player_profile, (void **)&ppOriginal_get_player_profile},
     };
 
     struct {__int64 offset_steam; __int64 offset_ws; void** ppf;} funcs[] {
