@@ -60,6 +60,7 @@ public:
             {[] (__int64 hModule) {
                 Patch::apply((void*)(hModule + OFFSET_HALO1_PF_4PLAYERS), "\x90\x90", 2);
                 Patch::apply((void*)(hModule + OFFSET_HALO1_PF_PAUSE), "\xEB", 1);
+                Patch::apply((void*)(hModule + OFFSET_HALO1_PF_IDK), "\x90\x90\x90\x90\x90\x90", 6);
 //                Halo1EntrySet()->update(hModule);
             }},
             {[] (__int64 hModule) {
