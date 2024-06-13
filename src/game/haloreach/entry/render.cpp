@@ -17,7 +17,7 @@ namespace HaloReach::Entry::Render {
             ImGui::Begin("Halo Reach");
             if (ImGui::Button("Add Player")) {
                 HaloReach::Entry::World::AddTask([]() {
-                    HaloReach::Native::Function::player_add(L"UWU", L"UWU");
+                    HaloReach::Native::Function::player_add(L"UWU", L"UWU", false);
                 });
             }
             ImGui::End();

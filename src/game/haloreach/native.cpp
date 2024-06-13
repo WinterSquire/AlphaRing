@@ -5,7 +5,7 @@
 
 CNativeInfo HaloReach::Native::s_nativeInfo;
 
-INDEX HaloReach::Native::Function::player_add(const wchar_t *name, const wchar_t *id) {
+INDEX HaloReach::Native::Function::player_add(const wchar_t *name, const wchar_t *id, bool isClient) {
     typedef __int64 (__fastcall* func_init_t) (INDEX index, void* a2, bool a3);
     // size: 0xA0
     struct player_init_t {
@@ -29,13 +29,16 @@ INDEX HaloReach::Native::Function::player_add(const wchar_t *name, const wchar_t
     memset(&new_player, 0, sizeof(player_init_t));
 
     new_player.v_true = true;
-    new_player.b_isClient = true;
     new_player.xid = index;
 
-    auto p_action = s_nativeInfo.getEntryAddress(OFFSET_HALOREACH_V_ENTRY_PLAYERS_ACTION);
-
-    new_player.respawn_flag = *(int*)(p_action + 8);
-    new_player.respawn_flag2 = *(__int16*)(p_action + 12);
+    if ((new_player.b_isClient = isClient)) {
+        new_player.input_map = new_player.user_input = -1;
+    } else {
+        new_player.input_map = new_player.user_input = index;
+        memcpy(&new_player.respawn_flag,
+               (void*)(s_nativeInfo.getEntryAddress(OFFSET_HALOREACH_V_ENTRY_PLAYERS_ACTION) + 8),
+               6);
+    }
 
     if (name) {
         String::wstrcpy(new_player.name, name);

@@ -9,7 +9,7 @@ DefNative(HaloReach) {
     namespace Function {
         // Main Thread
         // Don't use these functions directly in Render Thread!
-        INDEX player_add(const wchar_t *name, const wchar_t *id);
+        INDEX player_add(const wchar_t *name, const wchar_t *id, bool isClient);
     }
 
     DefEntryEntity(Players, OFFSET_HALOREACH_V_ENTRY_PLAYERS) {
