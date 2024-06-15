@@ -148,5 +148,9 @@ bool MCCHook::Initialize() {
             return false;
     }
 
+    Patch::apply(GetProcAddress(GetModuleHandleA("KERNEL32.DLL"), "IsDebuggerPresent"),
+                 "\x31\xC0\xC3\x90\x90\x90\x90",
+                 7);
+
     return true;
 }
