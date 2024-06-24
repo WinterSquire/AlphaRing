@@ -1,5 +1,4 @@
-#ifndef ALPHA_RING_NATIVE_HALO3_H
-#define ALPHA_RING_NATIVE_HALO3_H
+#pragma once
 
 #include "../ICNative.h"
 #include "offset_halo3.h"
@@ -421,5 +420,3 @@ DefNative(Halo3) {
         }
     };
 }
-
-#endif //ALPHA_RING_NATIVE_HALO3_H

@@ -1,6 +1,7 @@
-#ifndef ALPHA_RING_COMMON_H
-#define ALPHA_RING_COMMON_H
+#pragma once
 
-#include "./core/Log.h"
+#include "./log/Log.h"
+#include "./filesystem/Filesystem.h"
+#include "./core/String.h"
 
-#endif //ALPHA_RING_COMMON_H
+#include <functional>

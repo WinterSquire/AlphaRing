@@ -1,10 +1,5 @@
-#ifndef ALPHA_RING_MCC_HOOK_H
-#define ALPHA_RING_MCC_HOOK_H
-
+#pragma once
 
 namespace MCCHook {
     bool Initialize();
 }
-
-
-#endif //ALPHA_RING_MCC_HOOK_H

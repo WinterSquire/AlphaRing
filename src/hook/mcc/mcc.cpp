@@ -1,15 +1,15 @@
 #include "mcc.h"
 
 #include "common.h"
-#include "module/Module.h"
+#include "./module/Module.h"
 #include "offset_mcc.h"
 
 #include <minhook/MinHook.h>
 
 #include "core/String.h"
 #include "input/Input.h"
-#include "patch/Patch.h"
-#include "render/Renderer.h"
+#include "hook/mcc/module/patch/Patch.h"
+#include "hook/d3d11/main_renderer.h"
 
 #include "./setting/setting.h"
 
@@ -22,12 +22,12 @@ static void (__fastcall* get_player0_input)(INPUT_t* self);
 
 DefDetourFunction(void, __fastcall, module_load, module_info_t* info, int a2, __int64 a3) {
     ppOriginal_module_load(info, a2, a3);
-    Modules()->get((eModule)info->title)->load_module(info);
+    ModuleMCC()->get(info->title)->load_module(info);
 }
 
 DefDetourFunction(__int64, __fastcall, module_unload, module_info_t* info) {
     auto result = ppOriginal_module_unload(info);
-    Modules()->get((eModule)info->title)->unload_module();
+    ModuleMCC()->get(info->title)->unload_module();
     return result;
 }
 
@@ -58,11 +58,11 @@ DefDetourFunction(bool, __fastcall, input_get_status, INPUT_t* self, int index, 
     float delta_time = 0;
     INPUT_t::InputDevice* p_device;
 
-    if (Renderer()->ShowContext())
-        return false;
-
     auto p_input_setting = InputSetting();
     auto p_profile_setting = ProfileSetting();
+
+    if (p_input_setting->disable_input_on_menu && MainRenderer()->ShowContext())
+        return false;
 
     if (!p_input_setting->override_input)
         return ppOriginal_input_get_status(self, index, pData, a4);
@@ -127,11 +127,10 @@ bool MCCHook::Initialize() {
         (hModule = (__int64)GetModuleHandleA("MCCWinStore-Win64-Shipping.exe")) == 0)
         return false;
 
-    auto p_mcc = Modules()->get(MCC);
+    if (!ModuleMCC()->Init(hModule, isWS))
+        return false;
 
-    p_mcc->load_module({MCC,0, hModule});
-
-    p_mcc->version().toString(buffer, sizeof(buffer));
+    ModuleMCC()->version().toString(buffer, sizeof(buffer));
 
     LOG_INFO("Game Version: {}({})", buffer, isWS ? "Windows Store" : "Steam");
 

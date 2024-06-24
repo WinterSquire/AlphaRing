@@ -1,5 +1,7 @@
-#ifndef ALPHA_RING_STRING_H
-#define ALPHA_RING_STRING_H
+#pragma once
+
+#include <locale>
+#include <codecvt>
 
 #define STR_CPY(return_type, name, ...) inline return_type name(__VA_ARGS__) { \
     size_t i = 0; \
@@ -21,6 +23,3 @@ namespace String {
     template <size_t _Size> inline size_t strcpy(char (&dest)[_Size], const char *src) {return strcpy(dest, src, _Size);}
     template <size_t _Size> inline size_t strcpy(char (&dest)[_Size], const wchar_t *src) {return strcpy(dest, src, _Size);}
 }
-
-
-#endif //ALPHA_RING_STRING_H

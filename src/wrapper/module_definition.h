@@ -1,5 +1,4 @@
-#ifndef ALPHA_RING_MODULE_DEFINITION_H
-#define ALPHA_RING_MODULE_DEFINITION_H
+#pragma once
 
 #include <vector>
 #include <Windows.h>
@@ -15,5 +14,3 @@ private:
     std::vector<void*> m_funcs;
 
 };
-
-#endif //ALPHA_RING_MODULE_DEFINITION_H

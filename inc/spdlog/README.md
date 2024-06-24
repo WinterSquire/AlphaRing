@@ -49,9 +49,9 @@ see example [CMakeLists.txt](https://github.com/gabime/spdlog/blob/v1.x/example/
   * syslog.
   * Windows event log.
   * Windows debugger (```OutputDebugString(..)```).
-  * Log to Qt widgets ([example](#log-to-qt-with-nice-colors)).
+  * Info to Qt widgets ([example](#log-to-qt-with-nice-colors)).
   * Easily [extendable](https://github.com/gabime/spdlog/wiki/4.-Sinks#implementing-your-own-sink) with custom log targets.
-* Log filtering - log levels can be modified at runtime as well as compile time.
+* Info filtering - log levels can be modified at runtime as well as compile time.
 * Support for loading log levels from argv or environment var.
 * [Backtrace](#backtrace-support) support - store debug messages in a ring buffer and display them later on demand.
 
@@ -111,7 +111,7 @@ void basic_logfile_example()
     }
     catch (const spdlog::spdlog_ex &ex)
     {
-        std::cout << "Log init failed: " << ex.what() << std::endl;
+        std::cout << "Info init failed: " << ex.what() << std::endl;
     }
 }
 ```
@@ -183,7 +183,7 @@ void stopwatch_example()
 ```
 
 ---
-#### Log binary data in hex
+#### Info binary data in hex
 ```c++
 // many types of std::container<char> types can be used.
 // ranges are supported too.
@@ -308,7 +308,7 @@ void user_defined_example()
 ---
 #### User-defined flags in the log pattern
 ```c++ 
-// Log patterns can contain custom flags.
+// Info patterns can contain custom flags.
 // the following example will add new flag '%*' - which will be bound to a <my_formatter_flag> instance.
 #include "spdlog/pattern_formatter.h"
 class my_formatter_flag : public spdlog::custom_flag_formatter
@@ -393,7 +393,7 @@ $ ./example
 
 
 ---
-#### Log file open/close event handlers
+#### Info file open/close event handlers
 ```c++
 // You can get callbacks from spdlog before/after a log file has been opened or closed. 
 // This is useful for cleanup procedures or for adding something to the start/end of the log file.
@@ -421,7 +421,7 @@ void replace_default_logger_example()
 ```
 
 ---
-#### Log to Qt with nice colors
+#### Info to Qt with nice colors
 ```c++
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/qt_sinks.h"
