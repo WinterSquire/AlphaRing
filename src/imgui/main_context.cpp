@@ -16,6 +16,7 @@ public:
             pages[render_flag]->render();
 
         if (ImGui::BeginMainMenuBar()) {
+            ImGui::Separator();
             ImGui::Text("%.1f fps", ImGui::GetIO().Framerate);
             ImGui::EndMainMenuBar();
         }

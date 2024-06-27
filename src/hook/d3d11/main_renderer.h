@@ -16,6 +16,7 @@ public:
         m_pContext = p_context;
         m_bNewFrame = false;
         m_bShowContext = true;
+        m_bShowMouse = true;
 
         ImGui_Init();
     }
@@ -58,6 +59,14 @@ public:
         m_bShowContext = !m_bShowContext;
     }
 
+    inline bool GetShowMouse() {
+        return m_bShowMouse;
+    }
+
+    inline void SetShowMouse(bool b) {
+        m_bShowMouse = b;
+    }
+
     inline void SetState(ID3D11RasterizerState* p_state) {
         m_pContext->RSSetState(p_state);
     }
@@ -83,6 +92,7 @@ private:
 
     bool m_bShowContext;
     bool m_bNewFrame;
+    bool m_bShowMouse;
     ID3D11RenderTargetView* m_pView;
 
 };

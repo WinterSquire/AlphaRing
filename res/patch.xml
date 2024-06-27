@@ -13,7 +13,7 @@
                desc="Enable Loading mainmenu.map"
                offset="12E53C"
                aob="90 90 90 90 90 90"
-               default="true"
+               default="false"
         />
 
     </module>

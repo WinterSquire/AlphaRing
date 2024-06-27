@@ -26,20 +26,13 @@ LRESULT CMainWindow::dWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     return CallWindowProc(s_instance.m_old_pWndProc, hWnd, uMsg, wParam, lParam);
 }
 
-#include "filesystem/Filesystem.h"
-
 //todo: WM_IME_COMPOSITION Support
 LRESULT CMainWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    wchar_t path[MAX_PATH];
     AlphaRing::Input::Update();
 
     switch (uMsg) {
         case WM_KEYDOWN: {
             switch (wParam) {
-                case VK_F1:
-                    AlphaRing::Filesystem::GetResource("patch.xml", path);
-                    wprintf(L"\n%s\n", path);
-                    break;
                 case VK_F4:
                     MainRenderer()->ToggleContext();
                     break;
@@ -47,7 +40,11 @@ LRESULT CMainWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             break;
         }
     }
-    
+
+    auto& io = ImGui::GetIO();
+    if (io.WantCaptureMouse)
+        return true;
+
     return false;
 }
 

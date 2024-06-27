@@ -56,7 +56,7 @@ struct input_data_t {
 
 struct input_setting_t {
     bool override_input = false;
-    bool disable_input_on_menu = true;
+    bool disable_input_on_menu = false;
     bool enable_km = true;
     int controller_map[4] {3, 0, 1, 2};
 };

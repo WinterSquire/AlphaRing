@@ -104,6 +104,45 @@ DefDetourFunction(__int64, __fastcall, get_player_profile, __int64 self, __int64
     return ppOriginal_get_player_profile(self, xid);
 }
 
+DefDetourFunction(HINTERNET, __stdcall, dWinHttpConnect, HINTERNET hSession, LPCWSTR pswzServerName, INTERNET_PORT nServerPort, DWORD dwReserved) {
+    HINTERNET result = ppOriginal_dWinHttpConnect(hSession, pswzServerName, nServerPort, dwReserved);
+
+    NetworkSetting()->set_url(result, pswzServerName);
+
+    return result;
+}
+
+DefDetourFunction(HINTERNET, __stdcall, dWinHttpOpenRequest, HINTERNET hConnect, LPCWSTR pwszVerb, LPCWSTR pwszObjectName, LPCWSTR pwszVersion, LPCWSTR pwszReferrer, LPCWSTR* ppwszAcceptTypes, DWORD dwFlags) {
+    HINTERNET result = ppOriginal_dWinHttpOpenRequest(hConnect, pwszVerb, pwszObjectName, pwszVersion, pwszReferrer, ppwszAcceptTypes, dwFlags);
+
+    NetworkSetting()->add(result, hConnect, pwszVerb, pwszObjectName);
+
+    return result;
+}
+
+DefDetourFunction(BOOL, __stdcall, dWinHttpAddRequestHeaders, HINTERNET hRequest, LPCWSTR pwszHeaders, DWORD dwHeadersLength, DWORD dwModifiers) {
+    NetworkSetting()->set_header(hRequest, pwszHeaders);
+
+    return ppOriginal_dWinHttpAddRequestHeaders(hRequest, pwszHeaders, dwHeadersLength, dwModifiers);
+}
+
+static int count = 0;
+
+DefDetourFunction(BOOL, __stdcall, dWinHttpWriteData, HINTERNET hRequest, LPCVOID lpBuffer, DWORD dwNumberOfBytesToWrite, LPDWORD lpdwNumberOfBytesWritten) {
+    NetworkSetting()->set_body(hRequest, lpBuffer, dwNumberOfBytesToWrite);
+
+    return ppOriginal_dWinHttpWriteData(hRequest, lpBuffer, dwNumberOfBytesToWrite, lpdwNumberOfBytesWritten);
+}
+
+DefDetourFunction(BOOL, __stdcall, dWinHttpReadData, HINTERNET hRequest, LPVOID lpBuffer, DWORD dwNumberOfBytesToRead, LPDWORD lpdwNumberOfBytesRead) {
+    auto result = ppOriginal_dWinHttpReadData(hRequest, lpBuffer, dwNumberOfBytesToRead, lpdwNumberOfBytesRead);
+
+    NetworkSetting()->set_response(hRequest, lpBuffer, dwNumberOfBytesToRead);
+
+    return result;
+}
+
+
 bool MCCHook::Initialize() {
     bool isWS;
     void* pTarget;
@@ -150,6 +189,40 @@ bool MCCHook::Initialize() {
     Patch::apply(GetProcAddress(GetModuleHandleA("KERNEL32.DLL"), "IsDebuggerPresent"),
                  "\x31\xC0\xC3\x90\x90\x90\x90",
                  7);
+
+    auto h_win_http = GetModuleHandleA("winhttp.dll");
+
+    auto p_open_request = GetProcAddress(h_win_http, "WinHttpOpenRequest");
+
+    auto p_set_header = GetProcAddress(h_win_http, "WinHttpAddRequestHeaders");
+
+    auto p_write_data = GetProcAddress(h_win_http, "WinHttpWriteData");
+
+    auto p_connect = GetProcAddress(h_win_http, "WinHttpConnect");
+
+    auto p_read_data = GetProcAddress(h_win_http, "WinHttpReadData");
+
+    if (MH_CreateHook(p_read_data, dWinHttpReadData, (void**)&ppOriginal_dWinHttpReadData) != MH_OK ||
+        MH_EnableHook(p_read_data) != MH_OK)
+        return false;
+
+    if (MH_CreateHook(p_connect, dWinHttpConnect, (void**)&ppOriginal_dWinHttpConnect) != MH_OK ||
+        MH_EnableHook(p_connect) != MH_OK)
+        return false;
+
+    if (MH_CreateHook(p_open_request, dWinHttpOpenRequest, (void**)&ppOriginal_dWinHttpOpenRequest) != MH_OK ||
+        MH_EnableHook(p_open_request) != MH_OK)
+        return false;
+
+    if (MH_CreateHook(p_set_header, dWinHttpAddRequestHeaders, (void**)&ppOriginal_dWinHttpAddRequestHeaders) != MH_OK ||
+        MH_EnableHook(p_set_header) != MH_OK)
+        return false;
+
+    if (MH_CreateHook(p_write_data, dWinHttpWriteData, (void**)&ppOriginal_dWinHttpWriteData) != MH_OK ||
+        MH_EnableHook(p_write_data) != MH_OK)
+        return false;
+
+
 
     return true;
 }

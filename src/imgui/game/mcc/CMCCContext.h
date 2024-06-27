@@ -8,6 +8,7 @@ public:
 
     void context_patch();
     void context_splitscreen();
+    void context_network();
 
     static CMCCContext instance;
 };

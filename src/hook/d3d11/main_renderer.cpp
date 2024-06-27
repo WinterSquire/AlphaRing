@@ -46,7 +46,8 @@ bool CMainRenderer::Render(int render_flag) {
 
     if (m_bShowContext)
         MainContext()->render(render_flag);
-    else
+
+    if (!m_bShowMouse || !m_bShowContext)
         ImGui::SetMouseCursor(ImGuiMouseCursor_None);
 
     return m_bNewFrame = true;
