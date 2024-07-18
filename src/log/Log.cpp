@@ -1,13 +1,15 @@
 #include "Log.h"
 
-#include "spdlog/spdlog.h"
+#include "spdlog.h"
+
+#include "common.h"
 
 namespace AlphaRing::Log {
     std::shared_ptr<spdlog::logger> default_logger;
 
     bool Init() {
-        if (!AllocConsole())
-            return false;
+        bool result = AllocConsole();
+        assertm(result, "failed to allocate console");
 
         freopen("CONIN$", "r", stdin);
         freopen("CONOUT$", "w", stdout);

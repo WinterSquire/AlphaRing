@@ -9,5 +9,6 @@ namespace AlphaRing {
         bool Shutdown();
         bool Update();
         bool GetXInputGetState(DWORD dwUserIndex, XINPUT_STATE* pState);
+        void SetState(DWORD dwUserIndex, XINPUT_VIBRATION* pVibration);
     };
 }

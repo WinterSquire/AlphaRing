@@ -28,3 +28,11 @@ void AlphaRing::Filesystem::GetResource(const char *path_in, wchar_t *path_out) 
     std::wcscpy(path_out,
                 std::filesystem::absolute(std::filesystem::path("./alpha_ring").append(path_in)).c_str());
 }
+
+bool AlphaRing::Filesystem::Exist(const char *path) {
+    return std::filesystem::exists(std::filesystem::path(path));
+}
+
+bool AlphaRing::Filesystem::Exist(const wchar_t *path) {
+    return std::filesystem::exists(std::filesystem::path(path));
+}

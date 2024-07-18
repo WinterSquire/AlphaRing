@@ -1,0 +1,63 @@
+#pragma once
+
+#include <d3d11.h>
+#include "mcc/splitscreen/CGameManager.h"
+
+struct CGameData {
+    char buffer[0x2BF30];
+};
+
+static_assert((sizeof(CGameData) == 0x2BF30));
+
+struct CGameEngine {
+    enum eEventType {
+        EventPause = 0,
+        EventResume = 1,
+        EventExit = 2,
+        EventLoadCheckpoint = 3,
+        EventRestart = 4,
+        EventNewRound = 12,
+        EventTeamChange = 18,
+    };
+
+    struct Item {
+        struct Data {
+            const char* command; //"MPBOT: " | "HS: "
+            __int64 data;
+        };
+        struct _SLIST_ENTRY *Next;
+        eEventType eventType;
+        int one;
+        Data data;
+    };
+
+    struct FunctionTable {
+        void (__fastcall* free)(CGameEngine* self);
+        __int64 (__fastcall* render_init)(CGameEngine* self, ID3D11Device* pDevice, ID3D11DeviceContext* pContext, IDXGISwapChain* pSwapchain, void* un);
+        HANDLE (__fastcall* game_start)(CGameEngine* self, CGameManager* pGameManager, CGameData *pGameData);
+        PSLIST_ENTRY (__fastcall* set_event)(CGameEngine* self, int event_type, Item::Data *data);
+        void* nop1[5]; // todo: find these functions in other titles
+        PSLIST_ENTRY (__fastcall* set_name)(CGameEngine* self, const char *a2);
+        void* nop2;
+    };
+
+    FunctionTable* table;
+    int count;
+    float game_speed; // readonly?
+    char buffer[0x10];
+    Item items[31];
+    SLIST_HEADER header[0x5]; // 0x400
+    bool fine; // 0x450
+    char padding[0x9];
+
+    static void Initialize(CGameEngine** ppGameEngine);
+    inline void pause(bool value) {table->set_event(this, value ? EventPause : EventResume, nullptr);}
+    inline void load_checkpoint() {table->set_event(this, EventLoadCheckpoint, nullptr);}
+    inline void new_round() {table->set_event(this, EventNewRound, nullptr);}
+    inline void restart() {table->set_event(this, EventRestart, nullptr);}
+    inline void exit() {table->set_event(this, EventExit, nullptr);}
+};
+
+static_assert((sizeof(CGameEngine) == 0x460));
+extern CGameEngine** g_ppGameEngine;
+inline CGameEngine* GameEngine() {return *g_ppGameEngine;}

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "spdlog/spdlog.h"
+#include <spdlog.h>
 
 namespace AlphaRing::Log {
     extern std::shared_ptr<spdlog::logger> default_logger;

@@ -9,4 +9,7 @@ namespace AlphaRing::Filesystem {
     void GetDir(const char* path_in, wchar_t path_out[MAX_PATH]);
     void GetDir(const wchar_t* path_in, wchar_t path_out[MAX_PATH]);
     void GetResource(const char* path_in, wchar_t path_out[MAX_PATH]);
+
+    bool Exist(const char* path);
+    bool Exist(const wchar_t * path);
 }
