@@ -53,12 +53,10 @@ namespace AlphaRing::Global {
             Profile_t();
 
             __int64 get_xuid(int index) const {
-                if (!b_override || index >= player_count)
-                    return 0;
-
                 if (!index && !b_override_player0)
                     return profiles[0].xuid;
-
+                if (!b_override || index >= player_count)
+                    return 0;
                 return profiles[index].id;
             }
 
