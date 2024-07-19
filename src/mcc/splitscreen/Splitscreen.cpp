@@ -119,7 +119,7 @@ namespace MCC::Splitscreen {
                 p_action_name = buffer;
             }
             int value = p_data->gamepad_mapping[i];
-            if (ImGui::Combo(p_action_name, &value, p_button_names, 15))
+            if (ImGui::Combo(p_action_name, &value, p_button_names, 16))
                 p_data->gamepad_mapping[i] = value;
             ImGui::PopItemWidth();
         }
