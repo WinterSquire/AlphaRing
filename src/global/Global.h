@@ -30,6 +30,48 @@ namespace AlphaRing::Global {
             bool model;
             bool structure;
         };
+    }
 
+    namespace MCC {
+        DefGlobal(Profile) {
+            bool b_override;
+            int player_count;
+
+            // player 0
+            bool b_player0_use_km;
+            bool b_override_player0;
+            bool b_use_player0_profile;
+
+            struct profile_t {
+                int controller_index;
+                __int64 xuid;
+                __int64 id;
+                wchar_t name[1024];
+                __int8 gamepad_mapping[66];
+            } profiles[4];
+
+            Profile_t();
+
+            __int64 get_xuid(int index) const {
+                if (!b_override || index >= player_count)
+                    return 0;
+
+                if (!index && !b_override_player0)
+                    return profiles[0].xuid;
+
+                return profiles[index].id;
+            }
+
+            int get_index(__int64 xuid) const {
+                for (int i = 0; i < 4; ++i)
+                    if (xuid == profiles[i].id)
+                        return i;
+                return 0;
+            }
+
+            inline int get_controller_index(int index) const {return profiles[index].controller_index;}
+            static const char** get_action_names();
+            static const char** get_button_names();
+        };
     }
 }

@@ -1,7 +1,6 @@
 #include "Module.h"
 
 #include <functional>
-#include <Windows.h>
 
 #include "tinyxml2.h"
 
@@ -35,13 +34,8 @@ namespace MCC::Module {
 
         assertm(result, "MCC:Module: failed to patch module \"kernel32.dll\"");
 
-        CGameEngine** ppGameEngine = nullptr;
-
-        AlphaRing::Hook::Offset({
-            {0x3FFCAA8, 0, (void**)&ppGameEngine},
-        });
-
-        CGameEngine::Initialize(ppGameEngine);
+        // reload patch at startup
+        ReloadPatch("../../../alpha_ring/patch.xml");
 
         return true;
     }
@@ -122,6 +116,7 @@ bool MCC::Module::ReloadPatch(const char *xml_path) {
 }
 
 #include "imgui.h"
+#include "global/Global.h"
 
 namespace MCC::Module {
     void ContextPatch();
@@ -172,6 +167,19 @@ namespace MCC::Module {
         if (ImGui::Button("Resume Game")) p_engine->pause(false);
         if (ImGui::Button("Restart Game")) p_engine->restart();
         if (ImGui::Button("Exit Game")) p_engine->exit();
+        if (ImGui::Button("Reload Setting")) p_engine->reload_setting();
+        if (ImGui::Button("Load Setting")) p_engine->load_setting();
+
+        ImGui::Separator();
+
+        static int player = 0;
+        static int team = 0;
+        ImGui::Combo("Player", &player, "Player 0\0Player 1\0Player 2\0Player 3");
+        ImGui::Combo("Team", &team, "Red\0Blue\0Green\0Orange\0Purple\0Gold\0Brown\0Pink");
+        if (ImGui::Button("Change Team")) {
+            auto xuid = AlphaRing::Global::MCC::Profile()->get_xuid(player);
+            if (xuid != 0) p_engine->change_team(xuid, team);
+        }
     }
 
     void ContextPatch() {

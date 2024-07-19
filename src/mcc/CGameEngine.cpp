@@ -2,6 +2,7 @@
 
 CGameEngine** g_ppGameEngine;
 
-void CGameEngine::Initialize(CGameEngine** ppGameEngine) {
+bool CGameEngine::Initialize(CGameEngine** ppGameEngine) {
     g_ppGameEngine = ppGameEngine;
+    return true;
 }

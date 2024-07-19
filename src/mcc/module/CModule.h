@@ -5,7 +5,7 @@
 
 #include <Windows.h>
 
-#include "CGameEngine.h"
+#include "mcc/CGameEngine.h"
 
 struct module_info_t {
     __int32 title;

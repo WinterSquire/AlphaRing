@@ -1,18 +1,14 @@
 #include "Splitscreen.h"
 
-#include "input/Input.h"
 #include "common.h"
-#include "CGameManager.h"
 
-#include "settings.h"
+#include "global/Global.h"
 
 #include <offset_mcc.h>
 
-static float (__fastcall* deltaTime)(long long qpc);
-
 namespace MCC::Splitscreen {
     DefDetourFunction(__int64, __fastcall, get_index_by_xuid, void* a1, __int64 xuid) {
-        auto p_setting = &Settings()->profile_setting;
+        auto p_setting = AlphaRing::Global::MCC::Profile();
 
         if (!p_setting->b_override)
             return ppOriginal_get_index_by_xuid(a1, xuid);
@@ -28,37 +24,12 @@ namespace MCC::Splitscreen {
         return 0;
     }
 
-    float DeltaTime(__int64 a1) {
-        return deltaTime(a1);
-    }
-
     // todo:: let other players have the ability to pause the game
 
     bool Initialize() {
         bool result;
 
-        CGameManager* game_manager;
-        CDeviceManager** device_manager;
-
-        AlphaRing::Hook::Offset({
-            {OFFSET_MCC_PF_DELTA_TIME, OFFSET_MCC_WS_PF_DELTA_TIME, (void**)&deltaTime},
-            {0x3F76E50, 0, (void**)&game_manager},
-            {0x3FFFFF8, 0, (void**)&device_manager},
-        });
-
-        assertm(game_manager != nullptr, "MCC:Splitscreen: failed to get GameManager");
-        assertm(device_manager != nullptr, "MCC:Splitscreen: failed to get DeviceManager");
-
-        result = CGameManager::Initialize(game_manager);
-
-        assertm(result, "MCC:Splitscreen: failed to initialize GameManager");
-        assertm(GameManager() != nullptr, "MCC:Splitscreen: GameManager is null"); // static instance
-
-        result = CDeviceManager::Initialize(device_manager);
-
-        assertm(result, "MCC:Splitscreen: failed to initialize DeviceManager");
-//        assertm(DeviceManager() != nullptr, "MCC:Splitscreen: DeviceManager is null"); // heap memory
-
+        // fix: changing team freeze the game
         result = AlphaRing::Hook::Detour({
             {0x2D01DC, 0, get_index_by_xuid, (void**)&ppOriginal_get_index_by_xuid},
         });
@@ -72,91 +43,85 @@ namespace MCC::Splitscreen {
 #include "imgui.h"
 
 namespace MCC::Splitscreen {
-    void RealContext();
+    void RealContext(int index);
 
     void ImGuiContext() {
+        char buffer[1024];
+        static int editing_player = -1;
         static bool show_splitscreen;
 
         if (ImGui::BeginMainMenuBar()) {
-            ImGui::MenuItem("Splitscreen", nullptr, &show_splitscreen);
+            if (ImGui::BeginMenu("Splitscreen")) {
+                auto p_profile = AlphaRing::Global::MCC::Profile();
+
+                ImGui::MenuItem(p_profile->b_override ? "Disable" : "Enable", nullptr, &p_profile->b_override);
+                ImGui::PushItemWidth(200);ImGui::InputInt("Players", &p_profile->player_count);ImGui::PopItemWidth();
+
+                ImGui::Separator();
+
+                ImGui::MenuItem("Override player1's profile", nullptr, &p_profile->b_override_player0);
+                ImGui::MenuItem("Use player1's profile", nullptr, &p_profile->b_use_player0_profile);
+                ImGui::MenuItem("Enable K/M for player1", nullptr, &p_profile->b_player0_use_km);
+
+                ImGui::Separator();
+
+                for (int i = 0; i < p_profile->player_count; ++i) {
+                    sprintf(buffer, "Player %d", i + 1);
+                    if (ImGui::MenuItem(buffer, nullptr, editing_player == i)) {
+                        editing_player = i;
+                        show_splitscreen = true;
+                    }
+                }
+
+                ImGui::EndMenu();
+            }
             ImGui::EndMainMenuBar();
         }
 
-        if (show_splitscreen) {
-            if (ImGui::Begin("Splitscreen", &show_splitscreen, ImGuiWindowFlags_MenuBar))
-                RealContext();
+        if (show_splitscreen && editing_player != -1) {
+            sprintf(buffer, "Player %d", editing_player);
+            if (ImGui::Begin(buffer, &show_splitscreen, 0))
+                RealContext(editing_player);
             ImGui::End();
+        } else if (editing_player != -1) {
+            editing_player = -1;
         }
     }
 
-    void RealContext() {
+    const unsigned int offsets[] = {0x1C,0x1D,0x1F,0x21,0x23,0x24,0x27,0x2C,0x30,0x34,0x1AC,0x1B5,0x1B6,0x1B7,0x1B8,0x1BC,0x1C8,0x1CB,0x1CC,0x1CD,0x1CE,0x1CF,0x1D0,0x1D1,0x1D2,0x1D3,0x1D4,0x1D5,0x1D6,0x1D8,0x1DC};
+
+    void RealContext(int index) {
         char buffer[1024];
-        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-        auto p_profile_setting = &Settings()->profile_setting;
-        auto p_input_setting = &Settings()->input_setting;
+        auto p_profile = AlphaRing::Global::MCC::Profile();
+        auto p_data = &p_profile->profiles[index];
+        const char* items[] = {"Controller 1", "Controller 2", "Controller 3", "Controller 4", "NONE"};
 
-        if (ImGui::BeginMenuBar()) {
-            if (ImGui::MenuItem(p_profile_setting->b_override ? "Disable Splitscreen" : "Enable Splitscreen",
-                                nullptr, &p_profile_setting->b_override)) {
-                p_input_setting->override_input = p_profile_setting->b_override;
-            }
+        ImGui::PushItemWidth(200);
+        sprintf(buffer, "%ls", p_data->name);
+        if (ImGui::InputText("Name", buffer, sizeof(buffer)))
+            wsprintfW(p_data->name, L"%hs", buffer);
+        ImGui::PopItemWidth();
 
-            if (!p_profile_setting->b_override) {
-                ImGui::EndMenuBar();
-                return;
-            }
-
-            ImGui::PushItemWidth(150);
-            int tmp = p_profile_setting->player_count;
-            if (ImGui::InputInt("Players", &tmp) && tmp >= 1 && tmp <= 4) {
-                p_profile_setting->player_count = tmp;
-            }
+        if (index || !p_profile->b_player0_use_km) {
+            ImGui::PushItemWidth(200);
+            ImGui::Combo("Input", &p_data->controller_index, items, IM_ARRAYSIZE(items));
             ImGui::PopItemWidth();
-
-            ImGui::MenuItem("Use Player1's Profile",nullptr, &p_profile_setting->b_use_player0_profile);
-
-            ImGui::EndMenuBar();
         }
 
-        for (int i = 0; i < p_profile_setting->player_count; ++i) {
-            ImGui::Text("Player %d\n", i + 1);
+        auto p_button_names = p_profile->get_button_names();
+        auto p_action_names = p_profile->get_action_names();
 
-            ImGui::Indent();
-
-            if (i == 0) {
-                ImGui::Checkbox("Enable K/M", &p_input_setting->enable_km);
-                ImGui::SameLine();
-                ImGui::Checkbox("Override Profile", &p_profile_setting->b_override_player0);
+        for (int i = 0; i < 66; ++i) {
+            ImGui::PushItemWidth(200);
+            auto p_action_name = p_action_names[i];
+            if (p_action_name == nullptr) {
+                sprintf(buffer, "Button %d", i);
+                p_action_name = buffer;
             }
-
-            if (i || p_profile_setting->b_override_player0) {
-                ImGui::Text("Name:");
-                ImGui::SameLine();
-
-                ImGui::PushID(i << 1 | 0);
-                //todo: Wide Char Input Support
-                String::strcpy(buffer, converter.to_bytes(p_profile_setting->profiles[i].name).c_str());
-                ImGui::PushItemWidth(200);
-                if (ImGui::InputText("", buffer, sizeof(buffer)))
-                    String::wstrcpy(p_profile_setting->profiles[i].name, converter.from_bytes(buffer).c_str());
-                ImGui::PopItemWidth();
-                ImGui::PopID();
-            }
-
-            if (i || !p_input_setting->enable_km) {
-                const char *items[] = {"Controller 1", "Controller 2", "Controller 3", "Controller 4", "NONE"};
-
-                ImGui::Text("Input:");
-                ImGui::SameLine();
-
-                ImGui::PushID(i << 1 | 1);
-                ImGui::PushItemWidth(200);
-                ImGui::Combo("", &p_input_setting->controller_map[i], items, IM_ARRAYSIZE(items));
-                ImGui::PopItemWidth();
-                ImGui::PopID();
-            }
-
-            ImGui::Unindent();
+            int value = p_data->gamepad_mapping[i];
+            if (ImGui::Combo(p_action_name, &value, p_button_names, 15))
+                p_data->gamepad_mapping[i] = value;
+            ImGui::PopItemWidth();
         }
     }
 }

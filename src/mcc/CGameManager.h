@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mcc/splitscreen/CDeviceManager.h"
+#include "CDeviceManager.h"
 
 struct CGameManager {
 public:
@@ -12,6 +12,12 @@ public:
     static __int64 __fastcall retrive_gamepad_mapping(CGameManager* self, __int64 xid);
 
 public:
+    struct NetworkDataHeader {
+        int data_size;
+        int type;
+        // ... data
+    };
+
     struct FunctionTable {
         char pad0[0x110];
 
@@ -29,8 +35,8 @@ public:
         void (__fastcall* set_vibration)(CGameManager* self, DWORD dwUserIndex, XINPUT_VIBRATION *pVibration);
 
         char (__fastcall* un_set_info)(CGameManager* self, wchar_t *a2, __int64 a3);
-        __int64 (__fastcall* network_send1)(CGameManager* self, __int64 network_id, __int64 a3, unsigned int a4, int a5);
-        __int64 (__fastcall* network_send2)(CGameManager* self, __int64 network_id, __int64 a3, unsigned int a4, int a5);
+        __int64 (__fastcall* network_send)(CGameManager* self, __int64 network_id, NetworkDataHeader* data, unsigned int size, int type);
+        __int64 (__fastcall* network_send_direct)(CGameManager* self, __int64 network_id, NetworkDataHeader* data, unsigned int size, int type);
 
         // 0x158 network_recv
         __int64 (__fastcall* network_recv)(CGameManager* self, char* buffer, int len, __int64* network_id, __int64* un);

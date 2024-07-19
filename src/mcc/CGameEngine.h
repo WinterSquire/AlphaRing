@@ -1,7 +1,7 @@
 #pragma once
 
 #include <d3d11.h>
-#include "mcc/splitscreen/CGameManager.h"
+#include "CGameManager.h"
 
 struct CGameData {
     char buffer[0x2BF30];
@@ -16,15 +16,14 @@ struct CGameEngine {
         EventExit = 2,
         EventLoadCheckpoint = 3,
         EventRestart = 4,
+        EventLoadSetting = 5,
         EventNewRound = 12,
         EventTeamChange = 18,
+        EventReloadSetting = 23,
     };
 
     struct Item {
-        struct Data {
-            const char* command; //"MPBOT: " | "HS: "
-            __int64 data;
-        };
+        struct Data {__int64 data[2];};
         struct _SLIST_ENTRY *Next;
         eEventType eventType;
         int one;
@@ -50,12 +49,20 @@ struct CGameEngine {
     bool fine; // 0x450
     char padding[0x9];
 
-    static void Initialize(CGameEngine** ppGameEngine);
+    static bool Initialize(CGameEngine** ppGameEngine);
+
     inline void pause(bool value) {table->set_event(this, value ? EventPause : EventResume, nullptr);}
     inline void load_checkpoint() {table->set_event(this, EventLoadCheckpoint, nullptr);}
     inline void new_round() {table->set_event(this, EventNewRound, nullptr);}
     inline void restart() {table->set_event(this, EventRestart, nullptr);}
     inline void exit() {table->set_event(this, EventExit, nullptr);}
+    inline void reload_setting() {table->set_event(this, EventReloadSetting, nullptr);}
+    inline void load_setting() {table->set_event(this, EventLoadSetting, nullptr);}
+
+    inline void change_team(__int64 xuid, int team) {
+        Item::Data data = {xuid, team};
+        table->set_event(this, EventTeamChange, &data);
+    }
 };
 
 static_assert((sizeof(CGameEngine) == 0x460));

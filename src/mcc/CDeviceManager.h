@@ -1,7 +1,7 @@
 #pragma once
 
-#include <windows.h>
-#include <xinput.h>
+#include <Windows.h>
+#include <Xinput.h>
 
 inline static const char key_map_list[] = {
         '\x1B', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', '\xC0',

@@ -2,9 +2,9 @@
 
 #include "common.h"
 
-#include "mcc/splitscreen/settings.h"
+#include "./mcc.h"
+#include "global/Global.h"
 #include "input/Input.h"
-#include "mcc/splitscreen/Splitscreen.h"
 
 CGameManager* pGameManager;
 CGameManager::FunctionTable CGameManager::ppOriginal;
@@ -23,16 +23,16 @@ bool CGameManager::Initialize(CGameManager* mng) {
 
 void CGameManager::set_vibration(CGameManager *self, DWORD dwUserIndex, XINPUT_VIBRATION *pVibration) {
     CDeviceManager::InputDevice* p_device;
-    auto p_input_setting = &Settings()->input_setting;
+    auto p_profile = AlphaRing::Global::MCC::Profile();
     auto device_manager = DeviceManager();
 
-    if (!p_input_setting->override_input)
+    if (!p_profile->b_override)
         return ppOriginal.set_vibration(self, dwUserIndex, pVibration);
 
-    if (p_input_setting->enable_km && !dwUserIndex)
+    if (!dwUserIndex && p_profile->b_player0_use_km)
         return;
 
-    auto choice = p_input_setting->controller_map[dwUserIndex];
+    auto choice = p_profile->get_controller_index(dwUserIndex);
 
     if (choice == 4 || !(p_device = device_manager->p_input_device[choice]))
         return;
@@ -41,14 +41,14 @@ void CGameManager::set_vibration(CGameManager *self, DWORD dwUserIndex, XINPUT_V
 }
 
 __int64 CGameManager::get_player_profile(CGameManager *self, __int64 xid)  {
-    auto p_setting = &Settings()->profile_setting;
+    auto p_setting = AlphaRing::Global::MCC::Profile();
     if (p_setting->b_override && p_setting->b_use_player0_profile && p_setting->profiles[0].xuid != 0)
         xid = p_setting->profiles[0].xuid;
     return ppOriginal.get_player_profile(self, xid);
 }
 
 char CGameManager::get_xbox_user_id(CGameManager *self, __int64 *pId, wchar_t *pName, int size, int index) {
-    auto p_setting = &Settings()->profile_setting;
+    auto p_setting = AlphaRing::Global::MCC::Profile();
 
     if (p_setting->profiles[0].xuid == 0)
         ppOriginal.get_xbox_user_id(self, &p_setting->profiles[0].xuid, nullptr, 0, 0);
@@ -74,8 +74,7 @@ bool CGameManager::get_key_state(CGameManager *self, DWORD index, input_data_t *
     float delta_time = 0;
     CDeviceManager::InputDevice* p_device;
 
-    auto p_input_setting = &Settings()->input_setting;
-    auto p_profile_setting = &Settings()->profile_setting;
+    auto p_profile = AlphaRing::Global::MCC::Profile();
     auto device_manager = DeviceManager();
     auto p_global = AlphaRing::Global::Global();
 
@@ -86,22 +85,22 @@ bool CGameManager::get_key_state(CGameManager *self, DWORD index, input_data_t *
             return true;
     }
 
-    if (!p_input_setting->override_input)
+    if (!p_profile->b_override)
         return ppOriginal.get_key_state(self, index, p_input);
 
-    if (index >= p_profile_setting->player_count)
+    if (index >= p_profile->player_count)
         return false;
 
-    if (p_input_setting->enable_km && !index) {
+    if (p_profile->b_player0_use_km && !index) {
         p_device = device_manager->p_input_device[4];
         device_manager->table->update_state(device_manager, 0, 0, false);
         QueryPerformanceCounter(&qpc);
         auto v1 = qpc.QuadPart - device_manager->qpc.QuadPart;
         auto v2 = device_manager->qpc.QuadPart - qpc.QuadPart;
-        delta_time = fminf(fmaxf(MCC::Splitscreen::DeltaTime(v1 >= v2 ? v2 : v1) * 1000.0,0.1), 1000.0);
+        delta_time = fminf(fmaxf(MCC::DeltaTime(v1 >= v2 ? v2 : v1) * 1000.0,0.1), 1000.0);
         device_manager->qpc = qpc;
     } else {
-        auto choice = p_input_setting->controller_map[index];
+        auto choice = p_profile->get_controller_index(index);
         if (choice == 4 || (p_device = device_manager->p_input_device[choice]) == nullptr)
             return true;
 
@@ -120,8 +119,15 @@ bool CGameManager::get_key_state(CGameManager *self, DWORD index, input_data_t *
 }
 
 __int64 CGameManager::retrive_gamepad_mapping(CGameManager *self, __int64 xid) {
-    auto p_setting = &Settings()->profile_setting;
-    if (p_setting->b_override && p_setting->b_use_player0_profile && p_setting->profiles[0].xuid != 0)
+    auto p_setting = AlphaRing::Global::MCC::Profile();
+
+    if (!p_setting->b_override)
+        return ppOriginal.retrive_gamepad_mapping(self, xid);
+
+    if (p_setting->b_use_player0_profile && p_setting->profiles[0].xuid != 0)
         xid = p_setting->profiles[0].xuid;
-    return ppOriginal.retrive_gamepad_mapping(self, xid);
+
+    int index = p_setting->get_index(xid);
+
+    return (__int64)p_setting->profiles[index].gamepad_mapping;
 }
