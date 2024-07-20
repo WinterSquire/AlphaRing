@@ -1,12 +1,13 @@
 #pragma once
 
 #include "CDeviceManager.h"
+#include "CUserProfile.h"
 
 struct CGameManager {
 public:
     static bool Initialize(CGameManager* mng);
     static void __fastcall set_vibration(CGameManager* self, DWORD dwUserIndex, XINPUT_VIBRATION *pVibration);
-    static __int64 __fastcall get_player_profile(CGameManager* self, __int64 xid);
+    static CUserProfile* __fastcall get_player_profile(CGameManager* self, __int64 xid);
     static char __fastcall get_xbox_user_id(CGameManager* self, __int64* pId, wchar_t *pName, int size, int index);
     static bool __fastcall get_key_state(CGameManager* self, DWORD index, input_data_t* p_input);
     static __int64 __fastcall retrive_gamepad_mapping(CGameManager* self, __int64 xid);
@@ -22,7 +23,7 @@ public:
         char pad0[0x110];
 
         // 0x110i64 get_player_profile
-        __int64 (__fastcall* get_player_profile)(CGameManager* self, __int64 xid);
+        CUserProfile* (__fastcall* get_player_profile)(CGameManager* self, __int64 xid);
 
         char pad1[0x8];
 

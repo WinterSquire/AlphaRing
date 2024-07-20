@@ -40,13 +40,6 @@ void CGameManager::set_vibration(CGameManager *self, DWORD dwUserIndex, XINPUT_V
     AlphaRing::Input::SetState(p_device->input_user, pVibration);
 }
 
-__int64 CGameManager::get_player_profile(CGameManager *self, __int64 xid)  {
-    auto p_setting = AlphaRing::Global::MCC::Profile();
-    if (p_setting->b_override && p_setting->b_use_player0_profile && p_setting->profiles[0].xuid != 0)
-        xid = p_setting->profiles[0].xuid;
-    return ppOriginal.get_player_profile(self, xid);
-}
-
 char CGameManager::get_xbox_user_id(CGameManager *self, __int64 *pId, wchar_t *pName, int size, int index) {
     auto p_setting = AlphaRing::Global::MCC::Profile();
 
@@ -114,6 +107,17 @@ bool CGameManager::get_key_state(CGameManager *self, DWORD index, input_data_t *
     p_device
             ->p_method_table
             ->check(p_device);
+
+    return result;
+}
+
+CUserProfile* CGameManager::get_player_profile(CGameManager *self, __int64 xid)  {
+    auto p_setting = AlphaRing::Global::MCC::Profile();
+
+    if (p_setting->b_override && p_setting->b_use_player0_profile && p_setting->profiles[0].xuid != 0)
+        xid = p_setting->profiles[0].xuid;
+
+    auto result = ppOriginal.get_player_profile(self, xid);
 
     return result;
 }
