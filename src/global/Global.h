@@ -1,5 +1,9 @@
 #pragma once
 
+#include "mcc/CGameManager.h"
+#include "mcc/CGamepadMapping.h"
+#include "mcc/CUserProfile.h"
+
 #define DefGlobal(name) \
     struct name##_t;    \
     extern name##_t s_##name; \
@@ -47,14 +51,19 @@ namespace AlphaRing::Global {
                 __int64 xuid;
                 __int64 id;
                 wchar_t name[1024];
-                __int8 gamepad_mapping[66];
+                CGamepadMapping mapping;
+                CUserProfile profile;
             } profiles[4];
 
             Profile_t();
 
-            __int64 get_xuid(int index) const {
-                if (!index && !b_override_player0)
+            __int64 get_xuid(int index) {
+                if (!index && !b_override_player0) {
+                    if (profiles[0].xuid == 0)
+                        CGameManager::get_xbox_user_id(GameManager(), &profiles[0].xuid, nullptr, 0, 0);
                     return profiles[0].xuid;
+                }
+
                 if (!b_override || index >= player_count)
                     return 0;
                 return profiles[index].id;
@@ -68,8 +77,6 @@ namespace AlphaRing::Global {
             }
 
             inline int get_controller_index(int index) const {return profiles[index].controller_index;}
-            static const char** get_action_names();
-            static const char** get_button_names();
         };
     }
 }

@@ -114,15 +114,13 @@ bool CGameManager::get_key_state(CGameManager *self, DWORD index, input_data_t *
 CUserProfile* CGameManager::get_player_profile(CGameManager *self, __int64 xid)  {
     auto p_setting = AlphaRing::Global::MCC::Profile();
 
-    if (p_setting->b_override && p_setting->b_use_player0_profile && p_setting->profiles[0].xuid != 0)
-        xid = p_setting->profiles[0].xuid;
-
-    auto result = ppOriginal.get_player_profile(self, xid);
-
-    return result;
+    if (get_xuid(0) == xid && !p_setting->b_override_player0)
+        return ppOriginal.get_player_profile(self, xid);
+    else
+        return &p_setting->profiles[p_setting->get_index(xid)].profile;
 }
 
-__int64 CGameManager::retrive_gamepad_mapping(CGameManager *self, __int64 xid) {
+CGamepadMapping* CGameManager::retrive_gamepad_mapping(CGameManager *self, __int64 xid) {
     auto p_setting = AlphaRing::Global::MCC::Profile();
 
     if (!p_setting->b_override)
@@ -133,5 +131,11 @@ __int64 CGameManager::retrive_gamepad_mapping(CGameManager *self, __int64 xid) {
 
     int index = p_setting->get_index(xid);
 
-    return (__int64)p_setting->profiles[index].gamepad_mapping;
+    return &p_setting->profiles[index].mapping;
+}
+
+__int64 CGameManager::get_xuid(int index) {
+    __int64 result;
+    get_xbox_user_id(pGameManager, &result, nullptr, 0, index);
+    return result;
 }

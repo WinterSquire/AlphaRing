@@ -65,9 +65,7 @@ struct CUserProfile {
     int PlayerModelTertiaryColor; // 0xA0
     int SpartanPose; // 0xA4
     int ElitePose; // 0xA8
-
-    char buffer[0x100]; // 0xAC
-
+    struct Skin_t { int object; int skin; } Skins[32]; // 0xAC
     wchar_t ServiceTag[4]; // 0x1AC
     bool OnlineMedalFlasher; // 0x1B4
     bool VerticalLookSensitivity; // 0x1B5
@@ -101,12 +99,21 @@ struct CUserProfile {
     bool ControllerBansheeTrickButtonsSwapped; // 0x1DD
     bool ColorCorrection; // 0x1DE
     bool EnemyPlayerNameColor; // 0x1DF
-    bool GameEngineTimer; // 0x1E0
+    int GameEngineTimer; // 0x1E0
 
-    char buffer2[0x12F]; // 0x1E1
+    struct LoadoutSlot_t {
+        int TacticalPackageIndex;
+        int SupportUpgradeIndex;
+        int PrimaryWeaponIndex;
+        int SecondaryWeaponIndex;
+        int PrimaryWeaponVariantIndex;
+        int SecondaryWeaponVariantIndex;
+        int EquipmentIndex;
+        int GrenadeIndex;
+        wchar_t Name[14];
+    } LoadoutSlots[5]; // 0x1E4
 
-    bool GameSpecific; // 0x310
-    char un2[0x100 - 1]; // 0x311
+    char GameSpecific[0x100]; // 0x310
     float MouseSensitivity; // 0x410
     bool MouseSmoothing; // 0x414
     bool MouseAcceleration; // 0x415
@@ -117,24 +124,31 @@ struct CUserProfile {
     int MouseAccelerationExp; // 0x424
     int KeyboardMouseButtonPreset; //? 0x428
 
-    char buffer3[0x630]; // 0x42C
+    struct CustomKeyboardMouseMappingV2_t {
+        int AbstractButton;
+        int VirtualKeyCodes[5];
+    } CustomKeyboardMouseMappingV2[66]; // 0x42C
 
-    int MasterVolume; // 0xA5C
-    int MusicVolume; // 0xA60
-    int SfxVolume; // 0xA64
+    float MasterVolume; // [0.0, 1.0] 0xA5C
+    float MusicVolume; // [0.0, 1.0] 0xA60
+    float SfxVolume; // [0.0, 1.0] 0xA64
 
-    char buffer4[0xC]; // 0xA68
+    char buffer4[0xC]; // 0xA68 new skins?
 
     float Brightness; // 0xA74
 
-    char buffer5[0x3C]; // 0xA78
+    struct WeaponDisplayOffset_T {
+        float x,y,z;
+    } WeaponDisplayOffset[5]; // 0xA78
 
     int ColorBlindMode; // 0xAB4
     int ColorBlindStrength; // 0xAB8
     int ColorBlindBrightness; // 0xABC
     int ColorBlindContrast; // 0xAC0
     int RemasteredHUDSetting; // 0xAC4
-    int HUDScale; // 0xAC8
+    float HUDScale; // 0xAC8
+
+    void ImGuiContext();
 };
 
 static_assert(sizeof(CUserProfile) == 0xACC);

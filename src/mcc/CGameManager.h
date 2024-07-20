@@ -2,6 +2,7 @@
 
 #include "CDeviceManager.h"
 #include "CUserProfile.h"
+#include "CGamepadMapping.h"
 
 struct CGameManager {
 public:
@@ -10,7 +11,9 @@ public:
     static CUserProfile* __fastcall get_player_profile(CGameManager* self, __int64 xid);
     static char __fastcall get_xbox_user_id(CGameManager* self, __int64* pId, wchar_t *pName, int size, int index);
     static bool __fastcall get_key_state(CGameManager* self, DWORD index, input_data_t* p_input);
-    static __int64 __fastcall retrive_gamepad_mapping(CGameManager* self, __int64 xid);
+    static CGamepadMapping* __fastcall retrive_gamepad_mapping(CGameManager* self, __int64 xid);
+
+    static __int64 get_xuid(int index);
 
 public:
     struct NetworkDataHeader {
@@ -50,7 +53,7 @@ public:
         char pad5[0xD8];
 
         // 0x3A0i64 retrieve gamepad mapping
-        __int64 (__fastcall* retrive_gamepad_mapping)(CGameManager* self,  __int64 xid);
+        CGamepadMapping* (__fastcall* retrive_gamepad_mapping)(CGameManager* self,  __int64 xid);
     };
 
     static FunctionTable ppOriginal;
