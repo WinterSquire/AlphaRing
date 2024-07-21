@@ -70,7 +70,7 @@ namespace AlphaRing::Global {
             }
 
             int get_index(__int64 xuid) const {
-                for (int i = 0; i < 4; ++i)
+                for (int i = 1; i < 4; ++i)
                     if (xuid == profiles[i].id)
                         return i;
                 return 0;

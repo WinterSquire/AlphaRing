@@ -11,7 +11,7 @@ static std::array<const char*, 16> button_names {
 
 static std::array<const char*, 66> action_names {
         "Jump",
-        "Switch Grenades",
+        "Switch Grenades 1",
         "Action",
         "Reload Right Weapon",
         "Change Weapon",
@@ -24,12 +24,12 @@ static std::array<const char*, 66> action_names {
         nullptr,
         nullptr,
         "Swap/Reload Left Weapon",
-        nullptr,
+        "Sprint",
         "Banshee Bomb",
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
+        "Player Move Forward", // H1A
+        "Player Move Backward", // H1A
+        "Player Move Left", // H1A
+        "Player Move Right", // H1A
         "Multiplayer Scoreboard",
         "Vehicle Function 2",
         "Vehicle Function 3",
@@ -62,16 +62,16 @@ static std::array<const char*, 66> action_names {
         "Use Left Weapon",
         "Theater Zoom",
         "Toggle Rotation Axes",
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
+        "Duplicate",
+        "Lock",
+        "Reset",
+        "Select Next Grenades 2",
+        "Select Previous Grenades 2",
+        "Special Action",
+        "Open Loadouts Menu",
+        "Toggle Display Waypoint Markers",
+        "Toggle Display Waypoint Markers Alternative",
+        "Push to Talk", // not sure
         "Vehicle Ascend",
         "Vehicle Descend",
         "Select Previous Grenades",
