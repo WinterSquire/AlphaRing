@@ -1,7 +1,6 @@
 #pragma once
 
-#include <Windows.h>
-#include <Xinput.h>
+#include "CInputDevice.h"
 
 inline static const char key_map_list[] = {
         '\x1B', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', '\xC0',
@@ -50,26 +49,9 @@ public:
         void (__fastcall* update_state)(CDeviceManager* self, __int64 a2, __int64 a3, bool a4);
     };
 
-    struct InputDevice {
-    public:
-        struct method_table_t {
-            char un[0x38];
-            __int64 (__fastcall *set_state)(InputDevice*, float, void*);
-            void (__fastcall *check)(InputDevice*);
-        };
-    public:
-        method_table_t* p_method_table;
-        char un0[2040];
-        bool enable_mouse;
-        char un[0x7];
-        int input_user;// 0x808
-        char un1[0x110];
-        XINPUT_STATE state; // 0x91C
-    };
-
     static FunctionTable ppOriginal;
     FunctionTable* table;
-    InputDevice* p_input_device[5];
+    CInputDevice* p_input_device[5];
     char buffer[0x90];
     HWND hwnd; // 0xC0
     LARGE_INTEGER qpc; // 0xC8

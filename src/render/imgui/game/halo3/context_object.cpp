@@ -81,6 +81,7 @@ Object:
 )";
     const char* unit_format = R"(
 Unit:
+    Flag: %hX
     Actor: %X
     Player: %X
     Aim Target: %X
@@ -148,7 +149,7 @@ Unit:
     if (p_unit == nullptr) return;
 
     sprintf(buffer, unit_format,
-            p_unit->actor_index, p_unit->player_index,
+            p_unit->biped_flags, p_unit->actor_index, p_unit->player_index,
             p_unit->aim_target, p_unit->bump_target, p_unit->bump_close
     );
 

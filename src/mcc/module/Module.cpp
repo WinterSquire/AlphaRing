@@ -177,7 +177,7 @@ namespace MCC::Module {
         ImGui::Combo("Player", &player, "Player 0\0Player 1\0Player 2\0Player 3");
         ImGui::Combo("Team", &team, "Red\0Blue\0Green\0Orange\0Purple\0Gold\0Brown\0Pink");
         if (ImGui::Button("Change Team")) {
-            auto xuid = AlphaRing::Global::MCC::Profile()->get_xuid(player);
+            auto xuid = CGameManager::get_xuid(player);
             if (xuid != 0) p_engine->change_team(xuid, team);
         }
     }

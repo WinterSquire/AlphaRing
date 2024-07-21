@@ -6,14 +6,27 @@
 
 struct CGameManager {
 public:
+    struct Profile_t {
+        __int64 id;
+        int controller_index;
+        wchar_t name[1024];
+        CGamepadMapping mapping;
+        CUserProfile profile;
+    };
+
+public:
     static bool Initialize(CGameManager* mng);
+    static __int64 get_xuid(int index);
+    static int get_index(__int64 xuid);
+    static Profile_t* get_profile(int index);
+    static CInputDevice* get_controller(int index);
+
+private:
     static void __fastcall set_vibration(CGameManager* self, DWORD dwUserIndex, XINPUT_VIBRATION *pVibration);
     static CUserProfile* __fastcall get_player_profile(CGameManager* self, __int64 xid);
     static char __fastcall get_xbox_user_id(CGameManager* self, __int64* pId, wchar_t *pName, int size, int index);
     static bool __fastcall get_key_state(CGameManager* self, DWORD index, input_data_t* p_input);
     static CGamepadMapping* __fastcall retrive_gamepad_mapping(CGameManager* self, __int64 xid);
-
-    static __int64 get_xuid(int index);
 
 public:
     struct NetworkDataHeader {
@@ -24,6 +37,8 @@ public:
 
     struct FunctionTable {
         char pad0[0x110];
+
+        // 0x20 game_exit(self, __int64 reason, const char* reason)
 
         // 0x110i64 get_player_profile
         CUserProfile* (__fastcall* get_player_profile)(CGameManager* self, __int64 xid);

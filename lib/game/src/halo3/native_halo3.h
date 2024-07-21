@@ -222,11 +222,29 @@ DefNative(Halo3) {
 
     // ================================ Objects ================================
     DefEntryEntity(Objects, OFFSET_HALO3_V_ENTRY_OBJECT) {
+        enum ePhysicsFlags : unsigned int {
+            _object_is_early_mover_bit = 0x1,
+            _object_has_proxy_bit =  0x4000,
+            _object_connected_to_physics_bit = 0x80,
+            _object_is_early_mover_child_bit = 0x10,
+        };
+
         __int64 v0;
         __int64 v1;
         struct objects_t {
+            enum eObjectFlags : unsigned int {
+                _object_hidden_bit = 0x1,
+                _object_in_limbo_bit = 0x80,
+                _object_connected_to_map_bit = 0x100,
+                _object_has_attached_looping_sounds_bit = 0x20,
+                _object_has_attached_lights_bit = 0x10,
+                _object_has_unattached_lights_bit = 0x40,
+                _object_has_override_bit = 0x2000000,
+            };
+
             Datum datum;//0x0
-            __int8 v0[8];
+            eObjectFlags object_flags; //0x4
+            int v0;
             INDEX next_object_index;//0xC
             INDEX parent_object_index;//0x10
             __int8 v1[0x3C];
@@ -238,7 +256,7 @@ DefNative(Halo3) {
             __int8 v3[0x6];
             __int8 type;//0x96
             __int8 v4[0x11];
-            unsigned int physics_flags;//0xA8
+            ePhysicsFlags physics_flags;//0xA8
             __int8 v5[0xA];
             __int8 variant_index;//0xB6
             __int8 v6[0x15];
@@ -251,9 +269,9 @@ DefNative(Halo3) {
 
             /*
                 int flags;
-                int simulation_flags;
+                int simulation_flags; 0xD2
                 int gamestate_index;
-                int havok_comonent_index;
+                int havok_comonent_index; 0x9C
                 int next_recycling_group_member;
                 int object_identifier;
                 int scenario_datum_index;
@@ -274,6 +292,10 @@ DefNative(Halo3) {
         } *address;
 
         struct units_t : objects_t {
+            enum eUnitFlags {
+                _biped_setting_relaxation_pose_bit = 0x200,
+            };
+
             __int8 v9[0x54];
             INDEX actor_index;//0x168
             __int8 v10[0x4];
@@ -286,9 +308,13 @@ DefNative(Halo3) {
             float camo_time;
             __int64 un;
             float crouch_progress; // [0, 1.0]
-            __int8 v13[0x128];
-            INDEX bump_target;
+            __int8 v13[0xE4];
+            __int16 biped_flags;
+            __int8 v14[0x42];
+            INDEX bump_target; // 1188
             __int8 bump_close;
+
+            // 0x460 __int16 biped.flags
 
             inline bool FlashLight(){return unit_flags & 0x8000000u;}
             inline void FlashLight(bool b){if(b) unit_flags |= 0x8000000u;else damage_flags &= ~0x8000000u;}
