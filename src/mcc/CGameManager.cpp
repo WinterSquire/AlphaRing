@@ -8,7 +8,7 @@
 
 static struct ProfileContainer_t {CGameManager::Profile_t profiles[4]; ProfileContainer_t();} container;
 
-inline CGameManager::Profile_t* CGameManager::get_profile(int index) {return container.profiles + index;}
+CGameManager::Profile_t* CGameManager::get_profile(int index) {return container.profiles + index;}
 
 ProfileContainer_t::ProfileContainer_t() {
     __int64 guid[2];
