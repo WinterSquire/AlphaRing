@@ -16,5 +16,21 @@
                default="false"
         />
 
+        <patch name="Jump"
+               desc=""
+               offset="21922B"
+               aob="90 90"
+               default="false"
+        />
+
+        <patch name="Print"
+               desc="Enable Logging"
+               offset="46A8E09"
+               aob="01"
+               default="false"
+        />
+
+
+
     </module>
 </root>

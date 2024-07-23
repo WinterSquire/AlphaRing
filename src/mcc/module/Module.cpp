@@ -6,6 +6,7 @@
 
 #include "common.h"
 #include "offset_mcc.h"
+#include "mcc/CGameManager.h"
 
 namespace MCC::Module {
     DefDetourFunction(void, __fastcall, module_load, module_info_t* info, int a2, __int64 a3) {
@@ -169,6 +170,16 @@ namespace MCC::Module {
         if (ImGui::Button("Exit Game")) p_engine->exit();
         if (ImGui::Button("Reload Setting")) p_engine->reload_setting();
         if (ImGui::Button("Load Setting")) p_engine->load_setting();
+
+#pragma region HaloScript
+        static char halo_script[1024] = {0};
+
+        if (ImGui::InputTextMultiline("HaloScript", halo_script, sizeof(halo_script)))
+            halo_script[1023] = '\0';
+
+        if (ImGui::Button("Execute HaloScript"))
+            p_engine->execute_command(halo_script);
+#pragma endregion
 
         ImGui::Separator();
 

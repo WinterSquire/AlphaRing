@@ -37,6 +37,8 @@ bool CGameManager::Initialize(CGameManager* mng) {
         {pGameManager->table->get_xbox_user_id, get_xbox_user_id, (void**)&ppOriginal.get_xbox_user_id},
         {pGameManager->table->set_vibration, set_vibration, (void**)&ppOriginal.set_vibration},
         {pGameManager->table->retrive_gamepad_mapping, retrive_gamepad_mapping, (void**)&ppOriginal.retrive_gamepad_mapping},
+        {pGameManager->table->set_state, set_state, (void**)&ppOriginal.set_state},
+        {pGameManager->table->game_restart, game_restart, (void**)&ppOriginal.game_restart},
     });
 }
 
@@ -68,4 +70,18 @@ int CGameManager::get_index(__int64 xuid) {
         if (container.profiles[i].id == xuid)
             return i;
     return 0;
+}
+
+void CGameManager::set_state(CGameManager *self, eState state) {
+    auto state_name = "Unknown";
+    if (state == Exiting)
+        state_name = "Exiting";
+    LOG_INFO("Set Game State[{}]: {}", state, state_name);
+    return ppOriginal.set_state(self, state);
+}
+
+void *CGameManager::game_restart(CGameManager *self, int type, const char *reason) {
+    auto final_reason = reason ? reason : "NoReason";
+    LOG_INFO("Game Restart[{}]: {}", type, final_reason);
+    return ppOriginal.game_restart(self, type, reason);
 }

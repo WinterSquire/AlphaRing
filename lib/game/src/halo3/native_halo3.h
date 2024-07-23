@@ -157,6 +157,17 @@ DefNative(Halo3) {
 
 
     // ================================ Global ================================
+    DefPtr(Log, 0xA48170) {
+        struct log_t {
+            char title[0x100];
+            char content[0x200];
+        };
+
+        log_t log[0x20];
+
+        static_assert((sizeof(log_t) == 0x300));
+    };
+
     DefEntry(PhysicsConstant, OFFSET_HALO3_V_ENTRY_PHYSICS_CONSTANTS) {
         float gravity;
         float v0;

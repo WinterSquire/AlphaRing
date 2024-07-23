@@ -1,7 +1,9 @@
 #pragma once
 
 #include <d3d11.h>
-#include "CGameManager.h"
+#include "common.h"
+
+struct CGameManager;
 
 struct CGameData {
     char buffer[0x2BF30];
@@ -35,8 +37,8 @@ struct CGameEngine {
         __int64 (__fastcall* render_init)(CGameEngine* self, ID3D11Device* pDevice, ID3D11DeviceContext* pContext, IDXGISwapChain* pSwapchain, void* un);
         HANDLE (__fastcall* game_start)(CGameEngine* self, CGameManager* pGameManager, CGameData *pGameData);
         PSLIST_ENTRY (__fastcall* set_event)(CGameEngine* self, int event_type, Item::Data *data);
-        void* nop1[5]; // todo: find these functions in other titles
-        PSLIST_ENTRY (__fastcall* set_name)(CGameEngine* self, const char *a2);
+        void* nop1[5];
+        PSLIST_ENTRY (__fastcall* execute_command)(CGameEngine* self, const char *command);
         void* nop2;
     };
 
@@ -62,6 +64,12 @@ struct CGameEngine {
     inline void change_team(__int64 xuid, int team) {
         Item::Data data = {xuid, team};
         table->set_event(this, EventTeamChange, &data);
+    }
+
+    inline void execute_command(const char* command) {
+        char buffer[0x1000];
+        sprintf_s(buffer, "HS: %s", command);
+        table->execute_command(this, buffer);
     }
 };
 

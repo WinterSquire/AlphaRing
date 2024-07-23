@@ -2,6 +2,8 @@
 
 #include <offset_mcc.h>
 
+#include "mcc/CGameManager.h"
+
 #include "mcc/module/Module.h"
 #include "mcc/network/Network.h"
 #include "mcc/splitscreen/Splitscreen.h"

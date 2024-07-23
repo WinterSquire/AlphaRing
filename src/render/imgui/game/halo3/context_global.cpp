@@ -24,8 +24,7 @@ void CHalo3Context::context_global()  {
             speed = p_time->speed;
         }
 
-        sprintf(buffer, "Game Time: %d\nTick Per Second: %hd\nSpeed: %.2f", game_time, tick_per_second, speed);
-        ImGui::Text(buffer);
+        ImGui::Text("Game Time: %d\nTick Per Second: %hd\nSpeed: %.2f", game_time, tick_per_second, speed);
 
         auto map = Halo3::Native::Map();
 
@@ -52,6 +51,13 @@ void CHalo3Context::context_global()  {
             }
 
             ImGui::EndListBox();
+        }
+
+        auto p_log = Halo3::Native::Log();
+        for (int i = 0; i < 0x20; ++i) {
+            auto log = p_log->log + i;
+            if (log->title[0] == 0) break;
+            ImGui::Text("%s %s", log->title, log->content);
         }
     }
     ImGui::End();
