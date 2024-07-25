@@ -21,11 +21,11 @@ void CGameManager::set_vibration(CGameManager *self, DWORD dwUserIndex, XINPUT_V
     AlphaRing::Input::SetState(p_device->input_user, pVibration);
 }
 
-char CGameManager::get_xbox_user_id(CGameManager *self, __int64 *pId, wchar_t *pName, int size, int index) {
+bool CGameManager::get_xbox_user_id(CGameManager *self, __int64 *pId, wchar_t *pName, int size, int index) {
     auto p_setting = AlphaRing::Global::MCC::Splitscreen();
     auto p_profile = get_profile(index);
 
-    if (!p_setting->b_override || (!index && !p_setting->b_override_profile))
+    if (!p_setting->b_override || !index)
         return ppOriginal.get_xbox_user_id(self, pId, pName, size, index);
 
     if (index >= p_setting->player_count)

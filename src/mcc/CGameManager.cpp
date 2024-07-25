@@ -39,16 +39,14 @@ bool CGameManager::Initialize(CGameManager* mng) {
         {pGameManager->table->retrive_gamepad_mapping, retrive_gamepad_mapping, (void**)&ppOriginal.retrive_gamepad_mapping},
         {pGameManager->table->set_state, set_state, (void**)&ppOriginal.set_state},
         {pGameManager->table->game_restart, game_restart, (void**)&ppOriginal.game_restart},
+        {pGameManager->table->game_setup, game_setup, (void**)&ppOriginal.game_setup},
     });
 }
 
-// b_override = true;
-
 __int64 CGameManager::get_xuid(int index) {
     __int64 result;
-    auto setting = AlphaRing::Global::MCC::Splitscreen();
 
-    if (index || setting->b_override_profile)
+    if (index)
         return container.profiles[index].id;
     else
         return pGameManager->ppOriginal.get_xbox_user_id(pGameManager, &result, nullptr, 0, index) ? result : 0;
@@ -84,4 +82,9 @@ void *CGameManager::game_restart(CGameManager *self, int type, const char *reaso
     auto final_reason = reason ? reason : "NoReason";
     LOG_INFO("Game Restart[{}]: {}", type, final_reason);
     return ppOriginal.game_restart(self, type, reason);
+}
+
+char __fastcall CGameManager::game_setup(CGameManager* self, void* a2) {
+//    LOG_INFO("game setup"); player init/add
+    return ppOriginal.game_setup(self, a2);
 }

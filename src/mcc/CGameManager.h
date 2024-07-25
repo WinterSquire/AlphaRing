@@ -38,12 +38,13 @@
     private:
         static void __fastcall set_vibration(CGameManager* self, DWORD dwUserIndex, XINPUT_VIBRATION *pVibration);
         static CUserProfile* __fastcall get_player_profile(CGameManager* self, __int64 xid);
-        static char __fastcall get_xbox_user_id(CGameManager* self, __int64* pId, wchar_t *pName, int size, int index);
+        static bool __fastcall get_xbox_user_id(CGameManager* self, __int64* pId, wchar_t *pName, int size, int index);
         static bool __fastcall get_key_state(CGameManager* self, DWORD index, input_data_t* p_input);
         static CGamepadMapping* __fastcall retrive_gamepad_mapping(CGameManager* self, __int64 xid);
 
         static void __fastcall set_state(CGameManager* self, eState state);
         static void* __fastcall game_restart(CGameManager* self, int type, const char* reason);
+        static char __fastcall game_setup(CGameManager* self, void* a2);
 
     public:
         struct FunctionTable {
@@ -59,7 +60,7 @@
             char pad0[0xD0];
 
             // 0x100
-            char (__fastcall* sub_1401E51AC)(CGameManager* self, void* a2);
+            char (__fastcall* game_setup)(CGameManager* self, void* a2);
             __int64 (__fastcall* sub_1401E78FC)(CGameManager* self, void* a2);
             CUserProfile* (__fastcall* get_player_profile)(CGameManager* self, __int64 xid); // 0x110
 

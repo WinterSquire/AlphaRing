@@ -64,6 +64,7 @@ DefNative(Halo3) {
             } data;
             __int8 un1[0x280];
         } data[MAX_LOCAL_PLAYERS];
+        static_assert(sizeof(raw_data_t) == 0x3D0);
     };
 
     DefEntry(TextureCamera, OFFSET_HALO3_V_ENTRY_TEXTURE_CAMERA) {

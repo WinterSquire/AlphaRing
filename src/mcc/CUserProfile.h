@@ -118,10 +118,10 @@ struct CUserProfile {
     bool MouseSmoothing; // 0x414
     bool MouseAcceleration; // 0x415
     __int16 PixelPerfectHudScale; // 0x416
-    int MouseAccelerationMinRate; // 0x418
-    int MouseAccelerationMaxAccel; // 0x41C
-    int MouseAccelerationScale; // 0x420
-    int MouseAccelerationExp; // 0x424
+    float MouseAccelerationMinRate; // 0x418
+    float MouseAccelerationMaxAccel; // 0x41C
+    float MouseAccelerationScale; // 0x420
+    float MouseAccelerationExp; // 0x424
     int KeyboardMouseButtonPreset; //? 0x428
 
     struct CustomKeyboardMouseMappingV2_t {

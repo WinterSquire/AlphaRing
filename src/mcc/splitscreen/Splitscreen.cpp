@@ -88,21 +88,23 @@ namespace MCC::Splitscreen {
         ImGui::PushItemWidth(200);ImGui::Combo("Input", &p_profile->controller_index, items, IM_ARRAYSIZE(items));ImGui::PopItemWidth();
         ImGui::EndDisabled();
 
-        ImGui::BeginDisabled(!p_setting->b_override_profile);
+        bool is_disabled = (!index && !p_setting->b_override_profile) || (index && p_setting->b_use_player0_profile);
 
         if (ImGui::CollapsingHeader("Gamepad Mapping")) {
             ImGui::Indent();
+            ImGui::BeginDisabled(is_disabled);
             p_profile->mapping.ImGuiContext();
+            ImGui::EndDisabled();
             ImGui::Unindent();
         }
 
         if (ImGui::CollapsingHeader("Profile")) {
             ImGui::Indent();
+            ImGui::BeginDisabled(is_disabled);
             p_profile->profile.ImGuiContext();
+            ImGui::EndDisabled();
             ImGui::Unindent();
         }
-
-        ImGui::EndDisabled();
     }
 
     void RealContext() {
@@ -117,8 +119,15 @@ namespace MCC::Splitscreen {
                 ImGui::MenuItem("Override profile", nullptr, &p_setting->b_override_profile);
                 ImGui::EndMenu();
             }
-            ImGui::PushItemWidth(200);ImGui::InputInt("Players", &p_setting->player_count);ImGui::PopItemWidth();
+#pragma region player count
+            ImGui::PushItemWidth(200);
+            int count = p_setting->player_count;
+            if (ImGui::InputInt("Players", &count) && count >= 1 && count <=4) {
+                p_setting->player_count = count;
+            }
+            ImGui::PopItemWidth();
             ImGui::EndMenuBar();
+#pragma endregion
         }
 
         if (ImGui::BeginTabBar("Players")) {

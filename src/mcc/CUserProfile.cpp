@@ -150,6 +150,22 @@ void CUserProfile::ImGuiContext() {
 
     // CustomKeyboardMouseMappingV2 is ignored as it's used only for player0
 
+    result |= ImGui::InputFloat("MouseSensitivity", &MouseSensitivity);
+    result |= ImGui::Checkbox("MouseSmoothing", &MouseSmoothing);
+    result |= ImGui::Checkbox("MouseAcceleration", &MouseAcceleration);
+
+    int tmp = PixelPerfectHudScale;
+    if (ImGui::InputInt("PixelPerfectHudScale", &tmp) && tmp >= 0 && tmp <= 0xFFFF) {
+        PixelPerfectHudScale = static_cast<__int16>(tmp);
+        result = true;
+    }
+
+    result |= ImGui::InputFloat("MouseAccelerationMinRate", &MouseAccelerationMinRate);
+    result |= ImGui::InputFloat("MouseAccelerationMaxAccel", &MouseAccelerationMaxAccel);
+    result |= ImGui::InputFloat("MouseAccelerationScale", &MouseAccelerationScale);
+    result |= ImGui::InputFloat("MouseAccelerationExp", &MouseAccelerationExp);
+    result |= ImGui::InputInt("KeyboardMouseButtonPreset", &KeyboardMouseButtonPreset);
+
     result |= ImGui::InputFloat("MasterVolume", &MasterVolume);
     result |= ImGui::InputFloat("MusicVolume", &MusicVolume);
     result |= ImGui::InputFloat("SfxVolume", &SfxVolume);

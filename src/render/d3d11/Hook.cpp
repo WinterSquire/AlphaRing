@@ -23,6 +23,15 @@ namespace AlphaRing::Render::D3d11 {
                 graphics.pDevice->CreateRasterizerState(&r_desc, &r_state);
                 p_context->RSSetState(r_state);
             }
+#ifdef NEW_WIREFRAME
+            D3D11_PRIMITIVE_TOPOLOGY topology;
+            p_context->IAGetPrimitiveTopology(&topology);
+
+            p_context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+            ppOriginal_DrawIndexed(p_context, IndexCount, StartIndexLocation, BaseVertexLocation);
+
+            p_context->IASetPrimitiveTopology(topology);
+#endif
         }
 
         return ppOriginal_DrawIndexed(p_context, IndexCount, StartIndexLocation, BaseVertexLocation);

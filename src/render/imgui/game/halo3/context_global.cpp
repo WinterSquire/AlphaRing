@@ -3,6 +3,10 @@
 static bool show_context = false;
 static const char* map_types[4] = {"", "Campaign", "Multiplayer", "MainMenu"};
 
+namespace Halo3::Entry::Simulation {
+    void ImGuiContext();
+}
+
 void CHalo3Context::context_global()  {
     if (ImGui::BeginMainMenuBar()) {
         ImGui::MenuItem("Global", nullptr, &show_context);
@@ -18,13 +22,11 @@ void CHalo3Context::context_global()  {
         __int32 game_time = 0;
         float speed = 0;
 
-        if (p_time != nullptr) {
-            tick_per_second = p_time->tick_per_second;
-            game_time = p_time->game_time;
-            speed = p_time->speed;
-        }
+        if (p_time == nullptr) return;
 
-        ImGui::Text("Game Time: %d\nTick Per Second: %hd\nSpeed: %.2f", game_time, tick_per_second, speed);
+        ImGui::Text("Game Time: %d\nTick Per Second: %hd\nSpeed: %.2f", p_time->game_time, p_time->tick_per_second, p_time->speed);
+
+        Halo3::Entry::Simulation::ImGuiContext();
 
         auto map = Halo3::Native::Map();
 

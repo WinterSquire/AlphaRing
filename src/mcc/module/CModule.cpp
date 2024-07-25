@@ -50,18 +50,33 @@ static struct {
         {"splitscreen_patch3", "", OFFSET_HALO2_PF_PLAYER_COUNT2, "\x04", true},
 }}, {Halo3EntrySet(), {
         {"splitscreen_patch1", "", OFFSET_HALO3_PF_COOP_JOIN, "\x31\xC0\xC3\x90", true},
+        {"splitscreen_patch2", "remove black bar", 0x8AD160, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x3F", true},
+        {"splitscreen_patch3", "remove black bar", 0x8AD174, "\x00\x00\x00\x00\x00\x00\x00\x3F\x00\x00\x80\x3F", true},
+        {"splitscreen_patch4", "remove black bar", 0x8AD1B0, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x3F", true},
 }}, {nullptr, {
         {"splitscreen_patch1", "", OFFSET_HALO4_PF_COOP_JOIN, "\x31\xC0\xC3\x90", true},
         {"splitscreen_patch2", "", OFFSET_HALO4_PF_COOP_REJOIN, "\xEB", true},
         {"splitscreen_patch3", "", OFFSET_HALO4_PF_COOP_PLAYER_LIMIT, "\x90\x90\x90\x90\x90\x90", true},
+        {"splitscreen_patch4", "remove black bar", 0xE84E40, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x3F", false},
+        {"splitscreen_patch5", "remove black bar", 0xE84E54, "\x00\x00\x00\x00\x00\x00\x00\x3F\x00\x00\x80\x3F", false},
+        {"splitscreen_patch6", "remove black bar", 0xE84E90, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x3F", false},
 }}, {nullptr, {
         {"splitscreen_patch1", "", OFFSET_GROUNDHOG_PF_COOP_JOIN, "\x31\xC0\xC3\x90", true},
         {"splitscreen_patch2", "", OFFSET_GROUNDHOG_PF_REJOIN, "\xEB", true},
+        {"splitscreen_patch3", "remove black bar", 0xE76560, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x3F", false},
+        {"splitscreen_patch4", "remove black bar", 0xE76574, "\x00\x00\x00\x00\x00\x00\x00\x3F\x00\x00\x80\x3F", false},
+        {"splitscreen_patch5", "remove black bar", 0xE765B0, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x3F", false},
 }}, {nullptr, {
         {"splitscreen_patch1", "", OFFSET_HALO3ODST_PF_COOP_JOIN, "\x31\xC0\xC3\x90", true},
+        {"splitscreen_patch2", "remove black bar", 0x8F1FC0, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x3F", true},
+        {"splitscreen_patch3", "remove black bar", 0x8F1FD4, "\x00\x00\x00\x00\x00\x00\x00\x3F\x00\x00\x80\x3F", true},
+        {"splitscreen_patch4", "remove black bar", 0x8F2010, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x3F", true},
 }}, {nullptr, {
         {"splitscreen_patch1", "", OFFSET_HALOREACH_PF_COOP_JOIN, "\x31\xC0\xC3\x90", true},
         {"splitscreen_patch2", "", OFFSET_HALOREACH_PF_COOP_REJOIN, "\xEB", true},
+        {"splitscreen_patch3", "remove black bar", 0xB43D10, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x3F", false},
+        {"splitscreen_patch4", "remove black bar", 0xB43D24, "\x00\x00\x00\x00\x00\x00\x00\x3F\x00\x00\x80\x3F", false},
+        {"splitscreen_patch5", "remove black bar", 0xB43D60, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x80\x3F", false},
 }}};
 
 static std::unordered_map<std::string, CModule*> map_modules {
