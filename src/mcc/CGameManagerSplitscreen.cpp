@@ -15,7 +15,10 @@ void CGameManager::set_vibration(CGameManager *self, DWORD dwUserIndex, XINPUT_V
         return;
     }
 
-    if ((p_device = get_controller(dwUserIndex)) == nullptr)
+    if (dwUserIndex >= p_setting->player_count)
+        return;
+
+    if (pVibration == nullptr || (p_device = get_controller(dwUserIndex)) == nullptr)
         return;
 
     AlphaRing::Input::SetState(p_device->input_user, pVibration);
@@ -90,16 +93,14 @@ bool CGameManager::get_key_state(CGameManager *self, DWORD index, input_data_t *
 }
 
 CUserProfile* CGameManager::get_player_profile(CGameManager *self, __int64 xid)  {
+    auto index = get_index(xid);
     auto p_setting = AlphaRing::Global::MCC::Splitscreen();
 
     if (!p_setting->b_override)
         return ppOriginal.get_player_profile(self, xid);
 
-    if (!p_setting->b_override_profile) {
-        if (p_setting->b_use_player0_profile)
-            xid = get_xuid(0);
-        return ppOriginal.get_player_profile(self, xid);
-    }
+    if (!p_setting->b_override_profile && ((!index) || (index && p_setting->b_use_player0_profile)))
+        return ppOriginal.get_player_profile(self, get_xuid(0));
 
     if (p_setting->b_use_player0_profile)
         return &get_profile(0)->profile;
@@ -108,16 +109,14 @@ CUserProfile* CGameManager::get_player_profile(CGameManager *self, __int64 xid) 
 }
 
 CGamepadMapping* CGameManager::retrive_gamepad_mapping(CGameManager *self, __int64 xid) {
+    auto index = get_index(xid);
     auto p_setting = AlphaRing::Global::MCC::Splitscreen();
 
     if (!p_setting->b_override)
         return ppOriginal.retrive_gamepad_mapping(self, xid);
 
-    if (!p_setting->b_override_profile) {
-        if (p_setting->b_use_player0_profile)
-            xid = get_xuid(0);
-        return ppOriginal.retrive_gamepad_mapping(self, xid);
-    }
+    if (!p_setting->b_override_profile && ((!index) || (index && p_setting->b_use_player0_profile)))
+        return ppOriginal.retrive_gamepad_mapping(self, get_xuid(0));
 
     if (p_setting->b_use_player0_profile)
         return &get_profile(0)->mapping;

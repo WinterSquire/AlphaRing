@@ -55,12 +55,12 @@ __int64 CGameManager::get_xuid(int index) {
 CInputDevice *CGameManager::get_controller(int index) {
     auto mng = DeviceManager();
     auto setting = AlphaRing::Global::MCC::Splitscreen();
-    auto profile = get_profile(index);
+    auto controller_index = get_profile(index)->controller_index;
 
-    if ((!index && setting->b_player0_use_km) || profile->controller_index == 4)
+    if ((!index && setting->b_player0_use_km) || controller_index >= 4 || controller_index < 0)
         return nullptr;
     else
-        return mng->p_input_device[get_profile(index)->controller_index];
+        return mng->p_input_device[controller_index];
 }
 
 int CGameManager::get_index(__int64 xuid) {

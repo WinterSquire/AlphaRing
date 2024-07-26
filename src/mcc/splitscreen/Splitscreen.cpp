@@ -25,7 +25,7 @@ namespace MCC::Splitscreen {
 
         // fix: changing team freeze the game
         result = AlphaRing::Hook::Detour({
-            {0x2D01DC, 0, get_index_by_xuid, (void**)&ppOriginal_get_index_by_xuid},
+            {0x2D01DC, 0x2BD620, get_index_by_xuid, (void**)&ppOriginal_get_index_by_xuid},
         });
 
         assertm(result, "MCC:Splitscreen: failed to hook");
@@ -33,8 +33,6 @@ namespace MCC::Splitscreen {
         return true;
     }
 }
-
-#include "../CGameEngine.h"
 
 #include "imgui.h"
 

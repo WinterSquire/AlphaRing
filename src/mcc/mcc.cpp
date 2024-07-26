@@ -22,9 +22,9 @@ namespace MCC {
         CDeviceManager** device_manager;
 
         AlphaRing::Hook::Offset({
-            {0x3FFCAA8, 0, (void**)&ppGameEngine},
-            {0x3F76E50, 0, (void**)&game_manager},
-            {0x3FFFFF8, 0, (void**)&device_manager},
+            {0x3FFCAA8, 0x3E4B048, (void**)&ppGameEngine},
+            {0x3F76E50, 0x3DC54D0, (void**)&game_manager},
+            {0x3FFFFF8, 0x3E4E590, (void**)&device_manager},
             {OFFSET_MCC_PF_DELTA_TIME, OFFSET_MCC_WS_PF_DELTA_TIME, (void**)&deltaTime},
         });
 
