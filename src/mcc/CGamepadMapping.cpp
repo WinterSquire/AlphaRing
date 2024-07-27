@@ -1,4 +1,5 @@
 #include "CGamepadMapping.h"
+#include "CGameEngine.h"
 
 static std::array<const char*, 16> button_names {
         "Left Trigger","Right Trigger",
@@ -87,6 +88,7 @@ const std::array<const char *, 66>* CGamepadMapping::ActionNames() {return &acti
 
 void CGamepadMapping::ImGuiContext() {
     char buffer[10];
+    bool result = false;
 
     for (int i = 0; i < action_names.size(); ++i) {
         auto name = action_names.at(i);
@@ -97,8 +99,15 @@ void CGamepadMapping::ImGuiContext() {
 
         ImGui::PushItemWidth(200);
         int value = actions[i];
-        if (ImGui::Combo(name, &value, button_names.data(), button_names.size()))
+        if (ImGui::Combo(name, &value, button_names.data(), button_names.size())) {
             actions[i] = static_cast<CGamepadMapping::eButton>(value);
+            result = true;
+        }
         ImGui::PopItemWidth();
+    }
+
+    if (result) {
+        auto p_engine = GameEngine();
+        if (p_engine) p_engine->load_setting();
     }
 }
