@@ -81,7 +81,7 @@ Object:
 )";
     const char* unit_format = R"(
 Unit:
-    Flag: %hX
+    Flag[%hX]: | %hhd %hhd %hhd %hhd | %hhd %hhd %hhd %hhd | %hhd %hhd %hhd %hhd | %hhd %hhd %hhd %hhd |
     Actor: %X
     Player: %X
     Aim Target: %X
@@ -148,8 +148,15 @@ Unit:
     //============================== UNIT ==============================
     if (p_unit == nullptr) return;
 
+    long flags = p_unit->biped_flags;
+
     sprintf(buffer, unit_format,
-            p_unit->biped_flags, p_unit->actor_index, p_unit->player_index,
+            flags,
+            _bittest(&flags, 0), _bittest(&flags, 1), _bittest(&flags, 2), _bittest(&flags, 3),
+            _bittest(&flags, 4), _bittest(&flags, 5), _bittest(&flags, 6), _bittest(&flags, 7),
+            _bittest(&flags, 8), _bittest(&flags, 9), _bittest(&flags, 10), _bittest(&flags, 11),
+            _bittest(&flags, 12), _bittest(&flags, 13), _bittest(&flags, 14), _bittest(&flags, 15),
+            p_unit->actor_index, p_unit->player_index,
             p_unit->aim_target, p_unit->bump_target, p_unit->bump_close
     );
 
