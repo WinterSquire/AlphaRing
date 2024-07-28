@@ -179,7 +179,7 @@ DefNative(Halo3) {
         float v4;
         float v5;
 
-        const float GRAVITY = 4.1712594f;   // 0x40857AF5
+        inline static const float GRAVITY = 4.1712594f;
 
         inline void reset() {
             gravity = GRAVITY;
