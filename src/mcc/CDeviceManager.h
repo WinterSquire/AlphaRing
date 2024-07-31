@@ -18,7 +18,6 @@ inline static const char key_map_list[] = {
         '\x00', '\x00', '\x00', '\x00'
 };
 
-// 0x130
 struct input_data_t {
     int un;
     bool keyState[sizeof(key_map_list)]; // 0x4
@@ -31,7 +30,10 @@ struct input_data_t {
         float un1; // 0x114
         float constant_1; // 0x118
     } mouse;
+    char buffer1[20];
 };
+
+static_assert(sizeof(input_data_t) == 0x130);
 
 struct CDeviceManager {
 public:
@@ -43,9 +45,9 @@ public:
         char (__fastcall* get_status)(CDeviceManager* self, DWORD index, input_data_t* p_input_device, bool a4);
         char (__fastcall* update_time)(CDeviceManager* self, int a2, __int64 a3);
         void (__fastcall* set_vibration)(CDeviceManager* self, DWORD index, XINPUT_VIBRATION *a3);
-        void* pf2;
+        void (__fastcall* reset_device)(CDeviceManager* self);
         void* pf3;
-        void* pf4;
+        int (__fastcall* add_new_device)(CDeviceManager* self, int device_index);
         void (__fastcall* update_state)(CDeviceManager* self, __int64 a2, __int64 a3, bool a4);
     };
 

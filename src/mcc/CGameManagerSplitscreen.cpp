@@ -53,6 +53,8 @@ bool CGameManager::get_key_state(CGameManager *self, DWORD index, input_data_t *
     auto device_manager = DeviceManager();
     auto p_global = AlphaRing::Global::Global();
 
+    memset(p_input, 0, sizeof(input_data_t));
+
     if (p_global->show_imgui) {
         if (p_global->pause_game_on_menu_shown)
             return false;
