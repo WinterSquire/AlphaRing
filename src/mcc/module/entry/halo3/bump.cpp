@@ -1,7 +1,7 @@
 #include "halo3.h"
 
 namespace Halo3::Entry::Bump {
-    using units_t = Halo3::Native::Objects_t::units_t;
+    using units_t = units_definition;
 
     static bool bSwap = false;
     static INDEX vTarget = NONE;
@@ -9,10 +9,12 @@ namespace Halo3::Entry::Bump {
     static units_t* p_target = nullptr;
 
     void Prologue(INDEX self, INDEX target) {
+        auto p_object = Halo3::Native::object();
+
         bSwap = false;
         if (!AlphaRing::Global::Halo3::Physics()->enable_bump_possession || target == NONE || self == NONE) return;
-        auto p_obj_s = Halo3::Native::Objects()->get(self)->address;
-        auto p_obj_t = Halo3::Native::Objects()->get(target)->address;
+        auto p_obj_s = p_object->get(self)->address;
+        auto p_obj_t = p_object->get(target)->address;
         if (p_obj_s == nullptr || p_obj_t == nullptr) return;
         if (!p_obj_s->isUnit() || !p_obj_t->isUnit()) return;
         vTarget = target;

@@ -149,6 +149,7 @@ struct CUserProfile {
     float HUDScale; // 0xAC8
 
     void ImGuiContext();
+    static const char* CustomizationItemName(int index);
 };
 
 static_assert(sizeof(CUserProfile) == 0xACC);

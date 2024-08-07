@@ -22,7 +22,7 @@ void CHalo3Context::context_render() {
         }
 
         ImGui::Text("Render");
-        auto p_render = Halo3::Native::RenderFlag();
+        auto p_render = Halo3::Native::rasterizer_game_states();
         if (p_render != nullptr) {
             ImGui::Indent();
             ImGui::Checkbox("motion_blur", &p_render->motion_blur);
@@ -38,7 +38,7 @@ void CHalo3Context::context_render() {
         }
 
         ImGui::Text("Chud");
-        auto p_chud = Halo3::Native::Chud();
+        auto p_chud = Halo3::Native::chud_persistent_user_data2();
         if (p_chud != nullptr) {
             ImGui::Indent();
             ImGui::Checkbox("all", &p_chud->chud_show);

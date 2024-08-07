@@ -31,11 +31,7 @@ namespace AlphaRing::Render::D3d11 {
             InitMainRender(pSwapChain);
         }
 
-        if (ImGui::BeginFrame()) {
-            ImGui::Render();
-        }
-
-        ImGui::EndFrame();
+        ImGui::Render();
 
         return ppOriginal_Present(graphics.pSwapChain, SyncInterval, Flags);
     }

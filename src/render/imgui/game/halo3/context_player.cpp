@@ -21,22 +21,22 @@ void CHalo3Context::context_player() {
 
     char buffer[1024];
     char player_name[256];
-    auto p_player = Halo3::Native::Players();
-    auto p_action = Halo3::Native::PlayersAction();
+    auto p_players = Halo3::Native::players();
+    auto p_action = Halo3::Native::players_globals();
 
-    if (!p_player || !p_action) return;
+    if (!p_players || !p_action) return;
 
     if (ImGui::Begin("Player", &show_context)) {
         if (ImGui::IsKeyPressed(ImGuiKey_F1, false)) {
-            LOG_INFO("Player0: {:x}", (__int64)p_player->get(0));
+            LOG_INFO("Player0: {:x}", (__int64)p_players->get(0));
         }
 
         ImGui::Checkbox("Disable Action", &p_action->disable_input);
 
         ImGui::SameLine();
 
-        for (int i = 0; i < p_player->m_capacity; ++i) {
-            auto p_player = Halo3::Native::Players()->get(i);
+        for (int i = 0; i < p_players->m_capacity; ++i) {
+            auto p_player = p_players->get(i);
 
             if (p_player == nullptr) continue;
 

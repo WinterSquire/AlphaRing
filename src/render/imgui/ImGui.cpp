@@ -12,11 +12,14 @@
 #include "./game/mcc/CMCCContext.h"
 #include "./game/halo3/CHalo3Context.h"
 
+#include "mcc/mcc.h"
+#include "mcc/CGameGlobal.h"
+
 static ICContext* pages[7] {
-        g_pMCCContext,
         nullptr,
         nullptr,
         g_pHalo3Context,
+        nullptr,
         nullptr,
         nullptr,
         nullptr,
@@ -25,8 +28,8 @@ static ICContext* pages[7] {
 namespace AlphaRing::Render::ImGui {
     bool Initialize() {
         ::ImGui::CreateContext();
-        ImGui_ImplWin32_Init(D3d11::Graphics()->hwnd);
-        ImGui_ImplDX11_Init(D3d11::Graphics()->pDevice, D3d11::Graphics()->pContext);
+        ImGui_ImplWin32_Init(Graphics()->hwnd);
+        ImGui_ImplDX11_Init(Graphics()->pDevice, Graphics()->pContext);
         ::ImGui::StyleColorsDark();
 
         ImGuiIO &io = ::ImGui::GetIO();
@@ -39,7 +42,7 @@ namespace AlphaRing::Render::ImGui {
         io.IniFilename = "./alpha_ring/imgui.ini";
         ::ImGui::LoadIniSettingsFromDisk("../../../alpha_ring/imgui.ini");
 
-        const float scale = GetDpiForWindow(D3d11::Graphics()->hwnd) * 1.0f / 96.0f;
+        const float scale = GetDpiForWindow(Graphics()->hwnd) * 1.0f / 96.0f;
 
         auto font_path = R"(C:\Windows\Fonts\msyh.ttc)";
 
@@ -57,7 +60,14 @@ namespace AlphaRing::Render::ImGui {
         return true;
     }
 
-    void Render(int render_flag) {
+    void Render() {
+        ImGui_ImplDX11_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ::ImGui::NewFrame();
+
+        bool inGame = MCC::IsInGame();
+        auto pGameGlobal = GameGlobal();
+
         AlphaRing::Input::Update();
 
         if (!AlphaRing::Global::Global()->show_imgui || !AlphaRing::Global::Global()->show_imgui_mouse)
@@ -66,39 +76,24 @@ namespace AlphaRing::Render::ImGui {
         if (!AlphaRing::Global::Global()->show_imgui)
             return;
 
-        pages[0]->render();
+        g_pMCCContext->render();
 
-        if (render_flag != None)
-            pages[render_flag]->render();
+
+        if (inGame && pGameGlobal != nullptr) {
+            auto context = pages[pGameGlobal->current_game];
+            if (context != nullptr)
+                context->render();
+        }
 
         if (::ImGui::BeginMainMenuBar()) {
-            if (render_flag != None)
+            if (inGame)
                 ::ImGui::Separator();
             ::ImGui::Text("%.1f fps", ::ImGui::GetIO().Framerate);
             ::ImGui::EndMainMenuBar();
         }
-    }
-
-    static bool bNewFrame = false;
-
-    bool BeginFrame() {
-        if (bNewFrame)
-            return false;
-
-        ImGui_ImplDX11_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        ::ImGui::NewFrame();
-
-        return bNewFrame = true;
-    }
-
-    void EndFrame() {
-        if (!bNewFrame) return;
 
         ::ImGui::Render();
-        D3d11::Graphics()->SetRenderTargetView();
+        Graphics()->SetRenderTargetView();
         ImGui_ImplDX11_RenderDrawData(::ImGui::GetDrawData());
-
-        bNewFrame = false;
     }
 }

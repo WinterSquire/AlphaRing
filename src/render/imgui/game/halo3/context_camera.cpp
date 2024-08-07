@@ -46,10 +46,10 @@ void CHalo3Context::context_camera() {
 
 static void camera_context() {
     char buffer[1024];
-    auto p_camera = Halo3::Native::Camera();
-    auto p_splitScreen = Halo3::Native::SplitScreen();
+    auto p_camera = Halo3::Native::director_globals();
+    auto p_splitScreen = Halo3::Native::player_mapping_globals();
     auto p_video_setting = Halo3::Native::VideoSetting();
-    auto p_data = Halo3::Native::CameraData();
+    auto p_data = Halo3::Native::observer_globals();
 
     if (!p_camera || !p_data || !p_video_setting || !p_splitScreen) return;
 
@@ -84,7 +84,7 @@ static void camera_context() {
             int mode = *p_mode;
 
             setState([i, mode] {
-                Halo3::Native::Function::player_set_camera(i, (eCameraMode)mode);
+//                Halo3::Native::Function::player_set_camera(i, (eCameraMode)mode);
             });
         }
         ImGui::PopID();
@@ -104,11 +104,11 @@ static void camera_context() {
 }
 
 static void curve_backend() {
-    auto p_camera = Halo3::Native::Camera();
+    auto p_camera = Halo3::Native::director_globals();
 
     if (!p_camera || p_camera->mode[0].mode != CAMERAMODE_FLYING) return;
 
-    auto p_game_time = Halo3::Native::Time();
+    auto p_game_time = Halo3::Native::game_time_globals();
     auto p_video_setting = Halo3::Native::VideoSetting();
 
     if ( !p_video_setting || !p_game_time) return;

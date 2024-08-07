@@ -13,7 +13,7 @@ void CHalo3Context::context_physics() {
     if (ImGui::Begin("Physics", &show_context)) {
         ImGui::Checkbox("Enable Bump Possession", &AlphaRing::Global::Halo3::Physics()->enable_bump_possession);
 
-        auto p_physics_constant = Halo3::Native::PhysicsConstant();
+        auto p_physics_constant = Halo3::Native::physics_constants();
 
         if (p_physics_constant != nullptr) {
             ImGui::DragFloat("Gravity", &p_physics_constant->gravity, 0.1f);

@@ -16,7 +16,7 @@ void CHalo3Context::context_object() {
     if (!show_context) return;
 
     char buffer[1024];
-    auto mng = Halo3::Native::Objects();
+    auto mng = Halo3::Native::object();
     if (mng == nullptr) return;
 
     if (ImGui::Begin("Object", &show_context, ImGuiWindowFlags_MenuBar)) {
@@ -91,12 +91,12 @@ Unit:
     bool b;
     char buffer[1024];
 
-    auto mng = Halo3::Native::Objects();
+    auto mng = Halo3::Native::object();
 
     if (mng == nullptr || index < 0 || index > mng->m_capacity) return;
 
     auto p_object = mng->get(index)->address;
-    Halo3::Native::Objects_t::units_t* p_unit = nullptr;
+    units_definition* p_unit = nullptr;
 
     if (p_object == nullptr) return;
     //============================== OBJECT ==============================
@@ -105,7 +105,7 @@ Unit:
         LOG_INFO("Object: {:x}", (__int64)p_object);
     }
 
-    if (p_object->isUnit()) p_unit = (Halo3::Native::Objects_t::units_t*)p_object;
+    if (p_object->isUnit()) p_unit = (units_definition*)p_object;
 
     sprintf(buffer, object_format,
             p_object->datum, p_object->parent_object_index, p_object->next_object_index,

@@ -1,8 +1,5 @@
-#ifndef ALPHA_RING_BASE_H
-#define ALPHA_RING_BASE_H
+#pragma once
 
 #include "enum/enum.h"
 #include "type.h"
 #include "math.h"
-
-#endif //ALPHA_RING_BASE_H

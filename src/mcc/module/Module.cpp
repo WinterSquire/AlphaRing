@@ -157,11 +157,6 @@ namespace MCC::Module {
             return;
         }
 
-        ImGui::Text(R"(Summary:
-    - Command Count: %d
-    - Game Speed: %.2f
-)", p_engine->count, p_engine->game_speed);
-
         if (ImGui::Button("Load Checkpoint")) p_engine->load_checkpoint();
         if (ImGui::Button("New Round")) p_engine->new_round();
         if (ImGui::Button("Pause Game")) p_engine->pause(true);
@@ -174,15 +169,22 @@ namespace MCC::Module {
 #pragma region HaloScript
         static char halo_script[1024] = {0};
 
-        if (ImGui::InputTextMultiline("HaloScript", halo_script, sizeof(halo_script)))
+        if (ImGui::InputTextMultiline("HaloScript", halo_script + 4, sizeof(halo_script) - 4))
             halo_script[1023] = '\0';
 
-        if (ImGui::Button("Execute HaloScript"))
+        if (ImGui::Button("Execute HaloScript")) {
+            halo_script[0] = 'H';
+            halo_script[1] = 'S';
+            halo_script[2] = ':';
+            halo_script[3] = ' ';
+            halo_script[1023] = '\0';
             p_engine->execute_command(halo_script);
+        }
 #pragma endregion
 
         ImGui::Separator();
 
+#pragma region ChangeTeam
         static int player = 0;
         static int team = 0;
         ImGui::Combo("Player", &player, "Player 0\0Player 1\0Player 2\0Player 3");
@@ -191,6 +193,7 @@ namespace MCC::Module {
             auto xuid = CGameManager::get_xuid(player);
             if (xuid != 0) p_engine->change_team(xuid, team);
         }
+#pragma endregion
     }
 
     void ContextPatch() {

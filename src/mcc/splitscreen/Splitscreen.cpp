@@ -35,6 +35,7 @@ namespace MCC::Splitscreen {
 }
 
 #include "imgui.h"
+#include "mcc/mcc.h"
 
 #include <string>
 
@@ -62,20 +63,6 @@ namespace MCC::Splitscreen {
         auto p_profile = CGameManager::get_profile(index);
         const char* items[] = {"Controller 1", "Controller 2", "Controller 3", "Controller 4", "NONE"};
 
-        if (ImGui::Button("Load Profile")) {
-            __int64 xuid;
-            auto p_mng = GameManager();
-            auto p_engine = GameEngine();
-            if (p_mng && (xuid = CGameManager::get_xuid(0))) {
-                memcpy(&p_profile->profile, p_mng->ppOriginal.get_player_profile(p_mng, xuid), sizeof(CUserProfile));
-                memcpy(&p_profile->mapping, p_mng->ppOriginal.retrive_gamepad_mapping(p_mng, xuid), sizeof(CGamepadMapping));
-                if (p_engine)
-                    p_engine->load_setting();
-            }
-        }
-        if (ImGui::IsItemHovered())
-            ImGui::SetTooltip("Use this in game!!! Or the game will crash!!!");
-
         ImGui::PushItemWidth(200);
         String::convert(buffer, p_profile->name, 1024);
         if (ImGui::InputText("Name", buffer, sizeof(buffer)))
@@ -85,6 +72,20 @@ namespace MCC::Splitscreen {
         ImGui::BeginDisabled(!index && p_setting->b_player0_use_km);
         ImGui::PushItemWidth(200);ImGui::Combo("Input", &p_profile->controller_index, items, IM_ARRAYSIZE(items));ImGui::PopItemWidth();
         ImGui::EndDisabled();
+
+        if (ImGui::Button("Load Profile")) {
+            __int64 xuid;
+            auto p_mng = GameManager();
+            auto p_engine = GameEngine();
+            if (MCC::IsInGame() && p_mng && (xuid = CGameManager::get_xuid(0))) {
+                memcpy(&p_profile->profile, p_mng->ppOriginal.get_player_profile(p_mng, xuid), sizeof(CUserProfile));
+                memcpy(&p_profile->mapping, p_mng->ppOriginal.retrive_gamepad_mapping(p_mng, xuid), sizeof(CGamepadMapping));
+                if (p_engine)
+                    p_engine->load_setting();
+            }
+        }
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("Use this in game!!!");
 
         bool is_disabled = (!index && !p_setting->b_override_profile) || (index && p_setting->b_use_player0_profile);
 

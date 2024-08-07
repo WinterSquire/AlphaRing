@@ -2,17 +2,23 @@
 
 #include <offset_mcc.h>
 
-#include "mcc/CGameManager.h"
+#include "CGameManager.h"
+#include "CGameGlobal.h"
 
 #include "mcc/module/Module.h"
 #include "mcc/network/Network.h"
 #include "mcc/splitscreen/Splitscreen.h"
 
 namespace MCC {
+    static bool* bIsInGame;
     static float (__fastcall* deltaTime)(long long qpc);
 
     float DeltaTime(__int64 a1) {
         return deltaTime(a1);
+    }
+
+    bool IsInGame() {
+        return *bIsInGame;
     }
 
     bool Initialize() {
@@ -26,6 +32,8 @@ namespace MCC {
             {0x3F76E50, 0x3DC54D0, (void**)&game_manager},
             {0x3FFFFF8, 0x3E4E590, (void**)&device_manager},
             {OFFSET_MCC_PF_DELTA_TIME, OFFSET_MCC_WS_PF_DELTA_TIME, (void**)&deltaTime},
+            {0x3FFCAA7, 0x3E4B047, (void**)&bIsInGame},
+            {0x3FFCAC0, 0x3E4B060, (void**)&g_ppGameGlobal},
         });
 
         assertm(ppGameEngine != nullptr, "MCC: failed to get ppGameEngine");

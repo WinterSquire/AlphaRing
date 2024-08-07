@@ -11,7 +11,7 @@ void CHalo3Context::context_actor() {
     if (!show_context) return;
 
     if (ImGui::Begin("Actor", &show_context)) {
-        auto p_actor = Halo3::Native::Actor();
+        auto p_actor = Halo3::Native::actor();
 
         if (p_actor == nullptr) return;
 

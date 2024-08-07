@@ -18,7 +18,7 @@ void CHalo3Context::context_global()  {
 
     if (ImGui::Begin("Game Global", &show_context)) {
         char buffer[1024];
-        auto p_time = Halo3::Native::Time();
+        auto p_time = Halo3::Native::game_time_globals();
         __int16 tick_per_second = 0;
         __int32 game_time = 0;
         float speed = 0;
@@ -31,7 +31,7 @@ void CHalo3Context::context_global()  {
 
         Halo3::Entry::Simulation::ImGuiContext();
 
-        auto map = Halo3::Native::Map();
+        auto map = Halo3::Native::game_globals();
 
         if (map == nullptr) return;
 
