@@ -6,12 +6,26 @@
 #include <mutex>
 #include <imgui.h>
 
-namespace Halo3::Entry::Simulation {
-    static std::mutex g_mutex1;
-    bool bTAS = false;
-    bool bRun = false;
-    int run_tick = 0;
+static std::mutex g_mutex1;
+static bool bTAS = false;
+static bool bRun = false;
+static int run_tick = 0;
 
+static std::mutex g_mutex;
+
+static bool bCapture = false;
+static bool bPlayback = false;
+static int playback_tick = 0;
+static int total_tick = 0;
+static struct Node {
+    unit_control_definition data;
+    Node* next;
+    Node* prev;
+} *current, *head, *tail;
+
+static void SaveFileHandler();
+
+namespace Halo3::Entry::Simulation {
     Halo3Entry(entry1, 0xEEC5C, __int64, detour1, int tick, float* a2) {
         {
             std::lock_guard<std::mutex> g_lock(g_mutex1);
@@ -54,19 +68,6 @@ namespace Halo3::Entry::Simulation {
 }
 
 namespace Halo3::Entry::Simulation {
-
-    static std::mutex g_mutex;
-
-    static bool bCapture = false;
-    static bool bPlayback = false;
-    static int playback_tick = 0;
-    static int total_tick = 0;
-    static struct Node {
-        unit_control_definition* data;
-        Node* next;
-        Node* prev;
-    } *current, *head, *tail;
-
     Halo3Entry(entry, 0x350B24, char, detour, unsigned __int16 unit, unit_control_definition* control_data) {
         if (bCapture) {
             // create new node
@@ -223,6 +224,97 @@ namespace Halo3::Entry::Simulation {
         if (ImGui::Button("Resume##1")) {
             bPlayback = true;
         }
+
+        SaveFileHandler();
+
         ImGui::Unindent();
+    }
+}
+
+#include "nlohmann/json.hpp"
+
+using json = nlohmann::json;
+
+void to_json(json& j, Vector3* vector) {
+    j = json::object({
+        {"x", vector->x},
+        {"y", vector->y},
+        {"z", vector->z}
+    });
+}
+
+void to_json(json& j, aim_assist_definition* assist_data) {
+    j = json::object({
+        {"target_player", assist_data->target_player},
+        {"target_object", assist_data->target_object},
+        {"model_target", assist_data->model_target},
+        {"primary_autoaim_level", assist_data->primary_autoaim_level},
+        {"secondary_autoaim_level", assist_data->secondary_autoaim_level},
+        {"lead_vector", &assist_data->lead_vector},
+        {"flags", assist_data->flags}
+    });
+}
+
+void to_json(json& j, unit_control_definition* control_data) {
+    j = json::object({
+        {"identifier", control_data->identifier},
+        {"un", control_data->un},
+        {"weapon_set_identifier", control_data->weapon_set_identifier},
+        {"primary_weapon_indices", control_data->primary_weapon_indices},
+        {"secondary_weapon_indices", control_data->secondary_weapon_indices},
+        {"grenade_index", control_data->grenade_index},
+        {"zoom_level", control_data->zoom_level},
+        {"interaction_type", control_data->interaction_type},
+        {"action_flags", control_data->action_flags},
+        {"throttle", &control_data->throttle},
+        {"primary_trigger", control_data->primary_trigger},
+        {"secondary_trigger", control_data->secondary_trigger},
+        {"facing_vector", &control_data->facing_vector},
+        {"aiming_vector", &control_data->aiming_vector},
+        {"looking_vector", &control_data->looking_vector},
+        {"gaze_position", &control_data->gaze_position},
+        {"aim_assist_data", &control_data->aim_assist_data}
+    });
+}
+
+void to_json(json& j, Node* node) {
+    while (node != nullptr) {
+        json j1;
+        to_json(j1, &node->data);
+        j.push_back(j1);
+        node = node->next;
+    }
+}
+
+static void SaveFileHandler() {
+    static char buffer[1024] {0};
+    static bool show_save_window = false;
+
+    // save to json
+    if (ImGui::Button("Save")) {
+        show_save_window = true;
+    }
+
+    if (show_save_window) {
+        if (ImGui::Begin("Save Control Data", &show_save_window)) {
+            ImGui::Text("alpha_ring/");
+            ImGui::SameLine();
+            ImGui::InputText("File Name", buffer, sizeof(buffer));
+
+            if (ImGui::Button("Save")) {
+                if (head != nullptr) {
+                    json j;
+                    to_json(j, head);
+                    auto result = j.dump(4);
+                    AlphaRing::Filesystem::Save(buffer, result.c_str(), result.length());
+                }
+                show_save_window = false;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel")) {
+                show_save_window = false;
+            }
+        }
+        ImGui::End();
     }
 }

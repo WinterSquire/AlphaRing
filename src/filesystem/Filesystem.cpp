@@ -1,6 +1,7 @@
 #include "Filesystem.h"
 
 #include <filesystem>
+#include <fstream>
 
 bool AlphaRing::Filesystem::Init() {
     const char* home_dir = "../../../alpha_ring";
@@ -35,4 +36,14 @@ bool AlphaRing::Filesystem::Exist(const char *path) {
 
 bool AlphaRing::Filesystem::Exist(const wchar_t *path) {
     return std::filesystem::exists(std::filesystem::path(path));
+}
+
+bool AlphaRing::Filesystem::Save(const char *file_name, const char *data, size_t size) {
+    std::ofstream file(file_name, std::ios::binary);
+    if (!file.is_open()) return false;
+
+    file.write(data, size);
+    file.close();
+
+    return true;
 }

@@ -12,4 +12,6 @@ namespace AlphaRing::Filesystem {
 
     bool Exist(const char* path);
     bool Exist(const wchar_t * path);
+
+    bool Save(const char* file_name, const char* data, size_t size);
 }

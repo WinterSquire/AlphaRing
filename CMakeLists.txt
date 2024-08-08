@@ -16,6 +16,9 @@ set(LIBRARY_LIST
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
+# json
+include_directories(${CMAKE_SOURCE_DIR}/lib/json/include)
+
 # imgui
 add_library(imgui SHARED IMPORTED)
 include_directories(${CMAKE_SOURCE_DIR}/lib/imgui/inc)
