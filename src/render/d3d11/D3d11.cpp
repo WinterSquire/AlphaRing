@@ -24,28 +24,26 @@ namespace AlphaRing::Render::D3d11 {
                                                        const DXGI_SWAP_CHAIN_DESC *, IDXGISwapChain **, ID3D11Device **,
                                                        D3D_FEATURE_LEVEL *, ID3D11DeviceContext **);
 
-    Graphics_t graphics;
-
     DefDetourFunction(HRESULT, __stdcall, Present, IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags) {
-        if (graphics.pSwapChain != pSwapChain) {
+        if (Graphics()->pSwapChain != pSwapChain) {
             InitMainRender(pSwapChain);
         }
 
         ImGui::Render();
 
-        return ppOriginal_Present(graphics.pSwapChain, SyncInterval, Flags);
+        return ppOriginal_Present(Graphics()->pSwapChain, SyncInterval, Flags);
     }
 
     DefDetourFunction(HRESULT, __stdcall, ResizeBuffers, IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags) {
-        if (graphics.pSwapChain != pSwapChain) {
+        if (Graphics()->pSwapChain != pSwapChain) {
             InitMainRender(pSwapChain);
         }
 
-        graphics.pView->Release();
+        Graphics()->pView->Release();
 
-        auto result = ppOriginal_ResizeBuffers(graphics.pSwapChain, BufferCount, Width, Height, NewFormat, SwapChainFlags);
+        auto result = ppOriginal_ResizeBuffers(Graphics()->pSwapChain, BufferCount, Width, Height, NewFormat, SwapChainFlags);
 
-        graphics.RecreateRenderTargetView();
+        Graphics()->RecreateRenderTargetView();
 
         return result;
     }
@@ -59,12 +57,12 @@ namespace AlphaRing::Render::D3d11 {
         assert(initialized == false);
 
         // Get Device and Context
-        graphics.pSwapChain = swapChain;
-        graphics.pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)&graphics.pDevice);
-        graphics.pDevice->GetImmediateContext(&graphics.pContext);
+        Graphics()->pSwapChain = swapChain;
+        Graphics()->pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)&Graphics()->pDevice);
+        Graphics()->pDevice->GetImmediateContext(&Graphics()->pContext);
 
-        memcpy(functions + 18, *(void **) graphics.pDevice, 43 * sizeof(void *));
-        memcpy(functions + 18 + 43, *(void **) graphics.pContext, 144 * sizeof(void *));
+        memcpy(functions + 18, *(void **) Graphics()->pDevice, 43 * sizeof(void *));
+        memcpy(functions + 18 + 43, *(void **) Graphics()->pContext, 144 * sizeof(void *));
 
         bool result = CreateHook();
 
@@ -72,19 +70,19 @@ namespace AlphaRing::Render::D3d11 {
 
         // Get Factory
         IDXGIDevice * pDXGIDevice = nullptr;
-        graphics.pDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice);
+        Graphics()->pDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice);
 
         IDXGIAdapter * pDXGIAdapter = nullptr;
         pDXGIDevice->GetAdapter( &pDXGIAdapter );
 
-        pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&graphics.pIDXGIFactory);
+        pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&Graphics()->pIDXGIFactory);
 
         // Create Render Target View
-        graphics.RecreateRenderTargetView();
+        Graphics()->RecreateRenderTargetView();
 
         // Get Window HWND
-        graphics.pSwapChain->GetDesc(&sd);
-        graphics.hwnd = sd.OutputWindow;
+        Graphics()->pSwapChain->GetDesc(&sd);
+        Graphics()->hwnd = sd.OutputWindow;
 
         ImGui::Initialize();
         Window::Initialize();
