@@ -54,111 +54,25 @@ namespace Halo3::Entry::Simulation {
 }
 
 namespace Halo3::Entry::Simulation {
-    struct simulation {
-        char buffer[2200];
-        struct queue {
-            struct item {
-                int type; // 0x0
-                item* next; // 0x8
-            };
-            bool enable; // 0x0
-            int count; // 0x4
-            int mem_size; // 0x8
-            int queue_count; // 0xC
-            int queue_size; // 0x10
-            item* head; // 0x18
-            item* tail; // 0x20
-        } queue1, queue2;
-        __int64 players_bit;
-        int object_INDEX[16];
-        struct ControlData {
-            const static int k_maximum_weapons_per_unit = 4;
-            const static int k_unit_grenade_types_count = 4;
-            const static __int16 k_unit_aiming_speeds_count = 0x8000;
-
-            int un;
-            __int16 aiming_speed;
-            __int16 un2;
-            char weapon_indices[2];
-            __int16 grenade_index;
-            __int16 zoom_level;
-            char buffer[10];
-            struct Throttle {
-                float i,j,k;
-            } throttle; // 24 movement
-            float primary_trigger;
-            float secondary_trigger;
-            Vector3 facing_vector;
-            Vector3 aiming_vector;
-            Vector3 looking_vector;
-            Vector3 gaze_position;
-            struct AimAssist {
-                char buffer[36];
-            } aim_assist_data;
-
-            void ImGuiContext() {
-                int value;
-
-                value = aiming_speed;
-                if (ImGui::InputInt("Aiming Speed", &value) && value >= 0 && value < k_unit_aiming_speeds_count) {
-                    aiming_speed = value;
-                }
-
-                value = weapon_indices[0];
-                if (ImGui::InputInt("Weapon Index 1", &value) && value >= 0 && value < k_maximum_weapons_per_unit) {
-                    weapon_indices[0] = value;
-                }
-
-                value = weapon_indices[1];
-                if (ImGui::InputInt("Weapon Index 2", &value) && value >= 0 && value < k_maximum_weapons_per_unit) {
-                    weapon_indices[1] = value;
-                }
-
-                value = grenade_index;
-                if (ImGui::InputInt("Grenade Index", &value) && value >= 0 && value < k_unit_grenade_types_count) {
-                    grenade_index = value;
-                }
-
-                value = zoom_level;
-                if (ImGui::InputInt("Zoom Level", &value) && value >= 0 && value < 0xFFFF) {
-                    zoom_level = value;
-                }
-
-                ImGui::DragFloat3("Throttle(Movement?)", &throttle.i, 0.01f, -1.0f, 1.0f);
-
-                ImGui::DragFloat("Primary Trigger", &primary_trigger, 0.01f);
-                ImGui::DragFloat("Secondary Trigger", &secondary_trigger, 0.01f);
-
-                ImGui::DragFloat3("Facing Vector", &facing_vector.x, 0.01f);
-                ImGui::DragFloat3("Aiming Vector", &aiming_vector.x, 0.01f);
-                ImGui::DragFloat3("Looking Vector", &looking_vector.x, 0.01f);
-                ImGui::DragFloat3("Gaze Position", &gaze_position.x, 0.01f);
-
-            }
-        } control_data[10];
-        char buffer2[2144];
-    };
 
     static std::mutex g_mutex;
-
-    static_assert(sizeof(simulation) == 5776);
 
     static bool bCapture = false;
     static bool bPlayback = false;
     static int playback_tick = 0;
     static int total_tick = 0;
     static struct Node {
-        simulation::ControlData data;
+        unit_control_definition* data;
         Node* next;
         Node* prev;
     } *current, *head, *tail;
 
-    Halo3Entry(entry, 0x350B24, char, detour, unsigned __int16 unit, simulation::ControlData* control_data) {
+    Halo3Entry(entry, 0x350B24, char, detour, unsigned __int16 unit, unit_control_definition* control_data) {
         if (bCapture) {
             // create new node
             auto node = new Node();
             node->next = node->prev = nullptr;
-            memcpy(&node->data, control_data, sizeof(simulation::ControlData));
+            memcpy(&node->data, control_data, sizeof(unit_control_definition));
 
             // insert new node
             {
@@ -174,8 +88,7 @@ namespace Halo3::Entry::Simulation {
         } else if (bPlayback) {
             std::lock_guard<std::mutex> g_lock(g_mutex);
             if (current != nullptr) {
-                memcpy(control_data, &current->data, sizeof(simulation::ControlData));
-                playback_tick++;
+                memcpy(control_data, &current->data, sizeof(unit_control_definition));
                 if (current->next != nullptr) {
                     current = current->next;
                 } else {
@@ -199,12 +112,6 @@ namespace Halo3::Entry::Simulation {
 
         ImGui::Indent();
         ImGui::Text("Simulation Status: %s", status);
-
-        if (ImGui::TreeNode("Control Data")) {
-            if (current != nullptr)
-                current->data.ImGuiContext();
-            ImGui::TreePop();
-        }
 
         ImGui::Text("Tick[%d]", total_tick);
 
@@ -244,7 +151,7 @@ namespace Halo3::Entry::Simulation {
         // duplicate new node and then insert back
         if (ImGui::Button("Duplicate") && current != nullptr) {
             auto node = new Node();
-            memcpy(&node->data, &current->data, sizeof(simulation::ControlData));
+            memcpy(&node->data, &current->data, sizeof(unit_control_definition));
 
             node->next = current->next;
             node->prev = current;

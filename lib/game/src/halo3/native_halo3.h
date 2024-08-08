@@ -31,6 +31,7 @@ namespace Halo3::Native::Function {
 #include "./physics/physics_constants.h"
 #include "./rasterizer/rasterizer.h"
 #include "./render/views/render_texture_camera_view.h"
+#include "./simulation/simulation.h"
 
 #define DefH3Global(name) inline name##_definition* name() { return (name##_definition*)teb_data()->name; }
 
