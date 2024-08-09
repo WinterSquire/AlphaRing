@@ -33,6 +33,8 @@ namespace Halo3::Native::Function {
 #include "./render/views/render_texture_camera_view.h"
 #include "./simulation/simulation.h"
 
+#include "./render/views/split_screen_config.h"
+
 #define DefH3Global(name) inline name##_definition* name() { return (name##_definition*)teb_data()->name; }
 
 DefNative(Halo3) {
