@@ -40,11 +40,11 @@ void CHalo3Context::context_player() {
 
             if (p_player == nullptr) continue;
 
-            std::wcstombs(player_name, p_player->name, sizeof(player_name));
+            std::wcstombs(player_name, p_player->configuration.client.player_name, sizeof(player_name));
             sprintf_s(buffer, format,
-                      i, player_name, p_player->object_INDEX,
+                      i, player_name, p_player->unit_index,
                       p_player->position.x, p_player->position.y, p_player->position.z,
-                      p_player->team
+                      p_player->configuration.host.player_team
             );
 
             ImGui::Text(buffer);
