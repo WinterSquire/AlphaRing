@@ -2,7 +2,7 @@
 A Modding Tool for MCC
 
 [![Build status](https://ci.appveyor.com/api/projects/status/o3qbtc7jirw81xmb?svg=true)](https://ci.appveyor.com/project/WinterSquire/alpharing)
-![](https://dcbadge.limes.pink/api/server/https://discord.gg/TUyAnCrpuz)
+[![](https://dcbadge.limes.pink/api/server/https://discord.gg/TUyAnCrpuz)](https://discord.gg/TUyAnCrpuz)
 
 ### Showcase
 
