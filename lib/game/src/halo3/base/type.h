@@ -15,14 +15,19 @@ typedef unsigned int StringID;
 
 template<typename T>
 struct entity_manager_t {
-    char m_name[0x20];  // 0x0
-    __int32 m_max;      // 0x20
-    __int32 m_sizeof;   // 0x24
-    __int32 m_un1[5];   // 0x28
-    __int32 m_capacity; // 0x3C
-    __int32 m_size;     // 0x40
-    __int32 m_un2;      // 0x44
-    __int64 m_data;     // 0x48
+    char m_name[0x20];             // 0x0
+    __int32 m_max;                 // 0x20
+    __int32 m_sizeof;              // 0x24
+    __int32 m_un1;                 // 0x28
+    __int32 m_signature;           // 0x2C
+    __int32 m_un2[2];              // 0x30
+    unsigned __int16 m_next_index; // 0x3A
+    __int16 m_un3;                 // 0x3A
+    __int32 m_capacity;            // 0x3C
+    __int32 m_size;                // 0x40
+    unsigned __int16 m_next_id;    // 0x44
+    __int16 m_un4;                 // 0x46
+    __int64 m_data;                // 0x48
 
     inline bool isValid(__int16 index) const { return index >= 0 && index < m_size && index < m_max; }
     inline T* get(__int16 index) const { return (T*)(m_data + (__int64)m_sizeof * (__int16)index); }

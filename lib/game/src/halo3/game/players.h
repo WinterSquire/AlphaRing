@@ -26,7 +26,7 @@ struct players_definition {
     __int16 machine_controller_index1;
     char cluster_reference;
     char padding[3];
-    INDEX unit_index; // 40
+    Datum unit_datum; // 40
     INDEX restore_INDEX; // 0x2C
     __int8 v1[0x1C];
     Vector3 position;// 0x4C
