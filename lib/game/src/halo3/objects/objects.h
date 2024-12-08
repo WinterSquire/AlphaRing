@@ -20,7 +20,7 @@ struct objects_definition {
         _object_has_override_bit = 0x2000000,
     };
 
-    Datum datum;//0x0
+    INDEX tag_index; // 0x0
     eObjectFlags object_flags; //0x4
     int v0;
     INDEX next_object_index;//0xC
@@ -70,7 +70,9 @@ struct objects_definition {
 };
 
 struct object_definition {
-    __int64 v0;
-    __int64 v1;
+    unsigned __int16 id;
+    __int32 unknown_1;
+    __int32 unknown_2;
+    __int32 size;
     objects_definition* address;
 };

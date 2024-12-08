@@ -6,7 +6,7 @@ static bool show_context = false;
 static const char* format = R"(
 Player %d
     Name: %s
-    INDEX: %X
+    Object Datum: %X
     Position: %.2f %.2f %.2f
     Team: %d
 )";
@@ -33,8 +33,6 @@ void CHalo3Context::context_player() {
 
         ImGui::Checkbox("Disable Action", &p_action->disable_input);
 
-        ImGui::SameLine();
-
         for (int i = 0; i < p_players->m_capacity; ++i) {
             auto p_player = p_players->get(i);
 
@@ -42,7 +40,7 @@ void CHalo3Context::context_player() {
 
             std::wcstombs(player_name, p_player->configuration.client.player_name, sizeof(player_name));
             sprintf_s(buffer, format,
-                      i, player_name, p_player->unit_index,
+                      i, player_name, p_player->unit_datum,
                       p_player->position.x, p_player->position.y, p_player->position.z,
                       p_player->configuration.host.player_team
             );
