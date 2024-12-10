@@ -42,7 +42,7 @@ void CHalo3Context::context_object() {
                 for (Index i = 0; p_tag_names && i < mng->m_capacity; ++i) {
                     auto object = mng->get(i)->address;
                     if (object == nullptr || !bFilter[object->type]) continue;
-                    auto tag_name = p_tag_names->get(object->datum);
+                    auto tag_name = p_tag_names->get(object->tag_index);
                     if (tag_name == nullptr) continue;
                     tag_name = strrchr(tag_name, '\\');
                     if (tag_name == nullptr) continue;
@@ -73,7 +73,7 @@ void CHalo3Context::context_object() {
 static void print_object(int index) {
     const char* object_format = R"(
 Object:
-    Datum: %X
+    Object Datum: %X
     Parent Object: %X
     Child Object: %X
     Position: %.2f %.2f %.2f
@@ -95,7 +95,13 @@ Unit:
 
     if (mng == nullptr || index < 0 || index > mng->m_capacity) return;
 
-    auto p_object = mng->get(index)->address;
+
+
+    auto object_entry = mng->get(index);
+    auto object_datum = (((unsigned __int32)object_entry->id) << 16) | ((unsigned __int32)index);
+
+    auto p_object = object_entry->address;
+
     units_definition* p_unit = nullptr;
 
     if (p_object == nullptr) return;
@@ -108,7 +114,7 @@ Unit:
     if (p_object->isUnit()) p_unit = (units_definition*)p_object;
 
     sprintf(buffer, object_format,
-            p_object->datum, p_object->parent_object_index, p_object->next_object_index,
+            object_datum, p_object->parent_object_index, p_object->next_object_index,
             p_object->position.x, p_object->position.y, p_object->position.z,
             eObjectTypeName[p_object->type]
     );
