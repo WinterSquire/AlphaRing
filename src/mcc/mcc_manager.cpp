@@ -74,6 +74,7 @@ int c_mcc_manager::initialize() {
 	player_manager()->initialize();
 
 	// Initialize the d3d11
+	Sleep(1500);
 	d3d11_manager()->initialize();
 
 	// Wait for MCC to initialize
