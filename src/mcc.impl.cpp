@@ -15,7 +15,6 @@ void input_set_rumble(i_game_manager* This, e_local_player player, s_rumble_stat
 bool local_user_get_player(i_game_manager* This, XUID* xuid, wchar_t* name, uint32_t size, e_local_player player);
 s_gamepad_mapping* local_user_get_gamepad_mapping(i_game_manager* This, XUID xuid);
 
-s_mcc_global g_mcc_global;
 libmcc::s_game_globals_states g_o_game_state_ftable;
 libmcc::i_game_manager_vftable g_o_game_manager_vftable;
 

@@ -1,42 +1,71 @@
-#include "win32helper.h"
-#include "common.h"
 #include "mcc.h"
-
-#include <cassert>
+#include "win32helper.h"
 
 using namespace libmcc;
 
-extern int APIENTRY
-WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd);
+typedef void (*t_UMCCGameInstanceInit)(void* instance);
 
-// helper function
-static void
-write_ftable(void* dst, void** src, void** ori, void** tmp, size_t size) {
-	auto lob = sizeof(void*) * size;
+struct s_mcc_global {
+	int mcc_type;
+	int halo_type;
+	s_version version;
+	void* mcc_instance;
+	void* halo_instnce;
+	t_mcc_address_table address_table;
+	t_UMCCGameInstanceInit UMCCGameInstanceInit;
+};
 
-	memcpy(ori, dst, lob);
-	memcpy(tmp, dst, lob);
+static s_mcc_global g_mcc_global;
 
-	for (int i = 0; i < size; ++i) {
-		if (src[i] != NULL) tmp[i] = src[i];
-	}
+/*
+	[Window Thread] Wrapper for the main window thread
+*/
+static DWORD
+main_thread(LPVOID lpThreadParameter) {
+	extern int APIENTRY
+	WinMain(
+		HINSTANCE hInstance, 
+		HINSTANCE hPrevInstance, 
+		LPSTR lpCmdLine, 
+		int nShowCmd
+	);
 
-	win32_write_memory(dst, tmp, lob);
+	return WinMain(NULL, NULL, NULL, NULL);
 }
 
-typedef void (*t_UMCCGameInstanceInit)(void* instance);
-static t_UMCCGameInstanceInit g_UMCCGameInstanceInit;
-static void* g_mcc_address_table[k_mcc_offset_count];
-
+/*
+	[Game Thread] Initialization
+*/
 static void
 UMCCGameInstanceInit(void* instance) {
+	auto write_ftable = [](
+		void* dst, 
+		void** src, 
+		void** ori, 
+		void** tmp, 
+		size_t size
+	) -> void {
+		auto lob = sizeof(void*) * size;
+
+		memcpy(ori, dst, lob);
+		memcpy(tmp, dst, lob);
+
+		for (int i = 0; i < size; ++i) {
+			if (src[i] != NULL) tmp[i] = src[i];
+		}
+
+		win32_write_memory(dst, tmp, lob);
+	};
+
 	libmcc::s_game_globals_states game_state_ftable_tmp;
 	libmcc::i_game_manager_vftable game_manager_vftable_tmp;
 
-	g_UMCCGameInstanceInit(instance);
+	// invoke original function
+	g_mcc_global.UMCCGameInstanceInit(instance);
 
+	// patch function tables
 	write_ftable(
-		g_mcc_address_table[_mcc_offset_MCCGameState_vftable],
+		g_mcc_global.address_table[_mcc_offset_MCCGameState_vftable],
 		(void**)&g_m_game_state_ftable,
 		(void**)&g_o_game_state_ftable,
 		(void**)&game_state_ftable_tmp,
@@ -44,7 +73,7 @@ UMCCGameInstanceInit(void* instance) {
 	);
 
 	write_ftable(
-		g_mcc_address_table[_mcc_offset_MCCGameManager_vftable],
+		g_mcc_global.address_table[_mcc_offset_MCCGameManager_vftable],
 		(void**)&g_m_game_manager_vftable,
 		(void**)&g_o_game_manager_vftable,
 		(void**)&game_manager_vftable_tmp,
@@ -52,51 +81,89 @@ UMCCGameInstanceInit(void* instance) {
 	);
 }
 
+/*
+	[Main Thread] DLL Main
+*/
 BOOL APIENTRY
 DllMain(HMODULE hModule, DWORD reason, LPVOID reserved) {
+	auto set_address_table = [](
+		void* base,
+		const t_mcc_offset_table* in,
+		t_mcc_address_table* out
+	) -> void {
+		for (int i = 0; i < k_mcc_offset_count; ++i) {
+			out->at(i) = reinterpret_cast<char*>(base) + in->at(i);
+		}
+	};
+
+	auto write_pointer = [](
+		void* src,
+		void** dst,
+		void** original
+	) -> void {
+		auto tmp = src;
+		*original = *dst;
+		win32_write_memory(dst, &tmp, sizeof(void*));
+	};
+
 	switch (reason) {
 	case DLL_PROCESS_ATTACH: {
-		auto type = 0;
+		auto type = _mcc_type_steam;
 		auto module = GetModuleHandle(NULL);
 		auto name = win32_get_export_name(module);
-		auto version = win32_get_version(module);
-		auto offset_table = k_mcc_steam_offset_table;
+		auto version = win32_get_version(module);		
 
-		// check executable and version
+		// check executable
 		if (!strcmp(name, "MCCWinStore-Win64-Shipping.exe")) {
-			assert(false); // todo
-			type = 1;
-			offset_table = k_mcc_winstore_offset_table;
+			type = _mcc_type_winstore;
 		} else if (strcmp(name, "MCC-Win64-Shipping.exe")) {
-			MessageBox(NULL, TEXT("This mod won't be initialized."), TEXT("Invalid Game"), MB_OK);
+			MessageBox(
+				NULL, 
+				TEXT("This mod won't be initialized."), 
+				TEXT("Invalid Game"), 
+				MB_OK
+			);
 			break;
 		}
 
-		// todo: initialize global memory
+		g_mcc_global.mcc_type = type;
+		g_mcc_global.mcc_instance = module;
 
-		// initialize global value
-		g_mcc_global.type = type;
-		g_mcc_global.instance = module;
+		// setup address table
+		auto table = get_offset_table(type, version);
 
-		for (int i = 0; i < k_mcc_offset_count; ++i) {
-			g_mcc_address_table[i] = reinterpret_cast<char*>(module) + offset_table[i];
+		if (table == NULL) {
+			MessageBox(
+				NULL, 
+				TEXT("This mod won't be initialized."), 
+				TEXT("Unsupported Version"), 
+				MB_OK
+			);
+			break;
 		}
+
+		set_address_table(
+			module, 
+			table, 
+			&g_mcc_global.address_table
+		);
 
 		// create window thread
 		CreateThread(
 			NULL, 
 			NULL, 
-			[](LPVOID lpThreadParameter) -> DWORD {return WinMain(NULL, NULL, NULL, NULL); }, 
+			main_thread,
 			NULL, 
 			NULL, 
 			NULL
 		);
 
-		// setup second init
-		auto m_UMCCGameInstanceInit = UMCCGameInstanceInit;
-		auto p_UMCCGameInstanceInit = g_mcc_address_table[_mcc_offset_MCCGameInstance_vInit];
-		g_UMCCGameInstanceInit = *reinterpret_cast<t_UMCCGameInstanceInit*>(p_UMCCGameInstanceInit);
-		win32_write_memory(p_UMCCGameInstanceInit, &m_UMCCGameInstanceInit, sizeof(void*));
+		write_pointer(
+			(void*)UMCCGameInstanceInit,
+			(void**)g_mcc_global.address_table[_mcc_offset_MCCGameInstance_vInit],
+			(void**)&g_mcc_global.UMCCGameInstanceInit
+		);		
+
 		break;
 	}
 	default:

@@ -1,8 +1,11 @@
 #pragma once
 
-#include <libmcc/libmcc.h>
-
 #include "common.h"
+
+enum e_mcc_type {
+	_mcc_type_steam,
+	_mcc_type_winstore
+};
 
 enum e_mcc_offset {
 	_mcc_offset_MCCGameInstance_vInit,
@@ -12,24 +15,12 @@ enum e_mcc_offset {
 	k_mcc_offset_count
 };
 
-constexpr size_t k_mcc_steam_offset_table[k_mcc_offset_count]{
-	0x2965AC8,
-	0x3F66890,
-	0x327F3C0,
-};
+typedef std::array<size_t, k_mcc_offset_count> t_mcc_offset_table;
+typedef std::array<void*, k_mcc_offset_count> t_mcc_address_table;
 
-constexpr size_t k_mcc_winstore_offset_table[k_mcc_offset_count]{
-	// todo
-};
+const t_mcc_offset_table*
+get_offset_table(e_mcc_type type, s_version version);
 
-struct s_mcc_global {
-	int type;
-	int game_type;
-	void* instance;
-	void* game_instnce;
-};
-
-extern s_mcc_global g_mcc_global;
 extern libmcc::s_game_globals_states g_m_game_state_ftable;
 extern libmcc::s_game_globals_states g_o_game_state_ftable;
 extern libmcc::i_game_manager_vftable g_m_game_manager_vftable;
