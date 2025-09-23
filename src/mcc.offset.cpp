@@ -27,6 +27,9 @@ constexpr t_mcc_offset_table_record_list g_mcc_offset_table_record_list{
 		_mcc_type_steam,
 		{ 1,3528,0,0 },
 		{
+			0x2965AC8,
+			0x3F66890,
+			0x327F3C0,
 		}
 	},
 	s_mcc_offset_table_record{
@@ -34,6 +37,9 @@ constexpr t_mcc_offset_table_record_list g_mcc_offset_table_record_list{
 		_mcc_type_winstore,
 		{ 1,3528,0,0 },
 		{
+			0x2835448,
+			0x3DB4F10,
+			0x3122380,
 		}
 	},
 	s_mcc_offset_table_record{
@@ -51,6 +57,9 @@ constexpr t_mcc_offset_table_record_list g_mcc_offset_table_record_list{
 		_mcc_type_winstore,
 		{ 1,3495,0,0 },
 		{
+			0x2835448,
+			0x3DB4F10,
+			0x3122380,
 		}
 	},
 };
