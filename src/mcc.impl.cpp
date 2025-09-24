@@ -174,7 +174,7 @@ local_user_get_player(
 	uint32_t size, 
 	e_local_player player
 ) {
-	s_local_player_global* global = nullptr;
+	s_local_player_global* global = &g_local_player_global;
 
 	if (player < 0 || player >= global->number_of_local_player)
 		return false;

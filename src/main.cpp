@@ -1,5 +1,6 @@
 #include "mcc.h"
 #include "win32helper.h"
+#include "player.h"
 #include "rasterizer.h"
 #include "render.h"
 
@@ -35,7 +36,7 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShow
 	MSG msg;
 
 	win32_set_thread_name("AR_MAIN");
-
+	player_initialize();
 	rasterizer_initialize();
 
 	while (result = GetMessage(&msg, NULL, NULL, NULL)) {

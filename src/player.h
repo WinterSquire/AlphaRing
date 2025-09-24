@@ -30,6 +30,8 @@ struct s_local_player_global {
 
 extern s_local_player_global g_local_player_global;
 
+int player_initialize();
+
 /*
 	Get local player input device index
 	-1 : k/M

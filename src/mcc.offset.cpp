@@ -23,7 +23,7 @@ get_offset_table(e_mcc_type type, s_version version) {
 
 constexpr t_mcc_offset_table_record_list g_mcc_offset_table_record_list{
 	s_mcc_offset_table_record{
-		false,
+		true,
 		_mcc_type_steam,
 		{ 1,3528,0,0 },
 		{

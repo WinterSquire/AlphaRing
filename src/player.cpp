@@ -2,6 +2,29 @@
 
 s_local_player_global g_local_player_global;
 
+int player_initialize() {
+	union {
+		GUID guid;
+		struct {
+			unsigned long long data1;
+			unsigned long long data2;
+		};
+	} guid;
+	
+
+	CoCreateGuid(&guid.guid);
+
+	guid.data1 ^= guid.data2;
+
+	for (int i = 0; i < 4; ++i) {
+		g_local_player_global.ids[i] = guid.data1 + i;
+	}
+
+	g_local_player_global.number_of_local_player = 1;
+	
+	return 0;
+}
+
 int get_local_player_input_device_index(int local_player) {
 	if (local_player < 0 || local_player >= g_local_player_global.number_of_local_player)
 		return -2;

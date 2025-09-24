@@ -95,11 +95,18 @@ render_main() {
 
 static void 
 render_page1() {
-	static int players = 1;
 	auto io = &ImGui::GetIO();
 	auto context = ImGui::GetCurrentContext();
 
-	ImGui::InputInt("Players", &players);
+	int number_of_local_player = g_local_player_global.number_of_local_player;
+
+	if (
+		ImGui::InputInt("Players", &number_of_local_player) && 
+		number_of_local_player >= 1 && 
+		number_of_local_player < 4
+	) {
+		g_local_player_global.number_of_local_player = number_of_local_player;
+	}
 
 	if (ImGui::BeginTabBar("Config")) {
 		char buffer[] = "Player X";

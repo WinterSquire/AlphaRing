@@ -34,10 +34,10 @@ win32_get_version(HMODULE hModule) {
 	assert(pVerHead && pVerHead->vsf.dwSignature == 0xfeef04bd);
 
 	return s_version {
-		.major = HIWORD(pVerHead->vsf.dwFileDateMS),
-		.minor = LOWORD(pVerHead->vsf.dwFileDateMS),
-		.build = HIWORD(pVerHead->vsf.dwFileDateLS),
-		.revision = LOWORD(pVerHead->vsf.dwFileDateLS),
+		.major = HIWORD(pVerHead->vsf.dwFileVersionMS),
+		.minor = LOWORD(pVerHead->vsf.dwFileVersionMS),
+		.build = HIWORD(pVerHead->vsf.dwFileVersionLS),
+		.revision = LOWORD(pVerHead->vsf.dwFileVersionLS),
 	};
 }
 
