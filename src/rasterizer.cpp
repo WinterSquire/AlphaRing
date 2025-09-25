@@ -133,7 +133,9 @@ rasterizer_initialize() {
 	auto& io = ImGui::GetIO();
 
 	io.ConfigFlags |= 
-		ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
+		ImGuiConfigFlags_NavEnableKeyboard | 
+		ImGuiConfigFlags_NavEnableGamepad |
+		ImGuiConfigFlags_NoMouseCursorChange;
 
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(g_rasterizer_global.device, g_rasterizer_global.dc);
