@@ -30,6 +30,24 @@ static D3D_FEATURE_LEVEL g_fl[]{
 	D3D_FEATURE_LEVEL_11_0
 };
 
+static HWND g_parent_window = NULL;
+
+static BOOL CALLBACK 
+window_enum_procedure(HWND hWnd, LPARAM lParam) {
+	static auto current_process_id = GetCurrentProcessId();
+	DWORD window_process_id;
+
+	GetWindowThreadProcessId(hWnd, &window_process_id);
+
+	if (window_process_id != current_process_id) {
+		return true;
+	}
+
+	g_parent_window = hWnd;
+
+	return false;
+}
+
 int 
 rasterizer_initialize() {
 	int result = 0;
@@ -47,16 +65,20 @@ rasterizer_initialize() {
 
 	assert(cls);
 
+	EnumWindows(window_enum_procedure, NULL);
+
+	auto window_type = g_parent_window != NULL ? WS_CHILD : WS_OVERLAPPEDWINDOW;
+
 	auto hwnd = CreateWindowEx(
 		WS_EX_APPWINDOW,
 		CLSNAME,
 		WNDNAME,
-		WS_VISIBLE | WS_POPUPWINDOW | WS_SIZEBOX,
+		WS_VISIBLE | WS_SIZEBOX | window_type,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		DEFWIDTH,
 		DEFHEIGHT,
-		nullptr,
+		g_parent_window,
 		nullptr,
 		instance,
 		nullptr

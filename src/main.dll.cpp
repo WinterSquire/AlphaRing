@@ -79,6 +79,16 @@ UMCCGameInstanceInit(void* instance) {
 		(void**)&game_manager_vftable_tmp,
 		sizeof(game_manager_vftable_tmp) / sizeof(void*)
 	);
+
+	// create window thread
+	CreateThread(
+		NULL,
+		NULL,
+		main_thread,
+		NULL,
+		NULL,
+		NULL
+	);
 }
 
 /*
@@ -146,16 +156,6 @@ DllMain(HMODULE hModule, DWORD reason, LPVOID reserved) {
 			module, 
 			table, 
 			&g_mcc_global.address_table
-		);
-
-		// create window thread
-		CreateThread(
-			NULL, 
-			NULL, 
-			main_thread,
-			NULL, 
-			NULL, 
-			NULL
 		);
 
 		write_pointer(
