@@ -10,6 +10,15 @@ const char* k_game_titles[]{
 	"Halo Reach",
 };
 
+const char* k_input_device_names[]{
+	"None",
+	"Controller 1",
+	"Controller 2",
+	"Controller 3",
+	"Controller 4",
+	"Kayboad & Mouse"
+};
+
 const char* k_control_mapping_action_names[]{
 	"Jump",
 	"Switch Grenade",

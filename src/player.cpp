@@ -21,13 +21,14 @@ int player_initialize() {
 	}
 
 	g_local_player_global.number_of_local_player = 1;
+	g_local_player_global.input_devices[0] = _input_device_keyboard_and_mouse;
 	
 	return 0;
 }
 
 int get_local_player_input_device_index(int local_player) {
 	if (local_player < 0 || local_player >= g_local_player_global.number_of_local_player)
-		return -2;
+		return _input_device_none;
 	else
 		return g_local_player_global.input_devices[local_player];
 }

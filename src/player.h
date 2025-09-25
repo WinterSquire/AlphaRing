@@ -16,6 +16,15 @@ foreach player
 		get_player_gamepad_mapping
 */
 
+enum e_input_device {
+	_input_device_none,
+	_input_device_controller1,
+	_input_device_controller2,
+	_input_device_controller3,
+	_input_device_controller4,
+	_input_device_keyboard_and_mouse,
+};
+
 struct s_local_player_global {
 	bool override_profile;
 	int number_of_local_player;
@@ -34,9 +43,9 @@ int player_initialize();
 
 /*
 	Get local player input device index
-	-1 : k/M
-	-2 : None
-	0-3: Gamepad
+	0	: None
+	1-4 : Gamepad
+	5	: k/M
 */
 int get_local_player_input_device_index(int local_player);
 

@@ -115,7 +115,11 @@ render_page1() {
 			buffer[7] = '0' + i;
 
 			if (ImGui::BeginTabItem(buffer)) {
-				ImGui::Text(buffer);
+				int device_index = g_local_player_global.input_devices[i];
+
+				if (ImGui::Combo("Input", &device_index, k_input_device_names, 6)) {
+					g_local_player_global.input_devices[i] = device_index;
+				}
 
 				ImGui::EndTabItem();
 			}

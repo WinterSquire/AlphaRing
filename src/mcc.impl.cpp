@@ -117,11 +117,11 @@ input_update(
 
 	switch (input_device) {
 	// None
-	case -2: 
+	case _input_device_none: 
 		break;
 
 	// K/M
-	case -1: 
+	case _input_device_keyboard_and_mouse:
 		state->is_km = true; 
 		g_o_game_manager_vftable.input_update(This, player, state);
 		break;
@@ -129,7 +129,7 @@ input_update(
 	// Gamepad
 	default: 
 		ZeroMemory(&xstate, sizeof(xstate));
-		XInputGetState(input_device, &xstate);
+		XInputGetState(input_device - _input_device_controller1, &xstate);
 		state->gamepad.buttons = xstate.Gamepad.wButtons;
 		state->gamepad.leftTrigger = xstate.Gamepad.bLeftTrigger;
 		state->gamepad.rightTrigger = xstate.Gamepad.bRightTrigger;
