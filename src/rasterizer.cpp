@@ -39,7 +39,7 @@ window_enum_procedure(HWND hWnd, LPARAM lParam) {
 
 	GetWindowThreadProcessId(hWnd, &window_process_id);
 
-	if (window_process_id != current_process_id) {
+	if (window_process_id != current_process_id || !IsWindowVisible(hWnd)) {
 		return true;
 	}
 
