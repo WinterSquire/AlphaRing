@@ -134,8 +134,11 @@ rasterizer_initialize() {
 
 	io.ConfigFlags |= 
 		ImGuiConfigFlags_NavEnableKeyboard | 
-		ImGuiConfigFlags_NavEnableGamepad |
-		ImGuiConfigFlags_NoMouseCursorChange;
+		ImGuiConfigFlags_NavEnableGamepad;
+
+	if (g_parent_window) {
+		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+	}
 
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(g_rasterizer_global.device, g_rasterizer_global.dc);
