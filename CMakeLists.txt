@@ -17,6 +17,7 @@ set(SRC
 	"src/player.cpp" 
 	"src/rasterizer.cpp" 
 	"src/render.cpp" 
+	"src/storage.cpp" 
 	"src/win32helper.cpp"
 )
 

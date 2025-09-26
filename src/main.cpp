@@ -3,6 +3,7 @@
 #include "player.h"
 #include "rasterizer.h"
 #include "render.h"
+#include "storage.h"
 
 #include <cassert>
 
@@ -36,6 +37,7 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShow
 	MSG msg;
 
 	win32_set_thread_name("AR_MAIN");
+	storage_initialize();
 	player_initialize();
 	rasterizer_initialize();
 
@@ -71,6 +73,7 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShow
 	}
 
 	rasterizer_shutdown();
+	storage_uninitialize();
 
 	return 0;
 }
