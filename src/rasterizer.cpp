@@ -132,6 +132,8 @@ rasterizer_initialize() {
 
 	auto& io = ImGui::GetIO();
 
+	io.IniFilename = NULL;
+
 	io.ConfigFlags |= 
 		ImGuiConfigFlags_NavEnableKeyboard | 
 		ImGuiConfigFlags_NavEnableGamepad;
